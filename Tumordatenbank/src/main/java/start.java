@@ -76,7 +76,7 @@ public class start {
 		return s;
 	}
 
-	static void readExcelPatienten(String excelPath, Statement st, String dbTbl) {
+	static void readExcelPatient(String excelPath, Statement st, String dbTbl) {
 		try {
 			File excel = new File(excelPath);
 			FileInputStream fis = new FileInputStream(excel);
@@ -85,10 +85,20 @@ public class start {
 			book.setMissingCellPolicy(Row.CREATE_NULL_AS_BLANK);
 			Iterator<Row> itr = sheet.iterator();
 			// Iterating over Excel file in Java
-			int i =0;
+			
+			//------------------------------------------
+			int i =0;	//stop after 30 rows for testing
+			//------------------------------------------
+			
 			String oldDbValues="";
-			while (itr.hasNext() && i<30) {
-				i++;
+											//------------------------------
+			while (itr.hasNext() && i<30) {	//stop after 30 rows for testing
+											//------------------------------
+				
+				//--------------------------------------
+				i++;	//stop after 30 rows for testing
+				//--------------------------------------
+				
 				Row row = itr.next();
 				String dbValues="";
 				// Iterating over each column of Excel file
@@ -130,26 +140,39 @@ public class start {
 
 					}
 				}
-
+				//create substring, value is changed in for-loop, "default" to prevent the code from thinking 
+				//the first line from the excel document is already in the database
 				String subString = "default";
 
+				//zaehlerVar to count the commas, just the first 3 attributed are compared to prevent doubling 
+				//of persons
 				byte zaehlerVar = 0;
 
+				//for-loop extracts the substring with the 3 attributes from dbValues
 				for (int k = 0; (k < oldDbValues.length()); k++) {
+					//after each attribute zaehlerVar counts up (because of the , in the dbValues String)
 					if (oldDbValues.charAt(k) == ',') {
 						zaehlerVar++;
 					}
+					//if the substring contains the 3 required attributes, for-loop ends
 					if (zaehlerVar >= 3) {
 						subString = oldDbValues.substring(0, k);
 						break;
 					}
 				}
-
+				
+				//checking with the previous line from the excel file if the persons are the same, 
+				//the substrings with the 3 attributes from oldDbValues and dbValues are compared
+				//to eliminate the first row test if the first 8 (length "default") chars equals "\"Geburt"
 				if (!dbValues.substring(0, subString.length()).equals(subString)&&!dbValues.substring(0, subString.length()).equals("\"Geburt")) {
 					try{
+						//write to database if person is not the same
 						st.executeUpdate( "insert into "+dbTbl+" (Geburtsdatum, Vorname, Name, Strasse, Hausnummer, Land, PLZ, Ort)"
 								+ " values ( "+dbValues+" );");	
+						//------------------------------------
+						//for testing proposes
 						System.out.println(dbValues);
+						//------------------------------------
 					}
 					catch (SQLException se){
 						se.printStackTrace();
@@ -179,17 +202,20 @@ public class start {
 	public static void main(String[] args) {
 		String dbPatTbl=null, dbFallTbl=null, dbDrv=null, dbUrl=null, dbUsr="", dbPwd="", excelPath="";
 		//-----------------------------------
+		//Workpath
+		//-----------------------------------
 		dbPatTbl = "patientendaten";
 		dbFallTbl = "fall";
 		excelPath = "C://Project Pathologie/test.xlsx";
+		//-----------------------------------
+		//DB connection data
 		//-----------------------------------
 		dbDrv = "com.mysql.jdbc.Driver";
 		dbUrl = "jdbc:mysql://localhost:3306/mydb";
 		dbUsr = "java";
 		dbPwd = "geheim";
 
-
-
+		//Validate connectiondata
 		if( dbPatTbl == null || dbPatTbl.length() == 0 ||
 				dbFallTbl == null || dbFallTbl.length() == 0 ||
 				dbDrv == null || dbDrv.length() == 0 ||
@@ -206,8 +232,8 @@ public class start {
 			cn = DriverManager.getConnection( dbUrl, dbUsr, dbPwd );
 			st = cn.createStatement();
 
-
-			readExcelPatienten(excelPath, st, dbPatTbl);
+			
+			readExcelPatient(excelPath, st, dbPatTbl);
 
 		} catch( Exception ex ) {
 			System.out.println( ex );
