@@ -1,4 +1,6 @@
 import java.io.*;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.sql.*;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -30,7 +32,6 @@ public class start {
 			Class.forName( dbDrv );
 			cn = DriverManager.getConnection( dbUrl, dbUsr, dbPwd );
 			st = cn.createStatement();
-			//			rs = st.executeQuery( "insert into  );
 			rs = st.executeQuery( "select * from " + dbTbl );
 			// Get meta data:
 			ResultSetMetaData rsmd = rs.getMetaData();
@@ -198,29 +199,22 @@ public class start {
 	static void readExcelFall(String excelPath, Statement st, String dbTbl) {
 		ResultSet rs = null;
 		try{
-
-			rs = st.executeQuery( "select * from " + dbTbl );
+			String name, firstname, birthdate = null;
+			name = "Abdi";
+			firstname = "Pari";
+			birthdate ="1958-04-30";
+			
+			rs = st.executeQuery( "select * from " + dbTbl + " where name= \"" + name + "\" AND vorname= \"" +
+			firstname +"\" AND geburtsdatum= \""+birthdate+"\"");
 			// Get meta data:
 			ResultSetMetaData rsmd = rs.getMetaData();
-			int i, n = rsmd.getColumnCount();
-			// Print table content:
-			for( i=0; i<n; i++ )
-				System.out.print( "+---------------" );
-			System.out.println( "+" );
-			for( i=1; i<=n; i++ )    // Attention: first column with 1 instead of 0
-				System.out.print( "| " + extendStringTo14( rsmd.getColumnName( i ) ) );
-			System.out.println( "|" );
-			for( i=0; i<n; i++ )
-				System.out.print( "+---------------" );
-			System.out.println( "+" );
+			
+						
 			while( rs.next() ) {
-				for( i=1; i<=n; i++ )  // Attention: first column with 1 instead of 0
-					System.out.print( "| " + extendStringTo14( rs.getString( i ) ) );
-				System.out.println( "|" );
+				
+				
+				System.out.print(rs.getInt(1));
 			}
-			for( i=0; i<n; i++ )
-				System.out.print( "+---------------" );
-			System.out.println( "+" );
 		} catch( Exception ex ) {
 			System.out.println( ex );
 		} finally {
@@ -246,8 +240,21 @@ public class start {
 		dbUrl = "jdbc:mysql://localhost:3306/mydb";
 		dbUsr = "java";
 		dbPwd = "geheim";
-
-		//Validate connectiondata
+		
+		//-----------------------------------
+		//Um das zu connection mit localhost zu beschleunigen  kannst das auskommentieren,
+		//ist dafür da, das es auf allen meinen rechnern parallel mit einer datenbank funktioniert
+		//-----------------------------------
+		try {
+			Socket s = new Socket("192.168.178.22", 3306);
+			s.close();
+			dbUrl = "jdbc:mysql://192.168.178.22:3306/mydb";
+		}
+		catch (Exception e){
+		}
+		//-----------------------------------
+		
+		//Validate connection data
 		if( dbPatTbl == null || dbPatTbl.length() == 0 ||
 				dbFallTbl == null || dbFallTbl.length() == 0 ||
 				dbDrv == null || dbDrv.length() == 0 ||
