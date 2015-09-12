@@ -77,7 +77,7 @@ public class start {
 		return s;
 	}
 
-	static void readExcelPatient(String excelPath, Statement st, String dbTbl) {
+	static void readExcelPatient(String excelPath, Statement st, String dbPatTbl) {
 		try {
 			File excel = new File(excelPath);
 			FileInputStream fis = new FileInputStream(excel);
@@ -168,7 +168,7 @@ public class start {
 				if (!dbValues.substring(0, subString.length()).equals(subString)&&!dbValues.substring(0, subString.length()).equals("\"Geburt")) {
 					try{
 						//write to database if person is not the same
-						st.executeUpdate( "insert into "+dbTbl+" (Geburtsdatum, Vorname, Name, Strasse, Hausnummer, Land, PLZ, Ort)"
+						st.executeUpdate( "insert into "+dbPatTbl+" (Geburtsdatum, Vorname, Name, Strasse, Hausnummer, Land, PLZ, Ort)"
 								+ " values ( "+dbValues+" );");	
 						//------------------------------------
 						//for testing proposes
@@ -196,25 +196,31 @@ public class start {
 
 	}
 
-	static void readExcelFall(String excelPath, Statement st, String dbTbl) {
+	static void readExcelFall(String excelPath, Statement st, String dbPatTbl, String dbFallTbl) {
 		ResultSet rs = null;
 		try{
+			
+			
+			
+			
+			
+			
 			String name, firstname, birthdate = null;
 			name = "Abdi";
 			firstname = "Pari";
 			birthdate ="1958-04-30";
 			
-			rs = st.executeQuery( "select * from " + dbTbl + " where name= \"" + name + "\" AND vorname= \"" +
+			rs = st.executeQuery( "select * from " + dbPatTbl + " where name= \"" + name + "\" AND vorname= \"" +
 			firstname +"\" AND geburtsdatum= \""+birthdate+"\"");
 			// Get meta data:
 			ResultSetMetaData rsmd = rs.getMetaData();
-			
-						
-			while( rs.next() ) {
-				
-				
-				System.out.print(rs.getInt(1));
+							
+			rs.first();
+			System.out.print(rs.getInt(1));
+			if (rs.next()){
+				System.out.println("Fehler");
 			}
+			
 		} catch( Exception ex ) {
 			System.out.println( ex );
 		} finally {
@@ -273,7 +279,7 @@ public class start {
 
 
 //			readExcelPatient(excelPath, st, dbPatTbl);
-			readExcelFall(excelPath, st, dbPatTbl);
+			readExcelFall(excelPath, st, dbPatTbl, dbFallTbl);
 			
 		} catch( Exception ex ) {
 			System.out.println( ex );
