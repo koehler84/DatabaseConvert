@@ -85,20 +85,20 @@ public class start {
 			book.setMissingCellPolicy(Row.CREATE_NULL_AS_BLANK);
 			Iterator<Row> itr = sheet.iterator();
 			// Iterating over Excel file in Java
-			
+
 			//------------------------------------------
 			int i =0;	//stop after 30 rows for testing
 			//------------------------------------------
-			
+
 			String oldDbValues="";
-											//------------------------------
+			//------------------------------
 			while (itr.hasNext() && i<30) {	//stop after 30 rows for testing
-											//------------------------------
-				
+				//------------------------------
+
 				//--------------------------------------
 				i++;	//stop after 30 rows for testing
 				//--------------------------------------
-				
+
 				Row row = itr.next();
 				String dbValues="";
 				// Iterating over each column of Excel file
@@ -160,7 +160,7 @@ public class start {
 						break;
 					}
 				}
-				
+
 				//checking with the previous line from the excel file if the persons are the same, 
 				//the substrings with the 3 attributes from oldDbValues and dbValues are compared
 				//to eliminate the first row test if the first 8 (length "default") chars equals "\"Geburt"
@@ -196,8 +196,40 @@ public class start {
 	}
 
 	static void readExcelFall(String excelPath, Statement st, String dbTbl) {
-		
+		ResultSet rs = null;
+		try{
+
+			rs = st.executeQuery( "select * from " + dbTbl );
+			// Get meta data:
+			ResultSetMetaData rsmd = rs.getMetaData();
+			int i, n = rsmd.getColumnCount();
+			// Print table content:
+			for( i=0; i<n; i++ )
+				System.out.print( "+---------------" );
+			System.out.println( "+" );
+			for( i=1; i<=n; i++ )    // Attention: first column with 1 instead of 0
+				System.out.print( "| " + extendStringTo14( rsmd.getColumnName( i ) ) );
+			System.out.println( "|" );
+			for( i=0; i<n; i++ )
+				System.out.print( "+---------------" );
+			System.out.println( "+" );
+			while( rs.next() ) {
+				for( i=1; i<=n; i++ )  // Attention: first column with 1 instead of 0
+					System.out.print( "| " + extendStringTo14( rs.getString( i ) ) );
+				System.out.println( "|" );
+			}
+			for( i=0; i<n; i++ )
+				System.out.print( "+---------------" );
+			System.out.println( "+" );
+		} catch( Exception ex ) {
+			System.out.println( ex );
+		} finally {
+			try { if( rs != null ) rs.close(); } catch( Exception ex ) {/* nothing to do*/}
+			try { if( st != null ) st.close(); } catch( Exception ex ) {/* nothing to do*/}
+		}
+
 	}
+
 
 	public static void main(String[] args) {
 		String dbPatTbl=null, dbFallTbl=null, dbDrv=null, dbUrl=null, dbUsr="", dbPwd="", excelPath="";
@@ -232,9 +264,10 @@ public class start {
 			cn = DriverManager.getConnection( dbUrl, dbUsr, dbPwd );
 			st = cn.createStatement();
 
-			
-			readExcelPatient(excelPath, st, dbPatTbl);
 
+//			readExcelPatient(excelPath, st, dbPatTbl);
+			readExcelFall(excelPath, st, dbPatTbl);
+			
 		} catch( Exception ex ) {
 			System.out.println( ex );
 		} finally {
@@ -243,7 +276,7 @@ public class start {
 			try { if( cn != null ) cn.close(); } catch( Exception ex ) {/* nothing to do*/}
 		}
 
-//		showDbTable( dbTbl, dbDrv, dbUrl, dbUsr, dbPwd );
+		//		showDbTable( dbTbl, dbDrv, dbUrl, dbUsr, dbPwd );
 	}
 
 
