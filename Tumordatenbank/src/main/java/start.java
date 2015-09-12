@@ -201,9 +201,25 @@ public class start {
 		try{
 			
 			
-			
-			
-			
+			/*
+			eingangsdatum 1
+			e-nummer 2
+			einsender 3
+			gebdatum 4
+			vorname 5
+			befundtyp 27
+
+
+			  `E.-Nummer` VARCHAR(15) NOT NULL COMMENT '',
+			  `Befundtyp` INT(1) NOT NULL COMMENT '',
+			  `Patientendaten_PatientenID` INT(11) UNSIGNED ZEROFILL NOT NULL COMMENT '',
+			  `Einsender` VARCHAR(5) NULL COMMENT '',
+			  `Kryo` TINYINT(1) NULL COMMENT '',
+			  `Eingangsdatum` DATE NULL COMMENT '',
+			  `OP-Datum` DATE NULL COMMENT '',
+			  `Mikroskopie` TEXT NULL COMMENT '',
+			  `Arzt` NVARCHAR(45) NULL COMMENT '',
+			*/
 			
 			String name, firstname, birthdate = null;
 			name = "Abdi";
