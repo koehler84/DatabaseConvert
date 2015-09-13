@@ -1,4 +1,5 @@
 import java.io.*;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.sql.*;
 import java.util.Iterator;
@@ -326,8 +327,9 @@ public class start {
 		//ist dafür da, das es auf allen meinen rechnern parallel mit einer datenbank funktioniert
 		//-----------------------------------
 		try {
-			Socket s = new Socket("192.168.178.22", 3306);
-			s.close();
+			Socket sock = new Socket ();
+			sock.connect(new InetSocketAddress("192.168.178.22", 3306), 200 );
+			sock.close();
 			dbUrl = "jdbc:mysql://192.168.178.22:3306/mydb";
 		}
 		catch (Exception e){
