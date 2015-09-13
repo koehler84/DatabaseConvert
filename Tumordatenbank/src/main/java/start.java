@@ -13,8 +13,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-//Stephan Test 20:07
-
 public class start {
 	static void showDbTable( String dbTbl, String dbDrv, String dbUrl, String dbUsr, String dbPwd )
 	{
@@ -77,7 +75,7 @@ public class start {
 		return s;
 	}
 
-	static void readExcelPatient(String excelPath, Statement st, String dbPatTbl) {
+	static void excelToPatient(String excelPath, Statement st, String dbPatTbl) {
 		try {
 			File excel = new File(excelPath);
 			FileInputStream fis = new FileInputStream(excel);
@@ -196,40 +194,10 @@ public class start {
 
 	}
 
-	static void readExcelFall(String excelPath, Statement st, String dbPatTbl, String dbFallTbl) {
+	static void excelToFall(String excelPath, Statement st, String dbPatTbl, String dbFallTbl) {
 		ResultSet rs = null;
 		try{
-			/*
-			eingangsdatum 0	-> Eingangsdatum` DATE
-			e-nummer 1		-> E.-Nummer` VARCHAR(15)
-			einsender 2		-> Arzt` NVARCHAR(45)
-			gebdatum 3	  -+
-			vorname 4	  -+-> Patientendaten_PatientenID` INT(11)
-			name 5		  -+
-			befundtyp 26	-> Befundtyp` INT(1)
-
-			Nicht auslesbar:
-			Einsender` VARCHAR(5)
-			OP-Datum` DATE
-			Kryo` TINYINT(1)
-			Mikroskopie` TEXT
-
-			  `E.-Nummer` VARCHAR(15) NOT NULL COMMENT '',
-			  `Befundtyp` INT(1) NOT NULL COMMENT '',
-			  `Patientendaten_PatientenID` INT(11) UNSIGNED ZEROFILL NOT NULL COMMENT '',
-			  `Einsender` VARCHAR(5) NULL COMMENT '',
-			  `Kryo` TINYINT(1) NULL COMMENT '',
-			  `Eingangsdatum` DATE NULL COMMENT '',
-			  `OP-Datum` DATE NULL COMMENT '',
-			  `Mikroskopie` TEXT NULL COMMENT '',
-			  `Arzt` NVARCHAR(45) NULL COMMENT '', 
-
-			  TODO:
-			  1. Excel einlesen
-			  2. aus name vorname geburtsdatum -> patientenid bilden
-			  3. schreiben von db
-			 */
-
+			
 			File excel = new File(excelPath);
 			FileInputStream fis = new FileInputStream(excel);
 			XSSFWorkbook book = new XSSFWorkbook(fis);
@@ -250,7 +218,7 @@ public class start {
 				//--------------------------------------
 				k++;	//stop after 30 rows for testing
 				//--------------------------------------
-				
+
 				Row row = itr.next();
 				if (row.getCell(1).getStringCellValue().equals("Eingangsnummer")){
 					row =itr.next();
@@ -295,9 +263,10 @@ public class start {
 								break;
 							case 5:
 								name =cell.getStringCellValue();
+								break;
 							default:
+								dbValues = dbValues+"\""+cell.getStringCellValue()+"\",";
 							}
-							dbValues = dbValues+"\""+cell.getStringCellValue()+"\",";
 						}
 						break;
 					case Cell.CELL_TYPE_NUMERIC:
@@ -320,21 +289,21 @@ public class start {
 
 					}
 				}
-				System.out.println("select * from " + dbPatTbl + " where name= \"" + name + "\" AND vorname= \"" +
-						firstname +"\" AND geburtsdatum= \""+birthdate+"\"");
-				//				name = "Abdi";
-				//				firstname = "Pari";
-				//				birthdate ="1958-04-30";
 				rs = st.executeQuery( "select * from " + dbPatTbl + " where name= \"" + name + "\" AND vorname= \"" +
 						firstname +"\" AND geburtsdatum= \""+birthdate+"\"");
 				// Get meta data:
 				ResultSetMetaData rsmd = rs.getMetaData();
 
 				rs.first();
-				System.out.println(rs.getInt(1));
+				dbValues+=","+rs.getInt(1);
 				while (rs.next()){
 					System.out.println("Fehler");
 				}
+				System.out.println("insert into "+dbFallTbl+" (Eingangsdatum, E.-Nummer, Arzt, Befundtyp, Patientendaten_PatientenID)"
+						+ " values ( "+dbValues+" );");
+				st.executeUpdate( "insert into "+dbFallTbl+" (Eingangsdatum, E.-Nummer, Arzt, Befundtyp, Patientendaten_PatientenID)"
+						+ " values ( "+dbValues+" );");
+				
 			}
 		} catch( Exception ex ) {
 			System.out.println( ex );
@@ -393,8 +362,8 @@ public class start {
 			st = cn.createStatement();
 
 
-//			readExcelPatient(excelPath, st, dbPatTbl);
-			readExcelFall(excelPath, st, dbPatTbl, dbFallTbl);
+			//			excelToPatient(excelPath, st, dbPatTbl);
+			excelToFall(excelPath, st, dbPatTbl, dbFallTbl);
 
 		} catch( Exception ex ) {
 			System.out.println( ex );
