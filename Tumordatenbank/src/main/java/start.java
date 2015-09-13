@@ -19,6 +19,8 @@ public class start {
 			System.out.println( "Fehler: Parameter fehlt." );
 			return;
 		}
+		
+		//ich glaub das wars :D nu muss ich noch pushen? 4 ausstehend
 		Connection cn = null;
 		Statement  st = null;
 		ResultSet  rs = null;
