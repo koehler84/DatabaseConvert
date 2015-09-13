@@ -10,7 +10,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class start {
-	//lel
+	
 	static void showDbTable( String dbTbl, String dbDrv, String dbUrl, String dbUsr, String dbPwd )
 	{
 		if( dbTbl == null || dbTbl.length() == 0 ||
@@ -20,7 +20,6 @@ public class start {
 			return;
 		}
 		
-		//ich glaub das wars :D nu muss ich noch pushen? 4 ausstehend
 		Connection cn = null;
 		Statement  st = null;
 		ResultSet  rs = null;
@@ -74,7 +73,7 @@ public class start {
 		return s;
 	}
 												//ENTWEDER Statement st ODER PreparedStatement Pst
-	static void excelToPatient(String excelPath, /*Statement st*/ PreparedStatement Pst, String dbPatTbl) {
+	static void excelToPatient(String excelPath, /*Statement st*/ PreparedStatement Pst, PreparedStatement Pst2, String dbPatTbl) {
 		try {
 			File excel = new File(excelPath);
 			FileInputStream fis = new FileInputStream(excel);
@@ -82,10 +81,13 @@ public class start {
 			XSSFSheet sheet = book.getSheetAt(0);
 			book.setMissingCellPolicy(Row.CREATE_NULL_AS_BLANK);
 			Iterator<Row> itr = sheet.iterator();
+			if (itr.hasNext()) {
+				itr.next();		//Header-Zeile wird übersprungen, Daten werden direkt ausgelesen				
+			}
 			// Iterating over Excel file in Java
 
 			//------------------------------------------
-			int i =0;	//stop after 30 rows for testing
+			int i = 0;	//stop after 30 rows for testing
 			//------------------------------------------
 
 			String oldDbValues="";
@@ -106,24 +108,24 @@ public class start {
 
 					switch (cell.getCellType()) {
 					case Cell.CELL_TYPE_STRING:
-						dbValues = dbValues+"\""+cell.getStringCellValue()+"\"";
+						dbValues = dbValues+"\"" + cell.getStringCellValue() + "\"";
 						if (j!=10){
 							dbValues+=",";
 						}
 						break;
 					case Cell.CELL_TYPE_NUMERIC:
 						if (j==3){
-							dbValues = dbValues+"\"" + new java.sql.Date(cell.getDateCellValue().getTime())+"\",";
+							dbValues = dbValues + "\"" + new java.sql.Date(cell.getDateCellValue().getTime()) + "\",";
 						} else {
 							if(j==7){
-								dbValues = dbValues+"\""+(int)cell.getNumericCellValue() + "\",";
+								dbValues = dbValues + "\"" + (int)cell.getNumericCellValue() + "\",";
 							} else {
-								dbValues = dbValues+(int) cell.getNumericCellValue()+",";
+								dbValues = dbValues + (int) cell.getNumericCellValue() + ",";
 							}
 						}
 						break;
 					case Cell.CELL_TYPE_BOOLEAN:
-						dbValues = dbValues+"\""+cell.getBooleanCellValue() + "\",";
+						dbValues = dbValues + "\""+cell.getBooleanCellValue() + "\",";
 						break;
 					case Cell.CELL_TYPE_BLANK:
 						if (j==9){
@@ -162,14 +164,12 @@ public class start {
 				//checking with the previous line from the excel file if the persons are the same, 
 				//the substrings with the 3 attributes from oldDbValues and dbValues are compared
 				//to eliminate the first row test if the first 8 (length "default") chars equals "\"Geburt"
-				if (!dbValues.substring(0, subString.length()).equals(subString)&&!dbValues.substring(0, subString.length()).equals("\"Geburt")) {
+				if (!dbValues.substring(0, subString.length()).equals(subString) && !dbValues.substring(0, subString.length()).equals("\"Geburt")) {
 					try{
 						//write to database if person is not the same
 //						st.executeUpdate( "insert into "+dbPatTbl+" (`Geburtsdatum`, `Vorname`, `Name`, `Strasse`, `Hausnummer`, `Land`, `PLZ`, `Ort`)"
 //								+ " values ( "+dbValues+" );");
 						System.out.println(dbValues);
-						
-						
 						
 						//TODO Versuch mit PreparedStatement
 			//--------------------------------------------------------------------
@@ -191,6 +191,14 @@ public class start {
 							}
 							
 						}
+						
+						//Prüfung ob Person schon in Datenbank erfasst ist
+						Pst2.setString(1, stringAr[0]);
+						Pst2.setString(2, stringAr[1]);
+						Pst2.setString(3, stringAr[2]);
+						ResultSet result = Pst2.executeQuery();
+						result.next();
+						System.out.println("Anzahl gleicher Personen: " + result.getInt(1));
 						
 						//noch alles optimierbar
 						Pst.setString(1, stringAr[0]);
@@ -389,17 +397,19 @@ public class start {
 		Statement  st = null;
 		PreparedStatement Pst = null;
 		ResultSet  rs = null;
+		PreparedStatement Pst2 = null;
 		try {
 			// Select fitting database driver and connect:
 			Class.forName( dbDrv );
 			cn = DriverManager.getConnection( dbUrl, dbUsr, dbPwd );
 			st = cn.createStatement();
-			Pst = cn.prepareStatement("insert into patientendaten (`Geburtsdatum`, `Vorname`, `Name`, `Strasse`, `Hausnummer`, `Land`, `PLZ`, `Ort`)"
+			Pst = cn.prepareStatement("insert into patientendaten (Geburtsdatum, Vorname, Name, Strasse, Hausnummer, Land, PLZ, Ort)"
 					+ " values ( ? , ? , ? , ? , ?  , ? , ? , ? );");
+			Pst2 = cn.prepareStatement("select count(*) from patientendaten where Geburtsdatum = ? and Vorname = ? and Name = ? ;");
 
 			//----------------------------------------------------
 //			excelToPatient(excelPath, st, dbPatTbl);
-			excelToPatient(excelPath, Pst, dbPatTbl);
+			excelToPatient(excelPath, Pst, Pst2, dbPatTbl);
 			//----------------------------------------------------
 //			excelToFall(excelPath, st, dbPatTbl, dbFallTbl);
 			
