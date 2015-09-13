@@ -1,12 +1,7 @@
 import java.io.*;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.sql.*;
-import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -166,12 +161,9 @@ public class start {
 				if (!dbValues.substring(0, subString.length()).equals(subString)&&!dbValues.substring(0, subString.length()).equals("\"Geburt")) {
 					try{
 						//write to database if person is not the same
-						st.executeUpdate( "insert into "+dbPatTbl+" (Geburtsdatum, Vorname, Name, Strasse, Hausnummer, Land, PLZ, Ort)"
+						st.executeUpdate( "insert into "+dbPatTbl+" (`Geburtsdatum`, `Vorname`, `Name`, `Strasse`, `Hausnummer`, `Land`, `PLZ`, `Ort`)"
 								+ " values ( "+dbValues+" );");	
-						//------------------------------------
-						//for testing proposes
-						System.out.println(dbValues);
-						//------------------------------------
+					
 					}
 					catch (SQLException se){
 						se.printStackTrace();
@@ -186,6 +178,7 @@ public class start {
 
 			book.close();
 			fis.close();
+			System.out.println("Write patientendaten success");
 		} catch (FileNotFoundException fe) {
 			fe.printStackTrace();
 		} catch (IOException ie) {
@@ -197,7 +190,7 @@ public class start {
 	static void excelToFall(String excelPath, Statement st, String dbPatTbl, String dbFallTbl) {
 		ResultSet rs = null;
 		try{
-			
+
 			File excel = new File(excelPath);
 			FileInputStream fis = new FileInputStream(excel);
 			XSSFWorkbook book = new XSSFWorkbook(fis);
@@ -209,8 +202,6 @@ public class start {
 			//------------------------------------------
 			int k =0;	//stop after 30 rows for testing
 			//------------------------------------------
-
-			String oldDbValues="";
 			//------------------------------
 			while (itr.hasNext() && k<29) {	//stop after 30 rows for testing
 				//------------------------------
@@ -238,22 +229,22 @@ public class start {
 								dbValues = dbValues+0;
 								break;
 							case "Nachbericht 1":
-								dbValues = dbValues+0;
-								break;
-							case "Nachbericht 2":
 								dbValues = dbValues+1;
 								break;
-							case "Korrekturbefund 1":
+							case "Nachbericht 2":
 								dbValues = dbValues+2;
 								break;
-							case "Korrekturbefund 2":
+							case "Korrekturbefund 1":
 								dbValues = dbValues+3;
 								break;
-							case "Korrekturbefund 3":
+							case "Korrekturbefund 2":
 								dbValues = dbValues+4;
 								break;
-							case "Konsiliarbericht 1":
+							case "Korrekturbefund 3":
 								dbValues = dbValues+5;
+								break;
+							case "Konsiliarbericht 1":
+								dbValues = dbValues+6;
 							default:
 							}
 						} else {
@@ -291,20 +282,19 @@ public class start {
 				}
 				rs = st.executeQuery( "select * from " + dbPatTbl + " where name= \"" + name + "\" AND vorname= \"" +
 						firstname +"\" AND geburtsdatum= \""+birthdate+"\"");
-				// Get meta data:
-				ResultSetMetaData rsmd = rs.getMetaData();
 
 				rs.first();
 				dbValues+=","+rs.getInt(1);
 				while (rs.next()){
 					System.out.println("Fehler");
 				}
-				System.out.println("insert into "+dbFallTbl+" (Eingangsdatum, E.-Nummer, Arzt, Befundtyp, Patientendaten_PatientenID)"
+				st.executeUpdate( "insert into "+dbFallTbl+" (`Eingangsdatum`, `E.-Nummer`, `Arzt`, `Befundtyp`, `Patientendaten_PatientenID`)"
 						+ " values ( "+dbValues+" );");
-				st.executeUpdate( "insert into "+dbFallTbl+" (Eingangsdatum, E.-Nummer, Arzt, Befundtyp, Patientendaten_PatientenID)"
-						+ " values ( "+dbValues+" );");
-				
+
 			}
+			book.close();
+			fis.close();
+			System.out.println("Write fall success");
 		} catch( Exception ex ) {
 			System.out.println( ex );
 		} finally {
@@ -362,8 +352,8 @@ public class start {
 			st = cn.createStatement();
 
 
-			//			excelToPatient(excelPath, st, dbPatTbl);
-			excelToFall(excelPath, st, dbPatTbl, dbFallTbl);
+//			excelToPatient(excelPath, st, dbPatTbl);
+//			excelToFall(excelPath, st, dbPatTbl, dbFallTbl);
 
 		} catch( Exception ex ) {
 			System.out.println( ex );
@@ -373,7 +363,8 @@ public class start {
 			try { if( cn != null ) cn.close(); } catch( Exception ex ) {/* nothing to do*/}
 		}
 
-		//		showDbTable( dbTbl, dbDrv, dbUrl, dbUsr, dbPwd );
+		showDbTable( dbPatTbl, dbDrv, dbUrl, dbUsr, dbPwd );
+		showDbTable( dbFallTbl, dbDrv, dbUrl, dbUsr, dbPwd );
 	}
 
 
