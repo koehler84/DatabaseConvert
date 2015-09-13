@@ -169,9 +169,9 @@ public class start {
 //								+ " values ( "+dbValues+" );");
 						System.out.println(dbValues);
 						
-						//TODO Versuch mit PreparedStatement
-						Pst.setString(1, dbPatTbl);
 						
+						
+						//TODO Versuch mit PreparedStatement
 			//--------------------------------------------------------------------
 						//Following code just to get dbValues into String[]
 						String[] stringAr = new String[8];
@@ -402,7 +402,9 @@ public class start {
 			excelToPatient(excelPath, Pst, dbPatTbl);
 			//----------------------------------------------------
 //			excelToFall(excelPath, st, dbPatTbl, dbFallTbl);
-
+			
+			cn.close();
+			
 		} catch( Exception ex ) {
 			System.out.println( ex );
 		} finally {
