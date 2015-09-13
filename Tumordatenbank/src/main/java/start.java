@@ -10,7 +10,6 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class start {
-	//lel
 	static void showDbTable( String dbTbl, String dbDrv, String dbUrl, String dbUsr, String dbPwd )
 	{
 		if( dbTbl == null || dbTbl.length() == 0 ||
@@ -73,8 +72,8 @@ public class start {
 			return s.substring( 0, 2 * iWantLen );
 		return s;
 	}
-
-	static void excelToPatient(String excelPath, Statement st, String dbPatTbl) {
+												//ENTWEDER Statement st ODER PreparedStatement Pst
+	static void excelToPatient(String excelPath, /*Statement st*/ PreparedStatement Pst, String dbPatTbl) {
 		try {
 			File excel = new File(excelPath);
 			FileInputStream fis = new FileInputStream(excel);
@@ -92,11 +91,11 @@ public class start {
 			//------------------------------
 			while (itr.hasNext() && i<30) {	//stop after 30 rows for testing
 				//------------------------------
-
+				
 				//--------------------------------------
 				i++;	//stop after 30 rows for testing
 				//--------------------------------------
-
+				
 				Row row = itr.next();
 				String dbValues="";
 				// Iterating over each column of Excel file
@@ -165,9 +164,47 @@ public class start {
 				if (!dbValues.substring(0, subString.length()).equals(subString)&&!dbValues.substring(0, subString.length()).equals("\"Geburt")) {
 					try{
 						//write to database if person is not the same
-						st.executeUpdate( "insert into "+dbPatTbl+" (`Geburtsdatum`, `Vorname`, `Name`, `Strasse`, `Hausnummer`, `Land`, `PLZ`, `Ort`)"
-								+ " values ( "+dbValues+" );");	
-					
+//						st.executeUpdate( "insert into "+dbPatTbl+" (`Geburtsdatum`, `Vorname`, `Name`, `Strasse`, `Hausnummer`, `Land`, `PLZ`, `Ort`)"
+//								+ " values ( "+dbValues+" );");
+						System.out.println(dbValues);
+						
+						
+						
+						//TODO Versuch mit PreparedStatement
+			//--------------------------------------------------------------------
+						//Following code just to get dbValues into String[]
+						String[] stringAr = new String[8];
+						for (int k = 0; k < stringAr.length; k++) {
+							stringAr[k] = "";
+						}
+						int l = 0;
+						
+						for (int k = 0; k < dbValues.length(); k++) {
+							
+							if (dbValues.charAt(k) == ',') {
+								l++;
+							} else if (dbValues.charAt(k) == '"') {
+
+							} else {
+								stringAr[l] += dbValues.charAt(k) + "";
+							}
+							
+						}
+						
+						//noch alles optimierbar
+						Pst.setString(1, stringAr[0]);
+						Pst.setString(2, stringAr[1]);
+						Pst.setString(3, stringAr[2]);
+						Pst.setString(4, stringAr[3]);
+						Pst.setString(5, stringAr[4]);
+						Pst.setString(6, stringAr[5]);
+						Pst.setInt(7, Integer.parseInt(stringAr[6]));
+						Pst.setString(8, stringAr[7]);
+						
+						int rueck = Pst.executeUpdate();
+						System.out.println("execute Update Rückgabe: " + rueck);
+				//--------------------------------------------------------------------
+						
 					}
 					catch (SQLException se){
 						se.printStackTrace();
@@ -349,17 +386,24 @@ public class start {
 		}
 		Connection cn = null;
 		Statement  st = null;
+		PreparedStatement Pst = null;
 		ResultSet  rs = null;
 		try {
 			// Select fitting database driver and connect:
 			Class.forName( dbDrv );
 			cn = DriverManager.getConnection( dbUrl, dbUsr, dbPwd );
 			st = cn.createStatement();
+			Pst = cn.prepareStatement("insert into patientendaten (`Geburtsdatum`, `Vorname`, `Name`, `Strasse`, `Hausnummer`, `Land`, `PLZ`, `Ort`)"
+					+ " values ( ? , ? , ? , ? , ?  , ? , ? , ? );");
 
-
+			//----------------------------------------------------
 //			excelToPatient(excelPath, st, dbPatTbl);
+//			excelToPatient(excelPath, Pst, dbPatTbl);
+			//----------------------------------------------------
 //			excelToFall(excelPath, st, dbPatTbl, dbFallTbl);
-
+			
+			cn.close();
+			
 		} catch( Exception ex ) {
 			System.out.println( ex );
 		} finally {
@@ -368,8 +412,8 @@ public class start {
 			try { if( cn != null ) cn.close(); } catch( Exception ex ) {/* nothing to do*/}
 		}
 
-		showDbTable( dbPatTbl, dbDrv, dbUrl, dbUsr, dbPwd );
-		showDbTable( dbFallTbl, dbDrv, dbUrl, dbUsr, dbPwd );
+//		showDbTable( dbPatTbl, dbDrv, dbUrl, dbUsr, dbPwd );
+//		showDbTable( dbFallTbl, dbDrv, dbUrl, dbUsr, dbPwd );
 	}
 
 
