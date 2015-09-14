@@ -1,4 +1,5 @@
 import java.io.*;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.sql.*;
 import java.util.Iterator;
@@ -69,8 +70,8 @@ public class start {
 			return s.substring( 0, 2 * iWantLen );
 		return s;
 	}
-
-	static void excelToPatient(String excelPath, Statement st, String dbPatTbl) {
+												//ENTWEDER Statement st ODER PreparedStatement Pst
+	static void excelToPatient(String excelPath, /*Statement st*/ PreparedStatement Pst, String dbPatTbl) {
 		try {
 			File excel = new File(excelPath);
 			FileInputStream fis = new FileInputStream(excel);
@@ -161,9 +162,47 @@ public class start {
 				if (!dbValues.substring(0, subString.length()).equals(subString)&&!dbValues.substring(0, subString.length()).equals("\"Geburt")) {
 					try{
 						//write to database if person is not the same
-						st.executeUpdate( "insert into "+dbPatTbl+" (`Geburtsdatum`, `Vorname`, `Name`, `Strasse`, `Hausnummer`, `Land`, `PLZ`, `Ort`)"
-								+ " values ( "+dbValues+" );");	
-					
+//						st.executeUpdate( "insert into "+dbPatTbl+" (`Geburtsdatum`, `Vorname`, `Name`, `Strasse`, `Hausnummer`, `Land`, `PLZ`, `Ort`)"
+//								+ " values ( "+dbValues+" );");
+						System.out.println(dbValues);
+						
+						
+						
+						//TODO Versuch mit PreparedStatement
+			//--------------------------------------------------------------------
+						//Following code just to get dbValues into String[]
+						String[] stringAr = new String[8];
+						for (int k = 0; k < stringAr.length; k++) {
+							stringAr[k] = "";
+						}
+						int l = 0;
+						
+						for (int k = 0; k < dbValues.length(); k++) {
+							
+							if (dbValues.charAt(k) == ',') {
+								l++;
+							} else if (dbValues.charAt(k) == '"') {
+
+							} else {
+								stringAr[l] += dbValues.charAt(k) + "";
+							}
+							
+						}
+						
+						//noch alles optimierbar
+						Pst.setString(1, stringAr[0]);
+						Pst.setString(2, stringAr[1]);
+						Pst.setString(3, stringAr[2]);
+						Pst.setString(4, stringAr[3]);
+						Pst.setString(5, stringAr[4]);
+						Pst.setString(6, stringAr[5]);
+						Pst.setInt(7, Integer.parseInt(stringAr[6]));
+						Pst.setString(8, stringAr[7]);
+						
+						int rueck = Pst.executeUpdate();
+						System.out.println("execute Update Rückgabe: " + rueck);
+				//--------------------------------------------------------------------
+						
 					}
 					catch (SQLException se){
 						se.printStackTrace();
@@ -325,13 +364,14 @@ public class start {
 		//Um das zu connection mit localhost zu beschleunigen  kannst das auskommentieren,
 		//ist dafür da, das es auf allen meinen rechnern parallel mit einer datenbank funktioniert
 		//-----------------------------------
-//		try {
-//			Socket s = new Socket("192.168.178.22", 3306);
-//			s.close();
-//			dbUrl = "jdbc:mysql://192.168.178.22:3306/mydb";
-//		}
-//		catch (Exception e){
-//		}
+		try {
+			Socket sock = new Socket ();
+			sock.connect(new InetSocketAddress("192.168.178.22", 3306), 200 );
+			sock.close();
+			dbUrl = "jdbc:mysql://192.168.178.22:3306/mydb";
+		}
+		catch (Exception e){
+		}
 		//-----------------------------------
 
 		//Validate connection data
@@ -344,17 +384,24 @@ public class start {
 		}
 		Connection cn = null;
 		Statement  st = null;
+		PreparedStatement Pst = null;
 		ResultSet  rs = null;
 		try {
 			// Select fitting database driver and connect:
 			Class.forName( dbDrv );
 			cn = DriverManager.getConnection( dbUrl, dbUsr, dbPwd );
 			st = cn.createStatement();
+			Pst = cn.prepareStatement("insert into patientendaten (`Geburtsdatum`, `Vorname`, `Name`, `Strasse`, `Hausnummer`, `Land`, `PLZ`, `Ort`)"
+					+ " values ( ? , ? , ? , ? , ?  , ? , ? , ? );");
 
-
+			//----------------------------------------------------
 //			excelToPatient(excelPath, st, dbPatTbl);
+			excelToPatient(excelPath, Pst, dbPatTbl);
+			//----------------------------------------------------
 //			excelToFall(excelPath, st, dbPatTbl, dbFallTbl);
-
+			
+			cn.close();
+			
 		} catch( Exception ex ) {
 			System.out.println( ex );
 		} finally {
