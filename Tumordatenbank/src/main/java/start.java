@@ -427,6 +427,6 @@ public class start {
 				+ "ist Östrogen- und Progesteronrezeptor-negativ. Sonstiges: ip");
 	}
 
-
+	//http://download.eclipse.org/egit/github/updates-nightly/ <- GITHUB Task manager (über help -> install new software)
 
 }
