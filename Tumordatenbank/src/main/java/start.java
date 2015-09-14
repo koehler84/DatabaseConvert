@@ -189,14 +189,6 @@ public class start {
 							
 						}
 						
-						//Prüfung ob Person schon in Datenbank erfasst ist
-						Pst2.setString(1, stringAr[0]);
-						Pst2.setString(2, stringAr[1]);
-						Pst2.setString(3, stringAr[2]);
-						ResultSet result = Pst2.executeQuery();
-						result.next();
-						System.out.println("Anzahl gleicher Personen: " + result.getInt(1));
-						
 						//noch alles optimierbar
 						Pst.setString(1, stringAr[0]);
 						Pst.setString(2, stringAr[1]);
