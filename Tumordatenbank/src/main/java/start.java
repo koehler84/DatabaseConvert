@@ -325,13 +325,13 @@ public class start {
 		//Um das zu connection mit localhost zu beschleunigen  kannst das auskommentieren,
 		//ist dafür da, das es auf allen meinen rechnern parallel mit einer datenbank funktioniert
 		//-----------------------------------
-		try {
-			Socket s = new Socket("192.168.178.22", 3306);
-			s.close();
-			dbUrl = "jdbc:mysql://192.168.178.22:3306/mydb";
-		}
-		catch (Exception e){
-		}
+//		try {
+//			Socket s = new Socket("192.168.178.22", 3306);
+//			s.close();
+//			dbUrl = "jdbc:mysql://192.168.178.22:3306/mydb";
+//		}
+//		catch (Exception e){
+//		}
 		//-----------------------------------
 
 		//Validate connection data
@@ -363,8 +363,21 @@ public class start {
 			try { if( cn != null ) cn.close(); } catch( Exception ex ) {/* nothing to do*/}
 		}
 
-		showDbTable( dbPatTbl, dbDrv, dbUrl, dbUsr, dbPwd );
-		showDbTable( dbFallTbl, dbDrv, dbUrl, dbUsr, dbPwd );
+//		showDbTable( dbPatTbl, dbDrv, dbUrl, dbUsr, dbPwd );
+//		showDbTable( dbFallTbl, dbDrv, dbUrl, dbUsr, dbPwd );
+		
+		new StringReader("Makroskopie: 7 x 7 x 4 cm großes Mammaexzidat (links oben außen) mit zwei Fadenmarkierungen. 1,5 cm oberhalb der langen "
+				+ "Fadenmarkierung ein 2,2 x 2 x 1,8 cm großer lobulierter unscharf begrenzter 0,1 cm vom ventralen Resektionsrand entfernter Tumor. "
+				+ "Das übrige Gewebe fettreich mit diskreten streifenförmigen Fibrosierungen. Zusätzlich ein Telepathologieschnellschnittpräparat. "
+				+ "Mikroskopie: (HE, Schnellschnitt, Paraffineinbettung, HE, PAS, Östrogen- und Progesteronrzeptor, übriges Mammagewebe HE) Im "
+				+ "Bereich des makroskopisch beschriebenen Tumors eine vollständige Destruktion des ortsständigen Brustdrüsengewebes durch nahezu "
+				+ "ausschließlich solide, nur ganz diskret primitiv-tubuläre atypische Epithelverbände mit erheblicher Kernpleomorphie, Hyperchromasie "
+				+ "und deutlich erhöhter Mitoserate (mehr als 10 Mitosen auf 10 Gesichtsfelder bei 40facher Objektivvergrößerung). Tumorzellverbände "
+				+ "teilweise von einem dichten vorwiegend lymphozytären Entzündungszellinfiltrat umgeben. Im Randbereich einzelne Gangformationen mit "
+				+ "intraduktal gelegenen atypischen Epithelverbänden. Keine überzeugende Angioinvasion. Tumorkerne negativ für das Östrogen- und das "
+				+ "Progesteronrezeptor-Protein. Das übrige Mammagewebe parenchymarm mit geringen interstitiellen Fibrosierungen. Diagnose: Niedrig "
+				+ "differenziertes invasives duktales Karzinom (Tumordurchmesser 2,2 cm). Vorläufige Tumorklassifikation: G III, NOS, pT2. Der Tumor "
+				+ "ist Östrogen- und Progesteronrezeptor-negativ. Sonstiges: ip");
 	}
 
 
