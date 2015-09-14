@@ -51,9 +51,6 @@ public class StringReader {
 				diagStart = i;
 				mikroSub = source.substring(mikroskopStart, diagStart);
 			}
-			if (i==1450){
-				int a = 1;
-			}
 			if (i+"Tumorklassifikation".length() < this.source.length() && source.substring(i, i+"Tumorklassifikation:".length()).equals("Tumorklassifikation:")) {
 				tumorclassStart = i;
 				diagSub = source.substring(diagStart, tumorclassStart);
