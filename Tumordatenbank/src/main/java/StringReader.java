@@ -1,6 +1,6 @@
 
 public class StringReader {
-	
+
 	String source;
 	//--Klassifikation--
 	String Quadrant;
@@ -26,19 +26,19 @@ public class StringReader {
 	String Material;
 	int size;
 	java.sql.Date progressDate;
-	
-	
+
+
 	public StringReader (String source) {
 		this.source = source;
 		this.StringAnalyse();
 	}
-	
+
 	private void StringAnalyse() {
-		
+
 		int makroskopStart=0,mikroskopStart=0,diagStart=0,tumorclassStart=0;
 		String makroSub="",mikroSub="", diagSub="",tumorclassSub="";
-		
-		
+
+
 		for (int i = 0; i < this.source.length(); i++) {
 			if (source.substring(i, i+"Makroskopie:".length()).equals("Makroskopie:")) {
 				makroskopStart = i;
@@ -57,25 +57,43 @@ public class StringReader {
 				tumorclassSub = source.substring(tumorclassStart, this.source.length()-1);
 				break;
 			}
-//			if (i == this.source.length()-1) {
-//				tumorclassSub = source.substring(tumorclassStart, this.source.length()-1);
-//			}
+			//			if (i == this.source.length()-1) {
+			//				tumorclassSub = source.substring(tumorclassStart, this.source.length()-1);
+			//			}
 		}
-		
+
 		this.source = null;
-		
+
 		for (int i = 0; i < tumorclassSub.length(); i++) {
-			
-			if ((tumorclassSub.charAt(i) == 'G' || tumorclassSub.charAt(i) == 'g') && (tumorclassSub.charAt(i+1) == ' ' || 
-					tumorclassSub.charAt(i+1) == '1' || tumorclassSub.charAt(i+1) == '2' || tumorclassSub.charAt(i+1) == '3' || 
-					tumorclassSub.charAt(i+1) == 'I')) {
+
+			if ((tumorclassSub.charAt(i) == 'G' || tumorclassSub.charAt(i) == 'g') && 
+					(tumorclassSub.charAt(i+1) == ' ' || tumorclassSub.charAt(i+1) == '1' || tumorclassSub.charAt(i+1) == '2' || 
+					tumorclassSub.charAt(i+1) == '3' || tumorclassSub.charAt(i+1) == 'I') && 
+					(tumorclassSub.charAt(i+2) == 'I'|| tumorclassSub.charAt(i+2) == '1' || tumorclassSub.charAt(i+1) == '3' || 
+					tumorclassSub.charAt(i+1) == '3')) {
 				System.out.println("Gradient gefunden!" + tumorclassSub.substring(i, i+4));
 			}
 			
-			
+			if (tumorclassSub.charAt(i) == 'G' || tumorclassSub.charAt(i) == 'g') {
+				if (tumorclassSub.charAt(i+1) == '1' || tumorclassSub.charAt(i+1) == '2' || 
+					tumorclassSub.charAt(i+1) == '3' ){
+					System.out.println("Gradient G" + tumorclassSub.charAt(i+1));
+					G=tumorclassSub.charAt(i+1);
+				} 
+				if (tumorclassSub.charAt(i+1) == ' ' && (tumorclassSub.charAt(i+2) == '1' || tumorclassSub.charAt(i+1) == '3' || 
+					tumorclassSub.charAt(i+1) == '3')) {
+						System.out.println("Gradient G" + tumorclassSub.charAt(i+2));
+						G=tumorclassSub.charAt(i+2);
+					}
+				if (tumorclassSub.substring(i+1, i+4).equals("III") || tumorclassSub.substring(i+2, i+5).equals("III")) {
+					System.out.println("Gradient G3");
+					G=3;
+				}
+			}
+
 		}
-		
-		
+
+
 	}
-	
+
 }

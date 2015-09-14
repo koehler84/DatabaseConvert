@@ -396,7 +396,7 @@ public class start {
 
 			//----------------------------------------------------
 //			excelToPatient(excelPath, st, dbPatTbl);
-			excelToPatient(excelPath, Pst, dbPatTbl);
+//			excelToPatient(excelPath, Pst, dbPatTbl);
 			//----------------------------------------------------
 //			excelToFall(excelPath, st, dbPatTbl, dbFallTbl);
 			
