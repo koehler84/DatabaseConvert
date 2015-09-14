@@ -66,28 +66,26 @@ public class StringReader {
 
 		for (int i = 0; i < tumorclassSub.length(); i++) {
 
-			if ((tumorclassSub.charAt(i) == 'G' || tumorclassSub.charAt(i) == 'g') && 
-					(tumorclassSub.charAt(i+1) == ' ' || tumorclassSub.charAt(i+1) == '1' || tumorclassSub.charAt(i+1) == '2' || 
-					tumorclassSub.charAt(i+1) == '3' || tumorclassSub.charAt(i+1) == 'I') && 
-					(tumorclassSub.charAt(i+2) == 'I'|| tumorclassSub.charAt(i+2) == '1' || tumorclassSub.charAt(i+1) == '3' || 
-					tumorclassSub.charAt(i+1) == '3')) {
-				System.out.println("Gradient gefunden!" + tumorclassSub.substring(i, i+4));
-			}
-			
 			if (tumorclassSub.charAt(i) == 'G' || tumorclassSub.charAt(i) == 'g') {
 				if (tumorclassSub.charAt(i+1) == '1' || tumorclassSub.charAt(i+1) == '2' || 
-					tumorclassSub.charAt(i+1) == '3' ){
+						tumorclassSub.charAt(i+1) == '3' ){
 					System.out.println("Gradient G" + tumorclassSub.charAt(i+1));
 					G=tumorclassSub.charAt(i+1);
 				} 
-				if (tumorclassSub.charAt(i+1) == ' ' && (tumorclassSub.charAt(i+2) == '1' || tumorclassSub.charAt(i+1) == '3' || 
-					tumorclassSub.charAt(i+1) == '3')) {
-						System.out.println("Gradient G" + tumorclassSub.charAt(i+2));
-						G=tumorclassSub.charAt(i+2);
-					}
+				if (tumorclassSub.charAt(i+1) == ' ' && (tumorclassSub.charAt(i+2) == '1' || tumorclassSub.charAt(i+2) == '3' || 
+						tumorclassSub.charAt(i+2) == '3')) {
+					System.out.println("Gradient G" + tumorclassSub.charAt(i+2));
+					G=tumorclassSub.charAt(i+2);
+				}
 				if (tumorclassSub.substring(i+1, i+4).equals("III") || tumorclassSub.substring(i+2, i+5).equals("III")) {
 					System.out.println("Gradient G3");
 					G=3;
+				} else if (tumorclassSub.substring(i+1, i+3).equals("II") || tumorclassSub.substring(i+2, i+4).equals("II")){
+					System.out.println("Gradient G2");
+					G=2;
+				} else if (tumorclassSub.substring(i+1, i+2).equals("I") || tumorclassSub.substring(i+2, i+3).equals("I")){
+					System.out.println("Gradient G1");
+					G=1;
 				}
 			}
 
