@@ -78,7 +78,7 @@ public class StringReader {
 					G=tumorclassSub.charAt(i+1)-'0';
 				} 
 				if (tumorclassSub.charAt(i+1) == ' ' && (tumorclassSub.charAt(i+2) == '1' || tumorclassSub.charAt(i+2) == '2' || 
-						tumorclassSub.charAt(i+2) == '3'|| tumorclassSub.charAt(i+1) == '0')) {
+						tumorclassSub.charAt(i+2) == '3'|| tumorclassSub.charAt(i+2) == '0')) {
 					G=tumorclassSub.charAt(i+2)-'0';
 				}
 				if (tumorclassSub.substring(i+1, i+4).equals("III") || tumorclassSub.substring(i+2, i+5).equals("III")) {
@@ -89,6 +89,7 @@ public class StringReader {
 					G=1;
 				} else if (tumorclassSub.substring(i+1, i+2).toUpperCase().equals("X") || 
 						tumorclassSub.substring(i+1, i+2).toUpperCase().equals("X")){
+					//Römisch X ist 10, nicht 5 !?! 
 					G=5;
 				}
 			}
