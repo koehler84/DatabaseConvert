@@ -6,8 +6,9 @@ public class StringReader {
 	String Quadrant;
 	int G;								//Klassifikation =0,1,2,3,5=X,9 Nicht aus Datensatz 
 	//erkennbar (siehe Task 2)
-	String T;							//Tumor [c,p,][1,2,3,4,X][a,b,c] oder "missing" (siehe Task 2)
-	String N;
+	String T;							//Tumor [c,p,][1,2,3,4,X][a,b,c] oder "mis" (siehe Task 2)
+	String N;							//Metastasen [1,2,3,4,X][a,b,c] oder "mis" (siehe Task 2) 
+										//=> Task 5
 	String M;
 	int L;
 	int V;
@@ -67,8 +68,8 @@ public class StringReader {
 
 		//Init Failsafe
 		G=9;
-		T="missing";
-		N="missing";
+		T="mis";
+		N="mis";
 
 		for (int i = 0; i < tumorclassSub.length(); i++) {
 			//-------------
