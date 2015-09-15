@@ -69,11 +69,11 @@ public class StringReader {
 			if (tumorclassSub.charAt(i) == 'G' || tumorclassSub.charAt(i) == 'g') {
 				if (tumorclassSub.charAt(i+1) == '1' || tumorclassSub.charAt(i+1) == '2' || 
 						tumorclassSub.charAt(i+1) == '3' ){
-					G=tumorclassSub.charAt(i+1);
+					G=tumorclassSub.charAt(i+1)-'0';
 				} 
-				if (tumorclassSub.charAt(i+1) == ' ' && (tumorclassSub.charAt(i+2) == '1' || tumorclassSub.charAt(i+2) == '3' || 
+				if (tumorclassSub.charAt(i+1) == ' ' && (tumorclassSub.charAt(i+2) == '1' || tumorclassSub.charAt(i+2) == '2' || 
 						tumorclassSub.charAt(i+2) == '3')) {
-					G=tumorclassSub.charAt(i+2);
+					G=tumorclassSub.charAt(i+2)-'0';
 				}
 				if (tumorclassSub.substring(i+1, i+4).equals("III") || tumorclassSub.substring(i+2, i+5).equals("III")) {
 					G=3;
@@ -83,8 +83,35 @@ public class StringReader {
 					G=1;
 				}
 			}
-			System.out.println("Gradient G" + G);
 			
+			if (tumorclassSub.charAt(i) == 'T') {
+				if ((tumorclassSub.charAt(i+1) == '1' || tumorclassSub.charAt(i+1) == '2' || 
+						tumorclassSub.charAt(i+1) == '3' || tumorclassSub.charAt(i+1) == '4')){
+					T=""+ tumorclassSub.charAt(i+1);
+					
+					switch (tumorclassSub.charAt(i-1)){
+					case 'p': T="p"+T;
+					break;
+					case 'c': T="c"+T;
+					break;
+					default:
+					}
+					
+					switch (tumorclassSub.charAt(i+2)){
+					case 'a':	T+="a";
+					break;
+					case 'b':	T+="b";
+					break;
+					case 'c':	T+="c";
+					break;
+					default:
+					}
+				}
+				
+			}
+			
+		}
+		System.out.println("G: " + G + ", T: "+T);	
 			/*
 			 *  pT3L1V0R1
 			 *  pT3N1aL1V0R0
@@ -109,7 +136,7 @@ public class StringReader {
 			 
 			
 			
-		}
+		
 		
 		
 
