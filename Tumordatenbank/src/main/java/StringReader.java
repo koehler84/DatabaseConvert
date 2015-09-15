@@ -89,7 +89,6 @@ public class StringReader {
 					G=1;
 				} else if (tumorclassSub.substring(i+1, i+2).toUpperCase().equals("X") || 
 						tumorclassSub.substring(i+1, i+2).toUpperCase().equals("X")){
-					//Römisch X ist 10, nicht 5 !?! 
 					G=5;
 				}
 			}
