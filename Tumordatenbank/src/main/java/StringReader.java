@@ -62,7 +62,7 @@ public class StringReader {
 			//				tumorclassSub = source.substring(tumorclassStart, this.source.length()-1);
 			//			}
 		}
-
+		
 		this.source = null;
 		
 		//Init Failsafe
@@ -95,10 +95,10 @@ public class StringReader {
 			
 			if (tumorclassSub.charAt(i) == 'T') {
 				if ((tumorclassSub.charAt(i+1) == '1' || tumorclassSub.charAt(i+1) == '2' || 
-						tumorclassSub.charAt(i+1) == '3' || tumorclassSub.charAt(i+1) == '4')|| 
-						Character.toUpperCase(tumorclassSub.charAt(i+1)) == 'X'){
+						tumorclassSub.charAt(i+1) == '3' || tumorclassSub.charAt(i+1) == '4'|| 
+						Character.toUpperCase(tumorclassSub.charAt(i+1)) == 'X')){
 					T=""+ tumorclassSub.charAt(i+1);
-
+					
 					switch (tumorclassSub.charAt(i-1)){
 					case 'p': T="p"+T;
 					break;
@@ -106,7 +106,7 @@ public class StringReader {
 					break;
 					default:
 					}
-
+					
 					switch (tumorclassSub.charAt(i+2)){
 					case 'a':	T+="a";
 					break;
@@ -117,6 +117,26 @@ public class StringReader {
 					default:
 					}
 				}
+				
+				if (tumorclassSub.charAt(i) == 'N') {
+					if ((tumorclassSub.charAt(i+1) == '1' || tumorclassSub.charAt(i+1) == '2' || 
+							tumorclassSub.charAt(i+1) == '3' || Character.toUpperCase(tumorclassSub.charAt(i+1)) == 'X')){
+						T=""+ tumorclassSub.charAt(i+1);
+						
+						switch (tumorclassSub.charAt(i+2)){
+						case 'a':	T+="a";
+						break;
+						case 'b':	T+="b";
+						break;
+						case 'c':	T+="c";
+						break;
+						case 'd':	T+="d";
+						break;
+						case 'e':	T+="e";
+						break;
+						default:
+						}
+					}
 
 			}
 
