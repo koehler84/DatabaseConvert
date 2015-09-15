@@ -423,10 +423,10 @@ public class start {
 				+ "teilweise von einem dichten vorwiegend lymphozytären Entzündungszellinfiltrat umgeben. Im Randbereich einzelne Gangformationen mit "
 				+ "intraduktal gelegenen atypischen Epithelverbänden. Keine überzeugende Angioinvasion. Tumorkerne negativ für das Östrogen- und das "
 				+ "Progesteronrezeptor-Protein. Das übrige Mammagewebe parenchymarm mit geringen interstitiellen Fibrosierungen. Diagnose: Niedrig "
-				+ "differenziertes invasives duktales Karzinom (Tumordurchmesser 2,2 cm). Vorläufige Tumorklassifikation: G III, NOS, pT2. Der Tumor "
-				+ "ist Östrogen- und Progesteronrezeptor-negativ. Sonstiges: ip");
+				+ "differenziertes invasives duktales Karzinom (Tumordurchmesser 2,2 cm). Vorläufige Tumorklassifikation: C 57, M 8441/3, G 3, pT3c pN1(15/34) "
+				+ "L/V1. Der Tumor ist Östrogen- und Progesteronrezeptor-negativ. Sonstiges: ip");
 	}
 
-
+	//http://download.eclipse.org/egit/github/updates-nightly/ <- GITHUB Task manager (über help -> install new software)
 
 }
