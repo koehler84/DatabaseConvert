@@ -60,9 +60,6 @@ public class StringReader {
 				tumorclassSub = source.substring(tumorclassStart, this.source.length()-1);
 				break;
 			}
-			//			if (i == this.source.length()-1) {
-			//				tumorclassSub = source.substring(tumorclassStart, this.source.length()-1);
-			//			}
 		}
 
 		this.source = null;
@@ -122,6 +119,35 @@ public class StringReader {
 					break;
 					default:
 					}
+				} else if (tumorclassSub.substring(i+1, i+2).toUpperCase().equals("X") || 
+						tumorclassSub.substring(i+1, i+2).toUpperCase().equals("X")){
+					G=5;
+				}
+			}
+
+			if (Character.toUpperCase(tumorclassSub.charAt(i)) == 'T') {
+				if ((tumorclassSub.charAt(i+1) == '1' || tumorclassSub.charAt(i+1) == '2' || 
+						tumorclassSub.charAt(i+1) == '3' || tumorclassSub.charAt(i+1) == '4'|| 
+						Character.toUpperCase(tumorclassSub.charAt(i+1)) == 'X')){
+					T=""+ tumorclassSub.charAt(i+1);
+
+					switch (tumorclassSub.charAt(i-1)){
+					case 'p': T="p"+T;
+					break;
+					case 'c': T="c"+T;
+					break;
+					default:
+					}
+
+					switch (tumorclassSub.charAt(i+2)){
+					case 'a':	T+="a";
+					break;
+					case 'b':	T+="b";
+					break;
+					case 'c':	T+="c";
+					break;
+					default:
+					}
 				}
 			}
 
@@ -151,6 +177,51 @@ public class StringReader {
 						Character.toUpperCase(tumorclassSub.charAt(i+1)) == 'X'){
 					M=""+ tumorclassSub.charAt(i+1);
 
+			if (Character.toUpperCase(tumorclassSub.charAt(i)) == 'N') {
+				if ((tumorclassSub.charAt(i+1) == '1' || tumorclassSub.charAt(i+1) == '2' || 
+						tumorclassSub.charAt(i+1) == '3' || Character.toUpperCase(tumorclassSub.charAt(i+1)) == 'X')){
+					N=""+ tumorclassSub.charAt(i+1);
+
+					switch (tumorclassSub.charAt(i+2)){
+					case 'a':	N+="a";
+					break;
+					case 'b':	N+="b";
+					break;
+					case 'c':	N+="c";
+					break;
+					case 'd':	N+="d";
+					break;
+					case 'e':	N+="e";
+					break;
+					default:
+					}
+				}
+			}
+			
+			if (Character.toUpperCase(tumorclassSub.charAt(i)) == 'M') {
+				if (tumorclassSub.charAt(i+1) == '1' || tumorclassSub.charAt(i+1) == '0' ||
+						Character.toUpperCase(tumorclassSub.charAt(i+1)) == 'X'){
+					M=""+ tumorclassSub.charAt(i+1);
+
+					//TODO: localisation code (extrem low priority)
+				}
+			}
+			
+			if (Character.toUpperCase(tumorclassSub.charAt(i)) == 'L'){
+				if (tumorclassSub.charAt(i+1) == '/'){
+					if (tumorclassSub.charAt(i+1) == '0') {
+						L=V=0;
+					} else {
+						L=1;
+						V=tumorclassSub.charAt(i+3)-'0';
+					}
+				if (Character.toUpperCase(tumorclassSub.charAt(i+2)) == 'V'){
+					L=tumorclassSub.charAt(i+1)-'0';
+					V=tumorclassSub.charAt(i+3)-'0';
+				}
+				}
+			}
+			
 					//TODO: localisation code (extrem low priority)
 				}
 			}
