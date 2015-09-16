@@ -75,6 +75,7 @@ public class start {
 	}
 
 	static void excelToPatient(String excelPath, String dbPatTbl) {
+		
 		try {
 
 			PreparedStatement Pst = cn.prepareStatement("insert into patientendaten (`Geburtsdatum`, `Vorname`, `Name`, `Strasse`, `Hausnummer`, `Land`, `PLZ`, `Ort`)"

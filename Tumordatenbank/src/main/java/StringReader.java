@@ -60,9 +60,6 @@ public class StringReader {
 				tumorclassSub = source.substring(tumorclassStart, this.source.length()-1);
 				break;
 			}
-			//			if (i == this.source.length()-1) {
-			//				tumorclassSub = source.substring(tumorclassStart, this.source.length()-1);
-			//			}
 		}
 
 		this.source = null;
