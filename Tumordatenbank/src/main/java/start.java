@@ -63,7 +63,7 @@ public class start {
 		return s;
 	}
 
-	static void excelToPatient(String excelPath, String dbPatTbl) {
+	static void excelToPatient(String excelPath) {
 		
 		try {
 
@@ -81,59 +81,55 @@ public class start {
 			}
 			// Iterating over Excel file in Java
 
-			//------------------------------------------
 			int i = 0;	//stop after 30 rows for testing
-			//------------------------------------------
+			
+			int[][] positions = {{3,4,5,6,7,8,9,10},{1,2,3,4,5,6,7,8,9}};
 
-			//------------------------------
 			while (itr.hasNext() && i<30) {	//stop after 30 rows for testing
 
-				//--------------------------------------
 				i++;	//stop after 30 rows for testing
-				//--------------------------------------
-				Pst.clearParameters();		//clear parameters in Pst for next insert
+
 				Row row = itr.next();
+				Pst.clearParameters();		//clear parameters in Pst for next insert
 				
 				// Iterating over each column of Excel file
 				Cell cell = null;
-				for (int j=3; j<11;j++){
-					cell=row.getCell(j);
+				
+				for (int j=0; j<positions[0].length;j++) {
+					cell=row.getCell(positions[0][j]);
 
 					switch (cell.getCellType()) {
 					case Cell.CELL_TYPE_STRING:
-						Pst.setString(j-2, cell.getStringCellValue());
+						Pst.setString(positions[1][j], cell.getStringCellValue());
 						break;
 					case Cell.CELL_TYPE_NUMERIC:
-						if (j==3){
+						if (positions[0][j]==3){
 							Pst.setString(1, new java.sql.Date(cell.getDateCellValue().getTime()) + "");
 						} else {
-							if(j==7){
-								Pst.setString(5, (int)cell.getNumericCellValue() + "");
-							} else {
-								Pst.setInt(j-2, (int)cell.getNumericCellValue());
-							}
+							Pst.setInt(positions[1][j], (int)cell.getNumericCellValue());
 						}
 						break;
 					case Cell.CELL_TYPE_BOOLEAN:
 						//Do we even have boolean columns to read?
 						//TODO ASK THE USER FOR INPUT!
+						if (cell.getBooleanCellValue()) {
+							Pst.setString(positions[1][j], "True");
+						} else {
+							Pst.setString(positions[1][j], "False");
+						}
 						break;
 					case Cell.CELL_TYPE_BLANK:
-						if (j==9){
-							//Abfrage in der Datenbank: "select * from mydb.patientendaten where PLZ is null;"
-							Pst.setNull(j-2, java.sql.Types.NULL);
-						} else {
-							Pst.setString(j-2, null);
-						}
-					default:
-
+						//Abfrage in der Datenbank: "select * from mydb.patientendaten where PLZ is null;"
+						Pst.setNull(positions[1][j], java.sql.Types.NULL);
+						break;
 					}
 					
-				} try {
+				} 
+				
+				try {
 					//Execution of PreparedStatement, SQL Exeption if person is already in database
 					System.out.println("Updated rows in mydb.patientendaten: " + Pst.executeUpdate());
-				}
-				catch (SQLException se){
+				} catch (SQLException se){
 					System.out.println("Fehler beim Ausführen von \"insert into patientendaten\": Person ggf. schon erfasst!");
 				}
 
@@ -142,8 +138,6 @@ public class start {
 			book.close();
 			fis.close();
 			System.out.println("Write patientendaten success");
-		} catch (FileNotFoundException fe) {
-			fe.printStackTrace();
 		} catch (IOException ie) {
 			ie.printStackTrace();
 		} catch (SQLException e) {
@@ -172,33 +166,29 @@ public class start {
 			}
 			// Iterating over Excel file in Java
 
-			int[][] i = {{0,1,2,3,4,5,26},{4,5,6,3,2,1,7}};
+			int[][] positions = {{0,1,2,3,4,5,26},{4,5,6,3,2,1,7}};
 			
 			//i:	0,1,2,3,4,5,26		oben: Spalte in excel datei
 			//		4,5,6,3,2,1,7		unten: Position in Pst
 			
-			
-			//------------------------------------------
 			int k = 0;	//stop after 30 rows for testing
-			//------------------------------------------
+			
 			while (itr.hasNext() && k<29) {	//stop after 30 rows for testing
 
-				//--------------------------------------
 				k++;	//stop after 30 rows for testing
-				//--------------------------------------
 
 				Row row = itr.next();
 				// Iterating over each column of Excel file
 				Cell cell = null;
 				Pst.clearParameters();
 				
-				for (int j=0; j<i[0].length;j++){
+				for (int j=0; j<positions[0].length;j++){
 					
-					cell=row.getCell(i[0][j]);
+					cell=row.getCell(positions[0][j]);
 					
 					switch (cell.getCellType()) {
 					case Cell.CELL_TYPE_STRING:
-						if (i[0][j] == 26) {
+						if (positions[0][j] == 26) {
 							switch (cell.getStringCellValue())	{
 								case "Hauptbefund":
 									Pst.setInt(7, Befundtyp.Hauptbefund.getValue());
@@ -221,28 +211,30 @@ public class start {
 								case "Konsiliarbericht 1":
 									Pst.setInt(7, Befundtyp.Konsiliarbericht_1.getValue());
 									break;
+								default:
+									//TODO Ask User for input
+									//Es ist keiner der normalen Befundtypen, Rechtschreibfehler?
+									System.out.println("FEHLER: Keiner der bekannten Befundtypen!");
+									break;
 							}
 						} else {
-							Pst.setString(i[1][j], cell.getStringCellValue());
+							Pst.setString(positions[1][j], cell.getStringCellValue());
 						}
 						break;
 					case Cell.CELL_TYPE_NUMERIC:
-						if (i[0][j]==0){
-							//Eingangsdatum
-							Pst.setString(4, new java.sql.Date(cell.getDateCellValue().getTime())+"");
-						} else if (i[0][j]==3){
-							//Geburtsdatum
-							Pst.setString(3, new java.sql.Date(cell.getDateCellValue().getTime())+"");
+						if (positions[0][j] == 0 || positions[0][j] == 3){
+							//Eingangsdatum bzw Geburtsdatum
+							Pst.setString(positions[1][j], new java.sql.Date(cell.getDateCellValue().getTime())+"");
 						} else {
 							//Befundtyp
-							Pst.setInt(i[1][j], (int)cell.getNumericCellValue());
+							Pst.setInt(positions[1][j], (int)cell.getNumericCellValue());
 						}
 						break;
 					case Cell.CELL_TYPE_BOOLEAN:
 						//TODO Ask for User input
 						break;
 					case Cell.CELL_TYPE_BLANK:
-						Pst.setNull(i[1][j], java.sql.Types.NULL);
+						Pst.setNull(positions[1][j], java.sql.Types.NULL);
 						break;
 					}
 				}
@@ -262,9 +254,6 @@ public class start {
 			System.out.println("Fehler beim Erstellen des PreparedStatement \"insert into fall\"!");
 		} catch (IOException e) {
 			System.out.println("IO Exeption");
-		} finally {
-//			try { if( rs != null ) rs.close(); } catch( Exception ex ) {/* nothing to do*/}
-//			try { if( st != null ) st.close(); } catch( Exception ex ) {/* nothing to do*/}
 		}
 
 	}
@@ -299,7 +288,6 @@ public class start {
 		}
 		catch (Exception e){
 		}
-		//-----------------------------------
 
 		//Validate connection data
 		if( dbPatTbl == null || dbPatTbl.length() == 0 ||
@@ -316,7 +304,7 @@ public class start {
 			cn = DriverManager.getConnection( dbUrl, dbUsr, dbPwd );
 
 			//----------------------------------------------------
-//			excelToPatient(excelPath, dbPatTbl);
+//			excelToPatient(excelPath);
 			//----------------------------------------------------
 			excelToFall(excelPath);
 
