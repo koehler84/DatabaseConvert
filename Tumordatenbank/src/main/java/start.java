@@ -13,23 +13,16 @@ public class start {
 	
 	public static Connection cn;
 	
-	static void showDbTable( String dbTbl, String dbDrv, String dbUrl, String dbUsr, String dbPwd )
-	{
-		if( dbTbl == null || dbTbl.length() == 0 ||
-				dbDrv == null || dbDrv.length() == 0 ||
-				dbUrl == null || dbUrl.length() == 0 ) {
+	static void showDbTable(String dbTbl) {
+		
+		if(dbTbl == null) {
 			System.out.println( "Fehler: Parameter fehlt." );
 			return;
 		}
-		Connection cn = null;
-		Statement  st = null;
-		ResultSet  rs = null;
+		
 		try {
-			// Select fitting database driver and connect:
-			Class.forName( dbDrv );
-			cn = DriverManager.getConnection( dbUrl, dbUsr, dbPwd );
-			st = cn.createStatement();
-			rs = st.executeQuery( "select * from " + dbTbl );
+			Statement st = cn.createStatement();
+			ResultSet rs = st.executeQuery( "select * from " + dbTbl );
 			// Get meta data:
 			ResultSetMetaData rsmd = rs.getMetaData();
 			int i, n = rsmd.getColumnCount();
@@ -53,15 +46,11 @@ public class start {
 			System.out.println( "+" );
 		} catch( Exception ex ) {
 			System.out.println( ex );
-		} finally {
-			try { if( rs != null ) rs.close(); } catch( Exception ex ) {/* nothing to do*/}
-			try { if( st != null ) st.close(); } catch( Exception ex ) {/* nothing to do*/}
-			try { if( cn != null ) cn.close(); } catch( Exception ex ) {/* nothing to do*/}
 		}
+		
 	}
 
-	static final String extendStringTo14( String s )
-	{
+	static final String extendStringTo14( String s ) {
 		// Extend String to length of 14 characters
 		if( s == null ) { s = ""; }
 		final String sFillStrWithWantLen = "              ";
@@ -79,7 +68,7 @@ public class start {
 		try {
 
 			PreparedStatement Pst = cn.prepareStatement("insert into patientendaten (`Geburtsdatum`, `Vorname`, `Name`, `Strasse`, `Hausnummer`, `Land`, `PLZ`, `Ort`)"
-					+ " values ( ? , ? , ? , ? , ?  , ? , ? , ? );");
+					+ " values ( ? , ? , ? , ? , ? , ? , ? , ? );");
 
 			File excel = new File(excelPath);
 			FileInputStream fis = new FileInputStream(excel);
@@ -325,32 +314,25 @@ public class start {
 			System.out.println( "Fehler: Parameter fehlt." );
 			return;
 		}
-		//Connection cn = null; 	changed cn to static variable
-		Statement  st = null;
-		ResultSet  rs = null;
+		
 		try {
 			// Select fitting database driver and connect:
-			Class.forName( dbDrv );
+	/*???	*/Class.forName( dbDrv );
 			cn = DriverManager.getConnection( dbUrl, dbUsr, dbPwd );
-			st = cn.createStatement();
 
 			//----------------------------------------------------
 			excelToPatient(excelPath, dbPatTbl);
 			//----------------------------------------------------
-			//			excelToFall(excelPath, st, dbPatTbl, dbFallTbl);
+			//excelToFall(excelPath, st, dbPatTbl, dbFallTbl);
 
 		} catch( Exception ex ) {
 			System.out.println( ex );
-		} finally {
-			try { if( rs != null ) rs.close(); } catch( Exception ex ) {/* nothing to do*/}
-			try { if( st != null ) st.close(); } catch( Exception ex ) {/* nothing to do*/}
-			try { if( cn != null ) cn.close(); } catch( Exception ex ) {/* nothing to do*/}
 		}
 
-		//		showDbTable( dbPatTbl, dbDrv, dbUrl, dbUsr, dbPwd );
-		//		showDbTable( dbFallTbl, dbDrv, dbUrl, dbUsr, dbPwd );
+		showDbTable( dbPatTbl );
+		//showDbTable( dbFallTbl );
 
-		//		new StringReader("Makroskopie: 7 x 7 x 4 cm großes Mammaexzidat (links oben außen) mit zwei Fadenmarkierungen. 1,5 cm oberhalb der langen "
+		//new StringReader("Makroskopie: 7 x 7 x 4 cm großes Mammaexzidat (links oben außen) mit zwei Fadenmarkierungen. 1,5 cm oberhalb der langen "
 		//				+ "Fadenmarkierung ein 2,2 x 2 x 1,8 cm großer lobulierter unscharf begrenzter 0,1 cm vom ventralen Resektionsrand entfernter Tumor. "
 		//				+ "Das übrige Gewebe fettreich mit diskreten streifenförmigen Fibrosierungen. Zusätzlich ein Telepathologieschnellschnittpräparat. "
 		//				+ "Mikroskopie: (HE, Schnellschnitt, Paraffineinbettung, HE, PAS, Östrogen- und Progesteronrzeptor, übriges Mammagewebe HE) Im "
@@ -364,6 +346,12 @@ public class start {
 		//				+ "L/V1. Der Tumor ist Östrogen- und Progesteronrezeptor-negativ. Sonstiges: ip");
 
 		//Tumorklassifikation: C 57, M 8441/3, G 3, pT3c pN1(15/34) L/V1. Der Tumor ist Östrogen- und Progesteronrezeptor-negativ. Sonstiges: ip
+
+		try {
+			if( cn != null ) cn.close();
+		} catch (Exception e) {
+			System.out.println("Fehler beim Beenden der Datenbankverbindung!");
+		}
 
 	}
 
