@@ -70,22 +70,28 @@ public class start {
 			return s.substring( 0, 2 * iWantLen );
 		return s;
 	}
-												//ENTWEDER Statement st ODER PreparedStatement Pst
-	static void excelToPatient(String excelPath, /*Statement st*/ PreparedStatement Pst, String dbPatTbl) {
+
+	static void excelToPatient(String excelPath, Connection cn, String dbPatTbl) {
 		try {
+
+			PreparedStatement Pst = cn.prepareStatement("insert into patientendaten (`Geburtsdatum`, `Vorname`, `Name`, `Strasse`, `Hausnummer`, `Land`, `PLZ`, `Ort`)"
+					+ " values ( ? , ? , ? , ? , ?  , ? , ? , ? );");
+
 			File excel = new File(excelPath);
 			FileInputStream fis = new FileInputStream(excel);
 			XSSFWorkbook book = new XSSFWorkbook(fis);
 			XSSFSheet sheet = book.getSheetAt(0);
 			book.setMissingCellPolicy(Row.CREATE_NULL_AS_BLANK);
 			Iterator<Row> itr = sheet.iterator();
+			if (itr.hasNext()) {
+				itr.next();		//skipping the header row			
+			}
 			// Iterating over Excel file in Java
 
 			//------------------------------------------
-			int i =0;	//stop after 30 rows for testing
+			int i = 0;	//stop after 30 rows for testing
 			//------------------------------------------
 
-			String oldDbValues="";
 			//------------------------------
 			while (itr.hasNext() && i<30) {	//stop after 30 rows for testing
 				//------------------------------
@@ -93,9 +99,9 @@ public class start {
 				//--------------------------------------
 				i++;	//stop after 30 rows for testing
 				//--------------------------------------
-
+				Pst.clearParameters();		//clear parameters in Pst for next insert
 				Row row = itr.next();
-				String dbValues="";
+				
 				// Iterating over each column of Excel file
 				Cell cell = null;
 				for (int j=3; j<11;j++){
@@ -103,115 +109,46 @@ public class start {
 
 					switch (cell.getCellType()) {
 					case Cell.CELL_TYPE_STRING:
-						dbValues = dbValues+"\""+cell.getStringCellValue()+"\"";
-						if (j!=10){
-							dbValues+=",";
-						}
+						Pst.setString(j-2, cell.getStringCellValue());
 						break;
 					case Cell.CELL_TYPE_NUMERIC:
 						if (j==3){
-							dbValues = dbValues+"\"" + new java.sql.Date(cell.getDateCellValue().getTime())+"\",";
+							Pst.setString(1, new java.sql.Date(cell.getDateCellValue().getTime()) + "");
 						} else {
 							if(j==7){
-								dbValues = dbValues+"\""+(int)cell.getNumericCellValue() + "\",";
+								Pst.setString(5, (int)cell.getNumericCellValue() + "");
 							} else {
-								dbValues = dbValues+(int) cell.getNumericCellValue()+",";
+								Pst.setInt(j-2, (int)cell.getNumericCellValue());
 							}
 						}
 						break;
 					case Cell.CELL_TYPE_BOOLEAN:
-						dbValues = dbValues+"\""+cell.getBooleanCellValue() + "\",";
+						//Do we even have boolean columns to read?
 						break;
 					case Cell.CELL_TYPE_BLANK:
 						if (j==9){
-							dbValues+="99999";
+							//dbValues+="99999";
+							//insert into PLZ database as null or 99999?
+							Pst.setNull(j-2, java.sql.Types.NULL);
 						}else {
-							dbValues+= "\"\"";
-						}
-						if (j!=10){
-							dbValues+=",";
+							Pst.setString(j-2, null);
 						}
 					default:
 
 					}
 				}
-				//create substring, value is changed in for-loop, "default" to prevent the code from thinking 
-				//the first line from the excel document is already in the database
-				String subString = "default";
 
-				//zaehlerVar to count the commas, just the first 3 attributed are compared to prevent doubling 
-				//of persons
-				byte zaehlerVar = 0;
+				try {
 
-				//for-loop extracts the substring with the 3 attributes from dbValues
-				for (int k = 0; (k < oldDbValues.length()); k++) {
-					//after each attribute zaehlerVar counts up (because of the , in the dbValues String)
-					if (oldDbValues.charAt(k) == ',') {
-						zaehlerVar++;
-					}
-					//if the substring contains the 3 required attributes, for-loop ends
-					if (zaehlerVar >= 3) {
-						subString = oldDbValues.substring(0, k);
-						break;
-					}
-				}
-
-				//checking with the previous line from the excel file if the persons are the same, 
-				//the substrings with the 3 attributes from oldDbValues and dbValues are compared
-				//to eliminate the first row test if the first 8 (length "default") chars equals "\"Geburt"
-				if (!dbValues.substring(0, subString.length()).equals(subString)&&!dbValues.substring(0, subString.length()).equals("\"Geburt")) {
-					try{
-						//write to database if person is not the same
-//						st.executeUpdate( "insert into "+dbPatTbl+" (`Geburtsdatum`, `Vorname`, `Name`, `Strasse`, `Hausnummer`, `Land`, `PLZ`, `Ort`)"
-//								+ " values ( "+dbValues+" );");
-						System.out.println(dbValues);
-						
-						
-						
-						//TODO Versuch mit PreparedStatement
-			//--------------------------------------------------------------------
-						//Following code just to get dbValues into String[]
-						String[] stringAr = new String[8];
-						for (int k = 0; k < stringAr.length; k++) {
-							stringAr[k] = "";
-						}
-						int l = 0;
-						
-						for (int k = 0; k < dbValues.length(); k++) {
-							
-							if (dbValues.charAt(k) == ',') {
-								l++;
-							} else if (dbValues.charAt(k) == '"') {
-
-							} else {
-								stringAr[l] += dbValues.charAt(k) + "";
-							}
-							
-						}
-						
-						//noch alles optimierbar
-						Pst.setString(1, stringAr[0]);
-						Pst.setString(2, stringAr[1]);
-						Pst.setString(3, stringAr[2]);
-						Pst.setString(4, stringAr[3]);
-						Pst.setString(5, stringAr[4]);
-						Pst.setString(6, stringAr[5]);
-						Pst.setInt(7, Integer.parseInt(stringAr[6]));
-						Pst.setString(8, stringAr[7]);
-						
-						int rueck = Pst.executeUpdate();
-						System.out.println("execute Update Rückgabe: " + rueck);
-				//--------------------------------------------------------------------
-						
-					}
-					catch (SQLException se){
-						se.printStackTrace();
-					}
+					//Execution of PreparedStatement, SQL Exeption if person is already in database
+					//--------------------------------------------------------------------
+					System.out.println("Updated rows in mydb.patientendaten: " + Pst.executeUpdate());
+					//--------------------------------------------------------------------
 
 				}
-				oldDbValues=dbValues;
-
-
+				catch (SQLException se){
+					System.out.println("Fehler beim Ausführen von \"insert into patientendaten\": Person ggf. schon erfasst!");
+				}
 
 			}
 
@@ -222,6 +159,8 @@ public class start {
 			fe.printStackTrace();
 		} catch (IOException ie) {
 			ie.printStackTrace();
+		} catch (SQLException e) {
+			System.out.println("Fehler beim Erstellen des PreparedStatement \"insert into patientendaten\"!");
 		}
 
 	}
@@ -384,24 +323,18 @@ public class start {
 		}
 		Connection cn = null;
 		Statement  st = null;
-		PreparedStatement Pst = null;
 		ResultSet  rs = null;
 		try {
 			// Select fitting database driver and connect:
 			Class.forName( dbDrv );
 			cn = DriverManager.getConnection( dbUrl, dbUsr, dbPwd );
 			st = cn.createStatement();
-			Pst = cn.prepareStatement("insert into patientendaten (`Geburtsdatum`, `Vorname`, `Name`, `Strasse`, `Hausnummer`, `Land`, `PLZ`, `Ort`)"
-					+ " values ( ? , ? , ? , ? , ?  , ? , ? , ? );");
 
 			//----------------------------------------------------
-//			excelToPatient(excelPath, st, dbPatTbl);
-//			excelToPatient(excelPath, Pst, dbPatTbl);
+			excelToPatient(excelPath, cn, dbPatTbl);
 			//----------------------------------------------------
-//			excelToFall(excelPath, st, dbPatTbl, dbFallTbl);
-			
-			cn.close();
-			
+			//			excelToFall(excelPath, st, dbPatTbl, dbFallTbl);
+
 		} catch( Exception ex ) {
 			System.out.println( ex );
 		} finally {
@@ -410,21 +343,24 @@ public class start {
 			try { if( cn != null ) cn.close(); } catch( Exception ex ) {/* nothing to do*/}
 		}
 
-//		showDbTable( dbPatTbl, dbDrv, dbUrl, dbUsr, dbPwd );
-//		showDbTable( dbFallTbl, dbDrv, dbUrl, dbUsr, dbPwd );
-		
-		new StringReader("Makroskopie: 7 x 7 x 4 cm großes Mammaexzidat (links oben außen) mit zwei Fadenmarkierungen. 1,5 cm oberhalb der langen "
-				+ "Fadenmarkierung ein 2,2 x 2 x 1,8 cm großer lobulierter unscharf begrenzter 0,1 cm vom ventralen Resektionsrand entfernter Tumor. "
-				+ "Das übrige Gewebe fettreich mit diskreten streifenförmigen Fibrosierungen. Zusätzlich ein Telepathologieschnellschnittpräparat. "
-				+ "Mikroskopie: (HE, Schnellschnitt, Paraffineinbettung, HE, PAS, Östrogen- und Progesteronrzeptor, übriges Mammagewebe HE) Im "
-				+ "Bereich des makroskopisch beschriebenen Tumors eine vollständige Destruktion des ortsständigen Brustdrüsengewebes durch nahezu "
-				+ "ausschließlich solide, nur ganz diskret primitiv-tubuläre atypische Epithelverbände mit erheblicher Kernpleomorphie, Hyperchromasie "
-				+ "und deutlich erhöhter Mitoserate (mehr als 10 Mitosen auf 10 Gesichtsfelder bei 40facher Objektivvergrößerung). Tumorzellverbände "
-				+ "teilweise von einem dichten vorwiegend lymphozytären Entzündungszellinfiltrat umgeben. Im Randbereich einzelne Gangformationen mit "
-				+ "intraduktal gelegenen atypischen Epithelverbänden. Keine überzeugende Angioinvasion. Tumorkerne negativ für das Östrogen- und das "
-				+ "Progesteronrezeptor-Protein. Das übrige Mammagewebe parenchymarm mit geringen interstitiellen Fibrosierungen. Diagnose: Niedrig "
-				+ "differenziertes invasives duktales Karzinom (Tumordurchmesser 2,2 cm). Vorläufige Tumorklassifikation: G 3, NOS, pT2. Der Tumor "
-				+ "ist Östrogen- und Progesteronrezeptor-negativ. Sonstiges: ip");
+		//		showDbTable( dbPatTbl, dbDrv, dbUrl, dbUsr, dbPwd );
+		//		showDbTable( dbFallTbl, dbDrv, dbUrl, dbUsr, dbPwd );
+
+		//		new StringReader("Makroskopie: 7 x 7 x 4 cm großes Mammaexzidat (links oben außen) mit zwei Fadenmarkierungen. 1,5 cm oberhalb der langen "
+		//				+ "Fadenmarkierung ein 2,2 x 2 x 1,8 cm großer lobulierter unscharf begrenzter 0,1 cm vom ventralen Resektionsrand entfernter Tumor. "
+		//				+ "Das übrige Gewebe fettreich mit diskreten streifenförmigen Fibrosierungen. Zusätzlich ein Telepathologieschnellschnittpräparat. "
+		//				+ "Mikroskopie: (HE, Schnellschnitt, Paraffineinbettung, HE, PAS, Östrogen- und Progesteronrzeptor, übriges Mammagewebe HE) Im "
+		//				+ "Bereich des makroskopisch beschriebenen Tumors eine vollständige Destruktion des ortsständigen Brustdrüsengewebes durch nahezu "
+		//				+ "ausschließlich solide, nur ganz diskret primitiv-tubuläre atypische Epithelverbände mit erheblicher Kernpleomorphie, Hyperchromasie "
+		//				+ "und deutlich erhöhter Mitoserate (mehr als 10 Mitosen auf 10 Gesichtsfelder bei 40facher Objektivvergrößerung). Tumorzellverbände "
+		//				+ "teilweise von einem dichten vorwiegend lymphozytären Entzündungszellinfiltrat umgeben. Im Randbereich einzelne Gangformationen mit "
+		//				+ "intraduktal gelegenen atypischen Epithelverbänden. Keine überzeugende Angioinvasion. Tumorkerne negativ für das Östrogen- und das "
+		//				+ "Progesteronrezeptor-Protein. Das übrige Mammagewebe parenchymarm mit geringen interstitiellen Fibrosierungen. Diagnose: Niedrig "
+		//				+ "differenziertes invasives duktales Karzinom (Tumordurchmesser 2,2 cm). Vorläufige Tumorklassifikation: C 57, M 8441/3, G 3, pT3c pN1(15/34) "
+		//				+ "L/V1. Der Tumor ist Östrogen- und Progesteronrezeptor-negativ. Sonstiges: ip");
+
+		//Tumorklassifikation: C 57, M 8441/3, G 3, pT3c pN1(15/34) L/V1. Der Tumor ist Östrogen- und Progesteronrezeptor-negativ. Sonstiges: ip
+
 	}
 
 	//http://download.eclipse.org/egit/github/updates-nightly/ <- GITHUB Task manager (über help -> install new software)
