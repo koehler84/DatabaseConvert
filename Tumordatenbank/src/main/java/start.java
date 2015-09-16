@@ -201,25 +201,25 @@ public class start {
 						if (i[0][j] == 26) {
 							switch (cell.getStringCellValue())	{
 								case "Hauptbefund":
-									Pst.setInt(7, 0);
+									Pst.setInt(7, Befundtyp.Hauptbefund.getValue());
 									break;
 								case "Nachbericht 1":
-									Pst.setInt(7, 1);
+									Pst.setInt(7, Befundtyp.Nachbericht_1.getValue());
 									break;
 								case "Nachbericht 2":
-									Pst.setInt(7, 2);
+									Pst.setInt(7, Befundtyp.Nachbericht_2.getValue());
 									break;
 								case "Korrekturbefund 1":
-									Pst.setInt(7, 3);
+									Pst.setInt(7, Befundtyp.Korrekturbefund_1.getValue());
 									break;
 								case "Korrekturbefund 2":
-									Pst.setInt(7, 4);
+									Pst.setInt(7, Befundtyp.Korrekturbefund_2.getValue());
 									break;
 								case "Korrekturbefund 3":
-									Pst.setInt(7, 5);
+									Pst.setInt(7, Befundtyp.Korrekturbefund_3.getValue());
 									break;
 								case "Konsiliarbericht 1":
-									Pst.setInt(7, 6);
+									Pst.setInt(7, Befundtyp.Konsiliarbericht_1.getValue());
 									break;
 							}
 						} else {
