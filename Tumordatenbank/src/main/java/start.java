@@ -10,6 +10,9 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class start {
+	
+	public static Connection cn;
+	
 	static void showDbTable( String dbTbl, String dbDrv, String dbUrl, String dbUsr, String dbPwd )
 	{
 		if( dbTbl == null || dbTbl.length() == 0 ||
@@ -71,7 +74,7 @@ public class start {
 		return s;
 	}
 
-	static void excelToPatient(String excelPath, Connection cn, String dbPatTbl) {
+	static void excelToPatient(String excelPath, String dbPatTbl) {
 		try {
 
 			PreparedStatement Pst = cn.prepareStatement("insert into patientendaten (`Geburtsdatum`, `Vorname`, `Name`, `Strasse`, `Hausnummer`, `Land`, `PLZ`, `Ort`)"
@@ -180,7 +183,6 @@ public class start {
 			//------------------------------------------
 			int k =0;	//stop after 30 rows for testing
 			//------------------------------------------
-			//------------------------------
 			while (itr.hasNext() && k<29) {	//stop after 30 rows for testing
 				//------------------------------
 
@@ -284,6 +286,7 @@ public class start {
 
 
 	public static void main(String[] args) {
+		
 		String dbPatTbl=null, dbFallTbl=null, dbDrv=null, dbUrl=null, dbUsr="", dbPwd="", excelPath="";
 		//-----------------------------------
 		//Workpath
@@ -321,7 +324,7 @@ public class start {
 			System.out.println( "Fehler: Parameter fehlt." );
 			return;
 		}
-		Connection cn = null;
+		//Connection cn = null; 	changed cn to static variable
 		Statement  st = null;
 		ResultSet  rs = null;
 		try {
@@ -331,7 +334,7 @@ public class start {
 			st = cn.createStatement();
 
 			//----------------------------------------------------
-			excelToPatient(excelPath, cn, dbPatTbl);
+			excelToPatient(excelPath, dbPatTbl);
 			//----------------------------------------------------
 			//			excelToFall(excelPath, st, dbPatTbl, dbFallTbl);
 
