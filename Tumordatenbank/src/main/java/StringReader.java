@@ -4,14 +4,15 @@ public class StringReader {
 	String source;
 	//--Klassifikation--
 	String Quadrant;
-	int G;								//Klassifikation =0,1,2,3,5=X,9 Nicht aus Datensatz 
+	int G;								//Klassifikation =0,1,2,3,5=X,9 Not in Dataset 
 	//erkennbar (siehe Task 2)
-	String T;							//Tumor [c,p,][1,2,3,4,X][a,b,c] oder "mis" (siehe Task 2)
-	String N;							//Metastasen [1,2,3,4,X][a,b,c] oder "mis" (siehe Task 2) 
+	String T;							//Tumor [c,p,][1,2,3,4,X][a,b,c] or "mis" (see Task 2)
+	String N;							//Metastasen [1,2,3,4,X][a,b,c] or "mis" (see Task 2) 
 										//=> Task 5
-	String M;							//Fernmetastasen [0,1]{später möglicherweise kürzel} oder "mis" (siehe Task 2)
-	int L;
-	int V;
+	String M;							//Fernmetastasen [0,1]{later maybe localisation code} or 
+										//"mis" (see Task 2)
+	int L;								//9 - Not in Dataset
+	int V;								//9 - Not in Dataset
 	int R;
 	String nSum;
 	String nMeta;
@@ -71,6 +72,8 @@ public class StringReader {
 		T="mis";
 		N="mis";
 		M="mis";
+		L=9;
+		V=9;
 
 		for (int i = 0; i < tumorclassSub.length(); i++) {
 			//-------------
@@ -148,7 +151,7 @@ public class StringReader {
 						Character.toUpperCase(tumorclassSub.charAt(i+1)) == 'X'){
 					M=""+ tumorclassSub.charAt(i+1);
 
-					//möglicherweise einfügen Suche nach Lage (3 char kürzel)
+					//TODO: localisation code (extrem low priority)
 				}
 			}
 			
