@@ -9,7 +9,7 @@ public class StringReader {
 	String T;							//Tumor [c,p,][1,2,3,4,X][a,b,c] oder "mis" (siehe Task 2)
 	String N;							//Metastasen [1,2,3,4,X][a,b,c] oder "mis" (siehe Task 2) 
 										//=> Task 5
-	String M;
+	String M;							//Fernmetastasen [0,1]{später möglicherweise kürzel} oder "mis" (siehe Task 2)
 	int L;
 	int V;
 	int R;
@@ -70,6 +70,7 @@ public class StringReader {
 		G=9;
 		T="mis";
 		N="mis";
+		M="mis";
 
 		for (int i = 0; i < tumorclassSub.length(); i++) {
 			//-------------
@@ -95,7 +96,7 @@ public class StringReader {
 				}
 			}
 
-			if (tumorclassSub.charAt(i) == 'T') {
+			if (Character.toUpperCase(tumorclassSub.charAt(i)) == 'T') {
 				if ((tumorclassSub.charAt(i+1) == '1' || tumorclassSub.charAt(i+1) == '2' || 
 						tumorclassSub.charAt(i+1) == '3' || tumorclassSub.charAt(i+1) == '4'|| 
 						Character.toUpperCase(tumorclassSub.charAt(i+1)) == 'X')){
@@ -121,7 +122,7 @@ public class StringReader {
 				}
 			}
 
-			if (tumorclassSub.charAt(i) == 'N') {
+			if (Character.toUpperCase(tumorclassSub.charAt(i)) == 'N') {
 				if ((tumorclassSub.charAt(i+1) == '1' || tumorclassSub.charAt(i+1) == '2' || 
 						tumorclassSub.charAt(i+1) == '3' || Character.toUpperCase(tumorclassSub.charAt(i+1)) == 'X')){
 					N=""+ tumorclassSub.charAt(i+1);
@@ -141,14 +142,39 @@ public class StringReader {
 					}
 				}
 			}
+			
+			if (Character.toUpperCase(tumorclassSub.charAt(i)) == 'M') {
+				if (tumorclassSub.charAt(i+1) == '1' || tumorclassSub.charAt(i+1) == '0' ||
+						Character.toUpperCase(tumorclassSub.charAt(i+1)) == 'X'){
+					M=""+ tumorclassSub.charAt(i+1);
+
+					//möglicherweise einfügen Suche nach Lage (3 char kürzel)
+				}
+			}
+			
+			if (Character.toUpperCase(tumorclassSub.charAt(i)) == 'L'){
+				if (tumorclassSub.charAt(i+1) == '/'){
+					if (tumorclassSub.charAt(i+1) == '0') {
+						L=V=0;
+					} else {
+						L=1;
+						V=tumorclassSub.charAt(i+3)-'0';
+					}
+				if (Character.toUpperCase(tumorclassSub.charAt(i+2)) == 'V'){
+					L=tumorclassSub.charAt(i+1)-'0';
+					V=tumorclassSub.charAt(i+3)-'0';
+				}
+				}
+			}
+			
 		}
-		System.out.println("G: " + G + ", T: "+T+", N: "+N);	
+		System.out.println("G: " + G + ", T: " + T + ", N: " + N + ", M:" + M + ", L:" + L + ", V:" + V);	
 		/*
 		 *  pT3L1V0R1
 		 *  pT3N1aL1V0R0
 		 *  pT2
-		 *  pT2N1bivR0
-		 *  pT1b1 pN0(0/11) L/V0 MX R0  --- Sonderfall ist gar kein Brustkrebs
+		 *  pT2N1bivR0					--- Sonderfall ist gar kein Brustkrebs
+		 *  pT1b1 pN0(0/11) L/V0 MX R0  
 		 *  C 50, M 8500/3, G2, pT2(3,8 cm) pN1a(3/3) L/V0 R1, ER+, PR+, Her-2/neu-, Ki67-Index niedrig
 		 *  C 57, M 8441/3, G 3, pT3c pN1(15/34) L/V1
 		 *  pT2L0V0R0
