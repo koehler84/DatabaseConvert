@@ -87,7 +87,6 @@ public class start {
 
 			//------------------------------
 			while (itr.hasNext() && i<30) {	//stop after 30 rows for testing
-				//------------------------------
 
 				//--------------------------------------
 				i++;	//stop after 30 rows for testing
@@ -117,34 +116,29 @@ public class start {
 						break;
 					case Cell.CELL_TYPE_BOOLEAN:
 						//Do we even have boolean columns to read?
+						//TODO ASK THE USER FOR INPUT!
 						break;
 					case Cell.CELL_TYPE_BLANK:
 						if (j==9){
-							//dbValues+="99999";
-							//insert into PLZ database as null or 99999?
+							//Abfrage in der Datenbank: "select * from mydb.patientendaten where PLZ is null;"
 							Pst.setNull(j-2, java.sql.Types.NULL);
-						}else {
+						} else {
 							Pst.setString(j-2, null);
 						}
 					default:
 
 					}
-				}
-
-				try {
-
+					
+				} try {
 					//Execution of PreparedStatement, SQL Exeption if person is already in database
-					//--------------------------------------------------------------------
 					System.out.println("Updated rows in mydb.patientendaten: " + Pst.executeUpdate());
-					//--------------------------------------------------------------------
-
 				}
 				catch (SQLException se){
 					System.out.println("Fehler beim Ausführen von \"insert into patientendaten\": Person ggf. schon erfasst!");
 				}
 
 			}
-
+			
 			book.close();
 			fis.close();
 			System.out.println("Write patientendaten success");
@@ -158,9 +152,14 @@ public class start {
 
 	}
 
-	static void excelToFall(String excelPath, Statement st, String dbPatTbl, String dbFallTbl) {
-		ResultSet rs = null;
-		try{
+	static void excelToFall(String excelPath) {
+				
+		try {
+			
+			PreparedStatement Pst = cn.prepareStatement("insert into mydb.fall (`Patientendaten_PatientenID`, `Eingangsdatum`, "
+					+ "`E.-Nummer`, `Arzt`, `Befundtyp`) values "
+					+ "((select PatientenID from mydb.patientendaten where Name = ? and Vorname = ? and Geburtsdatum = ? ),"
+					+ " ? , ? , ? , ? );");
 
 			File excel = new File(excelPath);
 			FileInputStream fis = new FileInputStream(excel);
@@ -168,108 +167,104 @@ public class start {
 			XSSFSheet sheet = book.getSheetAt(0);
 			book.setMissingCellPolicy(Row.CREATE_NULL_AS_BLANK);
 			Iterator<Row> itr = sheet.iterator();
+			if (itr.hasNext()) {
+				itr.next();
+			}
 			// Iterating over Excel file in Java
 
+			int[][] i = {{0,1,2,3,4,5,26},{4,5,6,3,2,1,7}};
+			
+			//i:	0,1,2,3,4,5,26		oben: Spalte in excel datei
+			//		4,5,6,3,2,1,7		unten: Position in Pst
+			
+			
 			//------------------------------------------
-			int k =0;	//stop after 30 rows for testing
+			int k = 0;	//stop after 30 rows for testing
 			//------------------------------------------
 			while (itr.hasNext() && k<29) {	//stop after 30 rows for testing
-				//------------------------------
 
 				//--------------------------------------
 				k++;	//stop after 30 rows for testing
 				//--------------------------------------
 
 				Row row = itr.next();
-				if (row.getCell(1).getStringCellValue().equals("Eingangsnummer")){
-					row =itr.next();
-				}
-				String dbValues="";
 				// Iterating over each column of Excel file
 				Cell cell = null;
-				int[] i={0,1,2,3,4,5,26};
-				String name = "", firstname = "", birthdate = "";
-				for (int j=0; j<i.length;j++){
-					cell=row.getCell(i[j]);
+				Pst.clearParameters();
+				
+				for (int j=0; j<i[0].length;j++){
+					
+					cell=row.getCell(i[0][j]);
+					
 					switch (cell.getCellType()) {
 					case Cell.CELL_TYPE_STRING:
-						if (i[j] == 26){
+						if (i[0][j] == 26) {
 							switch (cell.getStringCellValue())	{
-							case "Hauptbefund":
-								dbValues = dbValues+0;
-								break;
-							case "Nachbericht 1":
-								dbValues = dbValues+1;
-								break;
-							case "Nachbericht 2":
-								dbValues = dbValues+2;
-								break;
-							case "Korrekturbefund 1":
-								dbValues = dbValues+3;
-								break;
-							case "Korrekturbefund 2":
-								dbValues = dbValues+4;
-								break;
-							case "Korrekturbefund 3":
-								dbValues = dbValues+5;
-								break;
-							case "Konsiliarbericht 1":
-								dbValues = dbValues+6;
-							default:
+								case "Hauptbefund":
+									Pst.setInt(7, 0);
+									break;
+								case "Nachbericht 1":
+									Pst.setInt(7, 1);
+									break;
+								case "Nachbericht 2":
+									Pst.setInt(7, 2);
+									break;
+								case "Korrekturbefund 1":
+									Pst.setInt(7, 3);
+									break;
+								case "Korrekturbefund 2":
+									Pst.setInt(7, 4);
+									break;
+								case "Korrekturbefund 3":
+									Pst.setInt(7, 5);
+									break;
+								case "Konsiliarbericht 1":
+									Pst.setInt(7, 6);
+									break;
 							}
 						} else {
-							switch (i[j]) {
-							case 4:
-								firstname = cell.getStringCellValue();
-								break;
-							case 5:
-								name =cell.getStringCellValue();
-								break;
-							default:
-								dbValues = dbValues+"\""+cell.getStringCellValue()+"\",";
-							}
+							Pst.setString(i[1][j], cell.getStringCellValue());
 						}
 						break;
 					case Cell.CELL_TYPE_NUMERIC:
-						if ((i[j]==0)){
-							dbValues = dbValues+"\"" + new java.sql.Date(cell.getDateCellValue().getTime())+"\",";
-						} else if (i[j]==3){
-							birthdate =new java.sql.Date(cell.getDateCellValue().getTime())+"";
+						if (i[0][j]==0){
+							//Eingangsdatum
+							Pst.setString(4, new java.sql.Date(cell.getDateCellValue().getTime())+"");
+						} else if (i[0][j]==3){
+							//Geburtsdatum
+							Pst.setString(3, new java.sql.Date(cell.getDateCellValue().getTime())+"");
 						} else {
-							dbValues = dbValues+(int) cell.getNumericCellValue()+",";
+							//Befundtyp
+							Pst.setInt(i[1][j], (int)cell.getNumericCellValue());
 						}
-
 						break;
 					case Cell.CELL_TYPE_BOOLEAN:
-						dbValues = dbValues+"\""+cell.getBooleanCellValue() + "\",";
+						//TODO Ask for User input
 						break;
 					case Cell.CELL_TYPE_BLANK:
-						dbValues+= "\"\",";
-
-					default:
-
+						Pst.setNull(i[1][j], java.sql.Types.NULL);
+						break;
 					}
 				}
-				rs = st.executeQuery( "select * from " + dbPatTbl + " where name= \"" + name + "\" AND vorname= \"" +
-						firstname +"\" AND geburtsdatum= \""+birthdate+"\"");
 
-				rs.first();
-				dbValues+=","+rs.getInt(1);
-				while (rs.next()){
-					System.out.println("Fehler");
+				try {
+					System.out.println("Updated rows in mydb.patientendaten: " + Pst.executeUpdate());
+				} catch (SQLException e) {
+					//e.printStackTrace();
+					System.out.println("Fehler beim Ausführen von \"insert into fall\": Fall ggf. doppelt!");
 				}
-				st.executeUpdate( "insert into "+dbFallTbl+" (`Eingangsdatum`, `E.-Nummer`, `Arzt`, `Befundtyp`, `Patientendaten_PatientenID`)"
-						+ " values ( "+dbValues+" );");
-
+				
 			}
+			System.out.println("Write fall success");
 			book.close();
 			fis.close();
-			System.out.println("Write fall success");
-		} catch( Exception ex ) {
-			System.out.println( ex );
+		} catch (SQLException SQLex) {
+			System.out.println("Fehler beim Erstellen des PreparedStatement \"insert into fall\"!");
+		} catch (IOException e) {
+			System.out.println("IO Exeption");
 		} finally {
-			try { if( rs != null ) rs.close(); } catch( Exception ex ) {/* nothing to do*/}
-			try { if( st != null ) st.close(); } catch( Exception ex ) {/* nothing to do*/}
+//			try { if( rs != null ) rs.close(); } catch( Exception ex ) {/* nothing to do*/}
+//			try { if( st != null ) st.close(); } catch( Exception ex ) {/* nothing to do*/}
 		}
 
 	}
@@ -321,15 +316,15 @@ public class start {
 			cn = DriverManager.getConnection( dbUrl, dbUsr, dbPwd );
 
 			//----------------------------------------------------
-			excelToPatient(excelPath, dbPatTbl);
+//			excelToPatient(excelPath, dbPatTbl);
 			//----------------------------------------------------
-			//excelToFall(excelPath, st, dbPatTbl, dbFallTbl);
+			excelToFall(excelPath);
 
 		} catch( Exception ex ) {
 			System.out.println( ex );
 		}
 
-		showDbTable( dbPatTbl );
+		//showDbTable( dbPatTbl );
 		//showDbTable( dbFallTbl );
 
 		//new StringReader("Makroskopie: 7 x 7 x 4 cm großes Mammaexzidat (links oben außen) mit zwei Fadenmarkierungen. 1,5 cm oberhalb der langen "
