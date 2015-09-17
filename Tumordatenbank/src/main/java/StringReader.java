@@ -79,18 +79,19 @@ public class StringReader {
 				if (tumorclassSub.charAt(i+1) == '1' || tumorclassSub.charAt(i+1) == '2' || 
 						tumorclassSub.charAt(i+1) == '3' || tumorclassSub.charAt(i+1) == '0'){
 					G=tumorclassSub.charAt(i+1)-'0';
-				} else if (tumorclassSub.charAt(i+1) == ' ' && (tumorclassSub.charAt(i+2) == '1' || tumorclassSub.charAt(i+2) == '2' || 
+				} 
+				if (tumorclassSub.charAt(i+1) == ' ' && (tumorclassSub.charAt(i+2) == '1' || tumorclassSub.charAt(i+2) == '2' || 
 						tumorclassSub.charAt(i+2) == '3'|| tumorclassSub.charAt(i+2) == '0')) {
 					G=tumorclassSub.charAt(i+2)-'0';
 				}
-				if (tumorclassSub.substring(i+1, i+4).equals("III") || tumorclassSub.substring(i+1, i+5).equals(" III")) {
+				if (tumorclassSub.substring(i+1, i+4).equals("III") || tumorclassSub.substring(i+2, i+5).equals("III")) {
 					G=3;
-				} else if (tumorclassSub.substring(i+1, i+3).equals("II") || tumorclassSub.substring(i+1, i+4).equals(" II")){
+				} else if (tumorclassSub.substring(i+1, i+3).equals("II") || tumorclassSub.substring(i+2, i+4).equals("II")){
 					G=2;
-				} else if (tumorclassSub.substring(i+1, i+2).equals("I") || tumorclassSub.substring(i+1, i+3).equals(" I")){
+				} else if (tumorclassSub.substring(i+1, i+2).equals("I") || tumorclassSub.substring(i+2, i+3).equals("I")){
 					G=1;
 				} else if (tumorclassSub.substring(i+1, i+2).toUpperCase().equals("X") || 
-						tumorclassSub.substring(i+1, i+3).toUpperCase().equals(" X")){
+						tumorclassSub.substring(i+1, i+2).toUpperCase().equals("X")){
 					G=5;
 				}
 			}
