@@ -4,6 +4,8 @@ import java.net.Socket;
 import java.sql.*;
 import java.util.Iterator;
 
+import javax.swing.table.DefaultTableModel;
+
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -12,6 +14,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 public class start {
 	
 	public static Connection cn;
+	public static correctParameters UIFenster1;
 	
 	static void showDbTable(String dbTbl) {
 		
@@ -97,7 +100,7 @@ public class start {
 				Cell cell = null;
 				
 				for (int j=0; j<positions[0].length;j++) {
-					cell=row.getCell(positions[0][j]);
+					cell = row.getCell(positions[0][j]);
 
 					switch (cell.getCellType()) {
 					case Cell.CELL_TYPE_STRING:
@@ -130,6 +133,7 @@ public class start {
 							//Es gibt keine Hausnummer zu vorhandener Straße
 							writeToDB = false;
 							System.out.println("Fehler: Hausnummer fehlt!");
+							fehlerToWindow("excelToPatient", row, positions);
 							break;
 						}
 						
@@ -138,7 +142,7 @@ public class start {
 						break;
 					}
 					
-				} 
+				}
 				
 				if (writeToDB) {
 					try {
@@ -288,6 +292,51 @@ public class start {
 		}
 
 	}
+	
+	public static void fehlerToWindow(String method, Row row, int[][] positions) {
+		
+		UIFenster1.scrollPane.setVisible(true);
+		UIFenster1.table.setVisible(true);
+		if (method.equals("excelToPatient")) {
+			DefaultTableModel tableModel = new DefaultTableModel(
+					new String[]{"Geburtsdatum", "Vorname", "Name", "Straße", "Hausnummer", "Land", "PLZ", "Ort"}, 0);
+			UIFenster1.table.setModel(tableModel);
+			
+			Object[] parameterArray = new Object[8];
+			
+			for (int j=0; j < positions[0].length;j++) {
+				Cell cell = row.getCell(positions[0][j]);
+
+				switch (cell.getCellType()) {
+				case Cell.CELL_TYPE_STRING:
+					parameterArray[j] = cell.getStringCellValue();
+					break;
+				case Cell.CELL_TYPE_NUMERIC:
+					if (positions[0][j]==3){
+						parameterArray[j] = new java.sql.Date(cell.getDateCellValue().getTime()) + "";
+					} else {
+						parameterArray[j] = (int)cell.getNumericCellValue();
+					}
+					break;
+				case Cell.CELL_TYPE_BOOLEAN:
+					if (cell.getBooleanCellValue()) {
+						parameterArray[j] = "True";
+					} else {
+						parameterArray[j] = "False";
+					}
+					break;
+				case Cell.CELL_TYPE_BLANK:
+					parameterArray[j] = null;
+					break;
+				}
+				
+			}
+			
+			tableModel.addRow(parameterArray);
+			UIFenster1.table.setModel(tableModel);
+		} //else if
+		
+	}
 
 
 	public static void main(String[] args) {
@@ -316,8 +365,8 @@ public class start {
 			sock.connect(new InetSocketAddress("192.168.178.22", 3306), 200 );
 			sock.close();
 			dbUrl = "jdbc:mysql://192.168.178.22:3306/mydb";
-		}
-		catch (Exception e){
+		} catch (Exception e) {
+			
 		}
 
 		//Validate connection data
@@ -329,7 +378,7 @@ public class start {
 			return;
 		}
 		
-		correctParameters UIFenster1 = new correctParameters();
+		UIFenster1 = new correctParameters();
 		UIFenster1.progressBar.setIndeterminate(true);
 		
 		try {
@@ -337,17 +386,18 @@ public class start {
 	/*???	*/Class.forName( dbDrv );
 			cn = DriverManager.getConnection( dbUrl, dbUsr, dbPwd );
 
-			//----------------------------------------------------
-			excelToPatient(excelPath);
-			//----------------------------------------------------
-//			excelToFall(excelPath);
 
-		} catch( Exception ex ) {
+		} catch ( Exception ex ) {
 			System.out.println( ex );
 		}
 
-		//showDbTable( dbPatTbl );
-		//showDbTable( dbFallTbl );
+		//----------------------------------------------------
+		excelToPatient(excelPath);
+//		excelToFall(excelPath);
+		
+//		showDbTable( dbPatTbl );
+//		showDbTable( dbFallTbl );
+		//----------------------------------------------------
 
 		//new StringReader("Makroskopie: 7 x 7 x 4 cm großes Mammaexzidat (links oben außen) mit zwei Fadenmarkierungen. 1,5 cm oberhalb der langen "
 		//				+ "Fadenmarkierung ein 2,2 x 2 x 1,8 cm großer lobulierter unscharf begrenzter 0,1 cm vom ventralen Resektionsrand entfernter Tumor. "
@@ -372,6 +422,7 @@ public class start {
 		
 		UIFenster1.progressBar.setIndeterminate(false);
 		UIFenster1.progressBar.setValue(1000);
+		
 		
 	}
 
