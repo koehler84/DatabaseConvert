@@ -90,9 +90,9 @@ public class start {
 				i++;	//stop after 30 rows for testing
 
 				Row row = itr.next();
-				Pst.clearParameters();		//clear parameters in Pst for next insert
-				
 				// Iterating over each column of Excel file
+				Pst.clearParameters();		//clear parameters in Pst for next insert
+				boolean writeToDB = true;
 				Cell cell = null;
 				
 				for (int j=0; j<positions[0].length;j++) {
@@ -119,6 +119,19 @@ public class start {
 						}
 						break;
 					case Cell.CELL_TYPE_BLANK:
+						
+						if (positions[0][j] >= 3 && positions[0][j] <= 5) {
+							writeToDB = false;
+							System.out.println("Fehler: Geburtsdatum, Vorname oder Nachmame fehlt!");
+							break;
+						}
+						if (positions[0][j] == 7 && row.getCell(positions[0][j-1]).getCellType() == Cell.CELL_TYPE_STRING) {
+							//Es gibt keine Hausnummer zu vorhandener Straße
+							writeToDB = false;
+							System.out.println("Fehler: Hausnummer fehlt!");
+							break;
+						}
+						
 						//Abfrage in der Datenbank: "select * from mydb.patientendaten where PLZ is null;"
 						Pst.setNull(positions[1][j], java.sql.Types.NULL);
 						break;
@@ -126,11 +139,15 @@ public class start {
 					
 				} 
 				
-				try {
-					//Execution of PreparedStatement, SQL Exeption if person is already in database
-					System.out.println("Updated rows in mydb.patientendaten: " + Pst.executeUpdate());
-				} catch (SQLException se){
-					System.out.println("Fehler beim Ausführen von \"insert into patientendaten\": Person ggf. schon erfasst!");
+				if (writeToDB) {
+					try {
+						//Execution of PreparedStatement, SQL Exeption if person is already in database
+						System.out.println("Updated rows in mydb.patientendaten: " + Pst.executeUpdate());
+					} catch (SQLException se){
+						System.out.println("Fehler beim Ausführen von \"insert into patientendaten\": Person ggf. schon erfasst!");
+					}
+				} else {
+					System.out.println("Fehler beim Einlesen der Patientendaten! Abbruch des Schreibvorgangs.");
 				}
 
 			}
@@ -179,8 +196,9 @@ public class start {
 
 				Row row = itr.next();
 				// Iterating over each column of Excel file
-				Cell cell = null;
 				Pst.clearParameters();
+				boolean writeToDB = true;
+				Cell cell = null;
 				
 				for (int j=0; j<positions[0].length;j++){
 					
@@ -214,6 +232,7 @@ public class start {
 								default:
 									//TODO Ask User for input
 									//Es ist keiner der normalen Befundtypen, Rechtschreibfehler?
+									writeToDB = false;
 									System.out.println("FEHLER: Keiner der bekannten Befundtypen!");
 									break;
 							}
@@ -234,16 +253,27 @@ public class start {
 						//TODO Ask for User input
 						break;
 					case Cell.CELL_TYPE_BLANK:
+						
+						if (positions[0][j] >= 0 && positions[0][j] <= 5 || positions[0][j] == 26) {		//TODO Wie wichtig ist der Einsender?
+							writeToDB = false;
+							System.out.println("Fehler: Wichtiger Parameter fehlt!");
+							break;
+						}
+						
 						Pst.setNull(positions[1][j], java.sql.Types.NULL);
 						break;
 					}
 				}
-
-				try {
-					System.out.println("Updated rows in mydb.patientendaten: " + Pst.executeUpdate());
-				} catch (SQLException e) {
-					//e.printStackTrace();
-					System.out.println("Fehler beim Ausführen von \"insert into fall\": Fall ggf. doppelt!");
+				
+				if (writeToDB) {
+					try {
+						System.out.println("Updated rows in mydb.patientendaten: " + Pst.executeUpdate());
+					} catch (SQLException e) {
+						//e.printStackTrace();
+						System.out.println("Fehler beim Ausführen von \"insert into fall\": Fall ggf. doppelt!");
+					}
+				} else {
+					System.out.println("Fehler beim Einlesen des Falls! Abbruch des Schreibvorgangs.");
 				}
 				
 			}
@@ -304,9 +334,9 @@ public class start {
 			cn = DriverManager.getConnection( dbUrl, dbUsr, dbPwd );
 
 			//----------------------------------------------------
-//			excelToPatient(excelPath);
+			excelToPatient(excelPath);
 			//----------------------------------------------------
-			excelToFall(excelPath);
+//			excelToFall(excelPath);
 
 		} catch( Exception ex ) {
 			System.out.println( ex );
