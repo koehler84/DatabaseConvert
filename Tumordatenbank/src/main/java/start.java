@@ -90,6 +90,7 @@ public class start {
 				i++;	//stop after 30 rows for testing
 
 				Row row = itr.next();
+				
 				// Iterating over each column of Excel file
 				Pst.clearParameters();		//clear parameters in Pst for next insert
 				boolean writeToDB = true;
@@ -182,7 +183,7 @@ public class start {
 				itr.next();
 			}
 			// Iterating over Excel file in Java
-
+			
 			int[][] positions = {{0,1,2,3,4,5,26},{4,5,6,3,2,1,7}};
 			
 			//i:	0,1,2,3,4,5,26		oben: Spalte in excel datei
@@ -328,6 +329,9 @@ public class start {
 			return;
 		}
 		
+		correctParameters UIFenster1 = new correctParameters();
+		UIFenster1.progressBar.setIndeterminate(true);
+		
 		try {
 			// Select fitting database driver and connect:
 	/*???	*/Class.forName( dbDrv );
@@ -365,7 +369,10 @@ public class start {
 		} catch (Exception e) {
 			System.out.println("Fehler beim Beenden der Datenbankverbindung!");
 		}
-
+		
+		UIFenster1.progressBar.setIndeterminate(false);
+		UIFenster1.progressBar.setValue(1000);
+		
 	}
 
 	//http://download.eclipse.org/egit/github/updates-nightly/ <- GITHUB Task manager (über help -> install new software)

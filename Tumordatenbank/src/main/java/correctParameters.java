@@ -1,18 +1,12 @@
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
-
 import org.apache.poi.ss.usermodel.Row;
-
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import java.awt.FlowLayout;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -25,6 +19,7 @@ import javax.swing.JMenuItem;
 public class correctParameters extends JFrame {
 
 	private JPanel contentPane;
+	JProgressBar progressBar;
 
 	/**
 	 * Launch the application.
@@ -82,7 +77,9 @@ public class correctParameters extends JFrame {
 		
 		JLabel lblFortschritt = new JLabel("Fortschritt:");
 		
-		JProgressBar progressBar = new JProgressBar();
+		progressBar = new JProgressBar();
+		progressBar.setMaximum(1000);
+		
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.TRAILING)
