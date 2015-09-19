@@ -84,6 +84,11 @@ public class correctParameters extends JFrame {
 		});
 		
 		JButton btnOk = new JButton("OK");
+		btnOk.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//System.out.println(getBounds().toString());
+			}
+		});
 		
 		JSeparator separator = new JSeparator();
 		
@@ -94,21 +99,14 @@ public class correctParameters extends JFrame {
 		
 		scrollPane = new JScrollPane();
 		scrollPane.setVisible(false);
-//		scrollPane.setVisible(true);
 		
 		table = new JTable();
 		table.setVisible(false);
-//		table.setVisible(true);
-//		DefaultTableModel tableModel = new DefaultTableModel(
-//				new String[]{"Geburtsdatum", "Vorname", "Name", "Straﬂe", "Hausnummer", "Land", "PLZ", "Ort"}, 0);
-//		table.setModel(tableModel);
-//		tableModel.addRow(new String[]{"test1"});
-//		table.setModel(new DefaultTableModel());
 		scrollPane.setViewportView(table);
 		
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
+			gl_contentPane.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addGap(1)
 					.addComponent(lblFortschritt, GroupLayout.PREFERRED_SIZE, 58, GroupLayout.PREFERRED_SIZE)
@@ -118,7 +116,7 @@ public class correctParameters extends JFrame {
 					.addComponent(btnOk)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(btnAbbrechen))
-				.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
+				.addGroup(gl_contentPane.createSequentialGroup()
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
 						.addComponent(scrollPane, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 523, Short.MAX_VALUE)
 						.addComponent(separator, GroupLayout.DEFAULT_SIZE, 523, Short.MAX_VALUE))
@@ -128,8 +126,8 @@ public class correctParameters extends JFrame {
 			gl_contentPane.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addGap(31)
-					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, 74, Short.MAX_VALUE)
+					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 43, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED, 78, Short.MAX_VALUE)
 					.addComponent(separator, GroupLayout.PREFERRED_SIZE, 3, GroupLayout.PREFERRED_SIZE)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_contentPane.createSequentialGroup()

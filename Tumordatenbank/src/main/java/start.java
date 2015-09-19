@@ -296,7 +296,9 @@ public class start {
 	public static void fehlerToWindow(String method, Row row, int[][] positions) {
 		
 		UIFenster1.scrollPane.setVisible(true);
+		UIFenster1.getContentPane().revalidate();		//essential for the scrollPane to be visible
 		UIFenster1.table.setVisible(true);
+		
 		if (method.equals("excelToPatient")) {
 			DefaultTableModel tableModel = new DefaultTableModel(
 					new String[]{"Geburtsdatum", "Vorname", "Name", "Straﬂe", "Hausnummer", "Land", "PLZ", "Ort"}, 0);
@@ -333,7 +335,6 @@ public class start {
 			}
 			
 			tableModel.addRow(parameterArray);
-			UIFenster1.table.setModel(tableModel);
 		} //else if
 		
 	}
@@ -380,6 +381,7 @@ public class start {
 		
 		UIFenster1 = new correctParameters();
 		UIFenster1.progressBar.setIndeterminate(true);
+//		UIFenster1.scrollPane.setVisible(false);
 		
 		try {
 			// Select fitting database driver and connect:
