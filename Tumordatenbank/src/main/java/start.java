@@ -381,7 +381,6 @@ public class start {
 		
 		UIFenster1 = new correctParameters();
 		UIFenster1.progressBar.setIndeterminate(true);
-//		UIFenster1.scrollPane.setVisible(false);
 		
 		try {
 			// Select fitting database driver and connect:

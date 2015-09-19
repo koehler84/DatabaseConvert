@@ -102,6 +102,7 @@ public class correctParameters extends JFrame {
 		
 		table = new JTable();
 		table.setVisible(false);
+		
 		scrollPane.setViewportView(table);
 		
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
