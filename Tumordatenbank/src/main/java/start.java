@@ -4,6 +4,8 @@ import java.net.Socket;
 import java.sql.*;
 import java.util.Iterator;
 
+import javax.swing.table.DefaultTableModel;
+
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -12,6 +14,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 public class start {
 	
 	public static Connection cn;
+	public static correctParameters UIFenster1;
 	
 	static void showDbTable(String dbTbl) {
 		
@@ -90,13 +93,14 @@ public class start {
 				i++;	//stop after 30 rows for testing
 
 				Row row = itr.next();
-				Pst.clearParameters();		//clear parameters in Pst for next insert
 				
 				// Iterating over each column of Excel file
+				Pst.clearParameters();		//clear parameters in Pst for next insert
+				boolean writeToDB = true;
 				Cell cell = null;
 				
 				for (int j=0; j<positions[0].length;j++) {
-					cell=row.getCell(positions[0][j]);
+					cell = row.getCell(positions[0][j]);
 
 					switch (cell.getCellType()) {
 					case Cell.CELL_TYPE_STRING:
@@ -119,18 +123,36 @@ public class start {
 						}
 						break;
 					case Cell.CELL_TYPE_BLANK:
+						
+						if (positions[0][j] >= 3 && positions[0][j] <= 5) {
+							writeToDB = false;
+							System.out.println("Fehler: Geburtsdatum, Vorname oder Nachmame fehlt!");
+							break;
+						}
+						if (positions[0][j] == 7 && row.getCell(positions[0][j-1]).getCellType() == Cell.CELL_TYPE_STRING) {
+							//Es gibt keine Hausnummer zu vorhandener Straße
+							writeToDB = false;
+							System.out.println("Fehler: Hausnummer fehlt!");
+							fehlerToWindow("excelToPatient", row, positions);
+							break;
+						}
+						
 						//Abfrage in der Datenbank: "select * from mydb.patientendaten where PLZ is null;"
 						Pst.setNull(positions[1][j], java.sql.Types.NULL);
 						break;
 					}
 					
-				} 
+				}
 				
-				try {
-					//Execution of PreparedStatement, SQL Exeption if person is already in database
-					System.out.println("Updated rows in mydb.patientendaten: " + Pst.executeUpdate());
-				} catch (SQLException se){
-					System.out.println("Fehler beim Ausführen von \"insert into patientendaten\": Person ggf. schon erfasst!");
+				if (writeToDB) {
+					try {
+						//Execution of PreparedStatement, SQL Exeption if person is already in database
+						System.out.println("Updated rows in mydb.patientendaten: " + Pst.executeUpdate());
+					} catch (SQLException se){
+						System.out.println("Fehler beim Ausführen von \"insert into patientendaten\": Person ggf. schon erfasst!");
+					}
+				} else {
+					System.out.println("Fehler beim Einlesen der Patientendaten! Abbruch des Schreibvorgangs.");
 				}
 
 			}
@@ -165,7 +187,7 @@ public class start {
 				itr.next();
 			}
 			// Iterating over Excel file in Java
-
+			
 			int[][] positions = {{0,1,2,3,4,5,26},{4,5,6,3,2,1,7}};
 			
 			//i:	0,1,2,3,4,5,26		oben: Spalte in excel datei
@@ -179,8 +201,9 @@ public class start {
 
 				Row row = itr.next();
 				// Iterating over each column of Excel file
-				Cell cell = null;
 				Pst.clearParameters();
+				boolean writeToDB = true;
+				Cell cell = null;
 				
 				for (int j=0; j<positions[0].length;j++){
 					
@@ -214,6 +237,7 @@ public class start {
 								default:
 									//TODO Ask User for input
 									//Es ist keiner der normalen Befundtypen, Rechtschreibfehler?
+									writeToDB = false;
 									System.out.println("FEHLER: Keiner der bekannten Befundtypen!");
 									break;
 							}
@@ -234,16 +258,27 @@ public class start {
 						//TODO Ask for User input
 						break;
 					case Cell.CELL_TYPE_BLANK:
+						
+						if (positions[0][j] >= 0 && positions[0][j] <= 5 || positions[0][j] == 26) {		//TODO Wie wichtig ist der Einsender?
+							writeToDB = false;
+							System.out.println("Fehler: Wichtiger Parameter fehlt!");
+							break;
+						}
+						
 						Pst.setNull(positions[1][j], java.sql.Types.NULL);
 						break;
 					}
 				}
-
-				try {
-					System.out.println("Updated rows in mydb.patientendaten: " + Pst.executeUpdate());
-				} catch (SQLException e) {
-					//e.printStackTrace();
-					System.out.println("Fehler beim Ausführen von \"insert into fall\": Fall ggf. doppelt!");
+				
+				if (writeToDB) {
+					try {
+						System.out.println("Updated rows in mydb.patientendaten: " + Pst.executeUpdate());
+					} catch (SQLException e) {
+						//e.printStackTrace();
+						System.out.println("Fehler beim Ausführen von \"insert into fall\": Fall ggf. doppelt!");
+					}
+				} else {
+					System.out.println("Fehler beim Einlesen des Falls! Abbruch des Schreibvorgangs.");
 				}
 				
 			}
@@ -256,6 +291,52 @@ public class start {
 			System.out.println("IO Exeption");
 		}
 
+	}
+	
+	public static void fehlerToWindow(String method, Row row, int[][] positions) {
+		
+		UIFenster1.scrollPane.setVisible(true);
+		UIFenster1.getContentPane().revalidate();		//essential for the scrollPane to be visible
+		UIFenster1.table.setVisible(true);
+		
+		if (method.equals("excelToPatient")) {
+			DefaultTableModel tableModel = new DefaultTableModel(
+					new String[]{"Geburtsdatum", "Vorname", "Name", "Straße", "Hausnummer", "Land", "PLZ", "Ort"}, 0);
+			UIFenster1.table.setModel(tableModel);
+			
+			Object[] parameterArray = new Object[8];
+			
+			for (int j=0; j < positions[0].length;j++) {
+				Cell cell = row.getCell(positions[0][j]);
+
+				switch (cell.getCellType()) {
+				case Cell.CELL_TYPE_STRING:
+					parameterArray[j] = cell.getStringCellValue();
+					break;
+				case Cell.CELL_TYPE_NUMERIC:
+					if (positions[0][j]==3){
+						parameterArray[j] = new java.sql.Date(cell.getDateCellValue().getTime()) + "";
+					} else {
+						parameterArray[j] = (int)cell.getNumericCellValue();
+					}
+					break;
+				case Cell.CELL_TYPE_BOOLEAN:
+					if (cell.getBooleanCellValue()) {
+						parameterArray[j] = "True";
+					} else {
+						parameterArray[j] = "False";
+					}
+					break;
+				case Cell.CELL_TYPE_BLANK:
+					parameterArray[j] = null;
+					break;
+				}
+				
+			}
+			
+			tableModel.addRow(parameterArray);
+		} //else if
+		
 	}
 
 
@@ -285,8 +366,8 @@ public class start {
 			sock.connect(new InetSocketAddress("192.168.178.22", 3306), 200 );
 			sock.close();
 			dbUrl = "jdbc:mysql://192.168.178.22:3306/mydb";
-		}
-		catch (Exception e){
+		} catch (Exception e) {
+			
 		}
 
 		//Validate connection data
@@ -298,22 +379,26 @@ public class start {
 			return;
 		}
 		
+		UIFenster1 = new correctParameters();
+		UIFenster1.progressBar.setIndeterminate(true);
+		
 		try {
 			// Select fitting database driver and connect:
 	/*???	*/Class.forName( dbDrv );
 			cn = DriverManager.getConnection( dbUrl, dbUsr, dbPwd );
 
-			//----------------------------------------------------
-//			excelToPatient(excelPath);
-			//----------------------------------------------------
-			excelToFall(excelPath);
 
-		} catch( Exception ex ) {
+		} catch ( Exception ex ) {
 			System.out.println( ex );
 		}
 
-		//showDbTable( dbPatTbl );
-		//showDbTable( dbFallTbl );
+		//----------------------------------------------------
+		excelToPatient(excelPath);
+//		excelToFall(excelPath);
+		
+//		showDbTable( dbPatTbl );
+//		showDbTable( dbFallTbl );
+		//----------------------------------------------------
 
 		//new StringReader("Makroskopie: 7 x 7 x 4 cm großes Mammaexzidat (links oben außen) mit zwei Fadenmarkierungen. 1,5 cm oberhalb der langen "
 		//				+ "Fadenmarkierung ein 2,2 x 2 x 1,8 cm großer lobulierter unscharf begrenzter 0,1 cm vom ventralen Resektionsrand entfernter Tumor. "
@@ -335,7 +420,11 @@ public class start {
 		} catch (Exception e) {
 			System.out.println("Fehler beim Beenden der Datenbankverbindung!");
 		}
-
+		
+		UIFenster1.progressBar.setIndeterminate(false);
+		UIFenster1.progressBar.setValue(1000);
+		
+		
 	}
 
 	//http://download.eclipse.org/egit/github/updates-nightly/ <- GITHUB Task manager (über help -> install new software)
