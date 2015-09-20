@@ -89,6 +89,7 @@ public class start {
 			
 			int[][] positions = {{3,4,5,6,7,8,9,10},{1,2,3,4,5,6,7,8,9}};
 
+			//Max. Reihen: sheet.getPhysicalNumberOfRows()
 			while (itr.hasNext() && i<30) {	//stop after 30 rows for testing
 
 				i++;	//stop after 30 rows for testing
@@ -197,6 +198,7 @@ public class start {
 			
 			int k = 0;	//stop after 30 rows for testing
 			
+			//Max. Reihen: sheet.getPhysicalNumberOfRows()
 			while (itr.hasNext() && k<29) {	//stop after 30 rows for testing
 
 				k++;	//stop after 30 rows for testing
