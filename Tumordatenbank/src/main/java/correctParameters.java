@@ -25,6 +25,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class correctParameters extends JFrame {
 
@@ -160,6 +162,15 @@ public class correctParameters extends JFrame {
 		textField_5.setColumns(10);
 		
 		textField_6 = new JTextField();
+		textField_6.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				//PLZ textField, daher nur Zahlen
+				if (!(e.getKeyChar() >= '0' && e.getKeyChar() <= '9')) {
+					e.consume();
+				}
+			}
+		});
 		textField_6.setColumns(10);
 		
 		textField_7 = new JTextField();
