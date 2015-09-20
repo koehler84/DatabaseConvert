@@ -15,6 +15,7 @@ public class start {
 	
 	public static Connection cn;
 	public static correctParameters UIFenster1;
+	public static boolean methodsCompleted;
 	
 	static void showDbTable(String dbTbl) {
 		
@@ -157,6 +158,7 @@ public class start {
 
 			}
 			
+			Pst.close();
 			book.close();
 			fis.close();
 			System.out.println("Write patientendaten success");
@@ -282,9 +284,11 @@ public class start {
 				}
 				
 			}
-			System.out.println("Write fall success");
+			
+			Pst.close();
 			book.close();
 			fis.close();
+			System.out.println("Write fall success");
 		} catch (SQLException SQLex) {
 			System.out.println("Fehler beim Erstellen des PreparedStatement \"insert into fall\"!");
 		} catch (IOException e) {
@@ -297,12 +301,18 @@ public class start {
 		
 		UIFenster1.scrollPane.setVisible(true);
 		UIFenster1.getContentPane().revalidate();		//essential for the scrollPane to be visible
+		UIFenster1.getContentPane().repaint();
 		UIFenster1.table.setVisible(true);
 		
 		if (method.equals("excelToPatient")) {
-			DefaultTableModel tableModel = new DefaultTableModel(
-					new String[]{"Geburtsdatum", "Vorname", "Name", "Straﬂe", "Hausnummer", "Land", "PLZ", "Ort"}, 0);
-			UIFenster1.table.setModel(tableModel);
+			
+			DefaultTableModel tableModel = new DefaultTableModel();
+			if (UIFenster1.table.getModel().getColumnCount() == 0) {
+				System.out.println("TableModel null");
+				tableModel = new DefaultTableModel(
+						new String[]{"Geburtsdatum", "Vorname", "Name", "Straﬂe", "Hausnummer", "Land", "PLZ", "Ort"}, 0);
+				UIFenster1.table.setModel(tableModel);
+			}
 			
 			Object[] parameterArray = new Object[8];
 			
@@ -334,8 +344,11 @@ public class start {
 				
 			}
 			
-			tableModel.addRow(parameterArray);
-		} //else if
+			((DefaultTableModel) UIFenster1.table.getModel()).addRow(parameterArray);
+			
+		} else if (method.equals("excelToFall")) {
+			
+		}
 		
 	}
 
@@ -415,9 +428,14 @@ public class start {
 
 		//Tumorklassifikation: C 57, M 8441/3, G 3, pT3c pN1(15/34) L/V1. Der Tumor ist ÷strogen- und Progesteronrezeptor-negativ. Sonstiges: ip
 
+		methodsCompleted = true;
+		
 		try {
-			if( cn != null ) cn.close();
-		} catch (Exception e) {
+			if (cn != null && !cn.isClosed() && !UIFenster1.isShowing()) {
+				cn.close();
+				System.out.println("Datenbankverbindung beednet! STARTCLASS");
+			}
+		} catch (SQLException e) {
 			System.out.println("Fehler beim Beenden der Datenbankverbindung!");
 		}
 		
