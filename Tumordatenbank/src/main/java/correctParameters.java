@@ -269,7 +269,19 @@ public class correctParameters extends JFrame {
 			System.out.println("Manueller Input: Zeilen geändert: " + changedRows);
 			Pst.close();
 			
-			((DefaultTableModel)table.getModel()).removeRow(0);
+			if (table.getRowCount() > 0) {
+				((DefaultTableModel)table.getModel()).removeRow(0);
+			}
+			
+			textField.setText("");
+			textField_1.setText("");
+			textField_2.setText("");
+			textField_3.setText("");
+			textField_4.setText("");
+			textField_5.setText("");
+			textField_6.setText("");
+			textField_7.setText("");
+			
 		} catch (SQLException e) {
 			System.out.println("Fehler in writeInputToDB: Person ggf. schon erfasst!");
 		}		
