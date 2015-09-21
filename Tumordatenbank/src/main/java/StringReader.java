@@ -16,9 +16,9 @@ public class StringReader {
 	int R;
 	String nSum;
 	String nMeta;
-	boolean ER;
+	String ER;
 	String erIrs;
-	boolean PR;
+	String PR;
 	String prIrs;
 	String her2_Neu;
 	int her2_NeuScore;
@@ -71,6 +71,8 @@ public class StringReader {
 		M="mis";
 		L=9;
 		V=9;
+		ER="mis";
+		PR="mis";
 
 		for (int i = 0; i < tumorclassSub.length() - 5; i++) {
 			//-------------
@@ -165,29 +167,38 @@ public class StringReader {
 					}
 				}
 			}
-			
+
 
 			if ((i < tumorclassSub.length() - 16) && tumorclassSub.substring(i+1, i+9).toUpperCase().equals("ÖSTROGEN")) {
-				for (int j = i + 9; j < tumorclassSub.length(); j++) {
-					if (tumorclassSub.substring(j+1, j+8).toUpperCase().equals("positiv".toUpperCase()) || j - i > 20) {
-						ER=true;						
+				for (int j = i + 9; j < tumorclassSub.length() - 8; j++) {
+					if (tumorclassSub.substring(j+1, j+8).toUpperCase().equals("positiv".toUpperCase())) {
+						ER="true";	
+						break;
 					}
-					if (tumorclassSub.substring(j+1, j+8).toUpperCase().equals("negativ".toUpperCase()) || j - i > 20) {
-						ER=false;						
+					if (tumorclassSub.substring(j+1, j+8).toUpperCase().equals("negativ".toUpperCase())) {
+						ER="false";	
+						break;
+					}
+					if (j - i > 35) {
+						break;
 					}
 				}
 
 			}
-			
+
 			if ((i < tumorclassSub.length() - 19) && tumorclassSub.substring(i+1, i+12).toUpperCase().equals("PROGESTERON")) {
-				for (int j = i + 12; j < tumorclassSub.length(); j++) {
-					if (tumorclassSub.substring(j+1, j+8).toUpperCase().equals("positiv".toUpperCase()) || j - i > 23) {
-						PR=true;						
+				for (int j = i + 12; j < tumorclassSub.length() - 8; j++) {
+					if (tumorclassSub.substring(j+1, j+8).toUpperCase().equals("positiv".toUpperCase())) {
+						PR="true";						
+						break;
 					}
-					if (tumorclassSub.substring(j+1, j+8).toUpperCase().equals("negativ".toUpperCase()) || j - i > 23) {
-						PR=false;						
+					if (tumorclassSub.substring(j+1, j+8).toUpperCase().equals("negativ".toUpperCase())) {
+						PR="false";		
+						break;
 					}
-				
+					if (j-i > 35) {
+						break;
+					}
 				}
 
 			}
