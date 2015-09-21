@@ -8,9 +8,9 @@ public class StringReader {
 	//erkennbar (siehe Task 2)
 	String T;							//Tumor [c,p,][1,2,3,4,X][a,b,c] or "mis" (see Task 2)
 	String N;							//Metastasen [1,2,3,4,X][a,b,c] or "mis" (see Task 2) 
-										//=> Task 5
+	//=> Task 5
 	String M;							//Fernmetastasen [0,1]{later maybe localisation code} or 
-										//"mis" (see Task 2)
+	//"mis" (see Task 2)
 	int L;								//9 - Not in Dataset
 	int V;								//9 - Not in Dataset
 	int R;
@@ -72,7 +72,7 @@ public class StringReader {
 		L=9;
 		V=9;
 
-		for (int i = 0; i < tumorclassSub.length(); i++) {
+		for (int i = 0; i < tumorclassSub.length() - 5; i++) {
 			//-------------
 
 			if (Character.toUpperCase(tumorclassSub.charAt(i)) == 'G'){
@@ -141,7 +141,7 @@ public class StringReader {
 					}
 				}
 			}
-			
+
 			if (Character.toUpperCase(tumorclassSub.charAt(i)) == 'M') {
 				if (tumorclassSub.charAt(i+1) == '1' || tumorclassSub.charAt(i+1) == '0' ||
 						Character.toUpperCase(tumorclassSub.charAt(i+1)) == 'X'){
@@ -150,24 +150,49 @@ public class StringReader {
 					//TODO: localisation code (extrem low priority)
 				}
 			}
-			
+
 			if (Character.toUpperCase(tumorclassSub.charAt(i)) == 'L'){
 				if (tumorclassSub.charAt(i+1) == '/'){
-					if (tumorclassSub.charAt(i+1) == '0') {
+					if (tumorclassSub.charAt(i+3) == '0') {
 						L=V=0;
 					} else {
 						L=1;
 						V=tumorclassSub.charAt(i+3)-'0';
 					}
-				if (Character.toUpperCase(tumorclassSub.charAt(i+2)) == 'V'){
-					L=tumorclassSub.charAt(i+1)-'0';
-					V=tumorclassSub.charAt(i+3)-'0';
-				}
+					if (Character.toUpperCase(tumorclassSub.charAt(i+2)) == 'V' && tumorclassSub.charAt(i+1) != '/'){
+						L=tumorclassSub.charAt(i+1)-'0';
+						V=tumorclassSub.charAt(i+3)-'0';
+					}
 				}
 			}
 			
+
+			if ((i < tumorclassSub.length() - 16) && tumorclassSub.substring(i+1, i+9).toUpperCase().equals("ÖSTROGEN")) {
+				for (int j = i + 9; j < tumorclassSub.length(); j++) {
+					if (tumorclassSub.substring(j+1, j+8).toUpperCase().equals("positiv".toUpperCase()) || j - i > 20) {
+						ER=true;						
+					}
+					if (tumorclassSub.substring(j+1, j+8).toUpperCase().equals("negativ".toUpperCase()) || j - i > 20) {
+						ER=false;						
+					}
+				}
+
+			}
+			
+			if ((i < tumorclassSub.length() - 19) && tumorclassSub.substring(i+1, i+12).toUpperCase().equals("PROGESTERON")) {
+				for (int j = i + 12; j < tumorclassSub.length(); j++) {
+					if (tumorclassSub.substring(j+1, j+8).toUpperCase().equals("positiv".toUpperCase()) || j - i > 23) {
+						PR=true;						
+					}
+					if (tumorclassSub.substring(j+1, j+8).toUpperCase().equals("negativ".toUpperCase()) || j - i > 23) {
+						PR=false;						
+					}
+				
+				}
+
+			}
 		}
-		System.out.println("G: " + G + ", T: " + T + ", N: " + N + ", M:" + M + ", L:" + L + ", V:" + V);	
+		System.out.println("G: " + G + ", T: " + T + ", N: " + N + ", M:" + M + ", L:" + L + ", V:" + V + ", ER:"+ ER + ", PR:"+ PR);	
 		/*
 		 *  pT3L1V0R1
 		 *  pT3N1aL1V0R0
