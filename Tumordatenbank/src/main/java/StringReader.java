@@ -31,7 +31,10 @@ public class StringReader {
 	
 	//TODO:	her2_Neu implementieren (X), SubString (V), R (V)
 
-
+	public StringReader () {
+		this.source = null;
+	}
+	
 	public StringReader (String source) {
 		this.source = source;
 		this.StringAnalyse();

@@ -230,7 +230,7 @@ public class start {
 				
 				String E_NR = null;
 				Befundtyp befundtyp = null;
-				StringReader srObject = null;				
+				StringReader srObject = new StringReader();				
 				try {
 					srObject = new StringReader(abc);
 				} catch (Exception e) {
