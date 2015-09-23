@@ -124,7 +124,7 @@ public class correctParameters extends JFrame {
 		JButton btnAbbrechen = new JButton("Abbrechen");
 		btnAbbrechen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				dispose();
+				//dispose();
 				
 				try {
 					if (start.cn != null && !start.cn.isClosed() && start.methodsCompleted) {
@@ -134,13 +134,24 @@ public class correctParameters extends JFrame {
 				} catch (SQLException e1) {
 					System.out.println("Fehler beim Beenden der Datenbankverbindung!");
 				}
+				
+				System.exit(0);
 			}
 		});
 		
 		JButton btnOk = new JButton("OK");
 		btnOk.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//System.out.println(getBounds().toString());
+				dispose();
+								
+				try {
+					if (start.cn != null && !start.cn.isClosed() && start.methodsCompleted) {
+						start.cn.close();
+						System.out.println("Datenbankverbindung beednet! WINDOW");
+					}
+				} catch (SQLException e1) {
+					System.out.println("Fehler beim Beenden der Datenbankverbindung!");
+				}
 			}
 		});
 		
@@ -446,10 +457,18 @@ public class correctParameters extends JFrame {
 			Pst.setString(4, textField_Strasse.getText());	//set Strasse
 			Pst.setString(5, textField_Hausnummer.getText());	//set Hausnummer
 			Pst.setString(6, textField_Land.getText());	//set Land
-			Pst.setString(7, textField_PLZ.getText());	//set PLZ
 			Pst.setString(8, textField_Ort.getText());	//set Ort
+			
+			if (textField_PLZ.getText().length() != 0) {
+				Pst.setInt(7, Integer.parseInt(textField_PLZ.getText()));
+			} else {
+				Pst.setString(7, null);
+			}
+			
 			if (checkBox_Vollstaendig.isSelected()) {
 				Pst.setInt(9, 0);
+			} else {
+				Pst.setInt(9, 1);
 			}
 			
 			System.out.println("Zeilen manuell geändert: " + Pst.executeUpdate());
@@ -473,7 +492,7 @@ public class correctParameters extends JFrame {
 			checkBox_Vollstaendig.setSelected(false);
 			
 		} catch (SQLException e) {
-			System.out.println("e");
+			System.out.println(e);
 		}
 		
 	}
