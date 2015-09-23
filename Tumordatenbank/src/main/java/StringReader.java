@@ -28,6 +28,8 @@ public class StringReader {
 	String Material;
 	int size;
 	java.sql.Date progressDate;
+	
+	//TODO:	her2_Neu implementieren (X), SubString (V), R (V)
 
 
 	public StringReader (String source) {
@@ -46,16 +48,16 @@ public class StringReader {
 					for (int j = i + receptor[l].length(); j <= textSub.length() - value[m].length(); j++) {
 						if (textSub.substring(j, j+value[m].length()).toUpperCase().equals(value[m])) {
 							if ((l==0 || l==1) && (m==0 || m==1)) {
-								ER="true";
+								ER="+";
 							}
 							if ((l==2 || l==3) && (m==0 || m==1)){
-								PR="true";
+								PR="+";
 							}
 							if ((l==0 || l==1) && (m==2 || m==3)) {
-								ER="false";
+								ER="-";
 							} 
 							if ((l==2 || l==3) && (m==2 || m==3)){
-								PR="false";
+								PR="-";
 							}
 							break;
 						}
@@ -71,10 +73,10 @@ public class StringReader {
 	private void StringAnalyse() {
 
 		int makroskopStart=0,mikroskopStart=0,diagStart=0,tumorclassStart=0;
-		String makroSub="",mikroSub="", diagSub="",tumorclassSub="";
+		String makroSub="",mikroSub="", diagSub="",tumorclassSub=this.source;
 
 
-		for (int i = 0; i < this.source.length(); i++) {
+		for (int i = 0; i < this.source.length() - 20; i++) {
 			if (source.substring(i, i+"Makroskopie:".length()).equals("Makroskopie:")) {
 				makroskopStart = i;
 			}
@@ -103,6 +105,7 @@ public class StringReader {
 		M="mis";
 		L=9;
 		V=9;
+		R=9;
 		ER="mis";
 		PR="mis";
 
@@ -197,6 +200,16 @@ public class StringReader {
 						L=tumorclassSub.charAt(i+1)-'0';
 						V=tumorclassSub.charAt(i+3)-'0';
 					}
+				}
+			}
+			
+			if (Character.toUpperCase(tumorclassSub.charAt(i)) == 'R') {
+				if (tumorclassSub.charAt(i+1) == '0' || tumorclassSub.charAt(i+1) == '1' ||
+						tumorclassSub.charAt(i+1) == '2' || Character.toUpperCase(tumorclassSub.charAt(i+1)) == 'X'){
+					R=tumorclassSub.charAt(i+1);
+				}
+				if (Character.toUpperCase(tumorclassSub.charAt(i+1)) == 'X') {
+					R=5;
 				}
 			}
 
