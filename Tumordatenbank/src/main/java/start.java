@@ -225,9 +225,18 @@ public class start {
 				boolean writeToDB = true;
 				Cell cell = null;
 				
-				for (int j=0; j<positions[0].length;j++){
+				cell = row.getCell(28);
+				String abc = cell.getStringCellValue();
+				
+				try {
+					new StringReader(abc);
+				} catch (Exception e) {
+					System.out.println("Objektfehler!");
+				}
+				
+				for (int j=0; j<positions[0].length;j++) {
 					
-					cell=row.getCell(positions[0][j]);
+					cell = row.getCell(positions[0][j]);
 					
 					switch (cell.getCellType()) {
 					case Cell.CELL_TYPE_STRING:
@@ -425,8 +434,8 @@ public class start {
 		}
 
 		//----------------------------------------------------
-		excelToPatient(excelPath);
-//		excelToFall(excelPath);
+//		excelToPatient(excelPath);
+		excelToFall(excelPath);
 		
 //		showDbTable( dbPatTbl );
 //		showDbTable( dbFallTbl );
