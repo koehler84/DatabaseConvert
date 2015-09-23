@@ -314,7 +314,7 @@ public class start {
 					try {
 						System.out.println("Updated rows in mydb.patientendaten: " + Pst.executeUpdate());
 					} catch (SQLException e) {
-						//e.printStackTrace();
+						e.printStackTrace();
 						System.out.println("Fehler beim Ausführen von \"insert into fall\": Fall ggf. doppelt!");
 					}
 				} else {
@@ -468,7 +468,7 @@ public class start {
 		}
 
 		//----------------------------------------------------
-		excelToPatient(excelPath);
+		//excelToPatient(excelPath);
 		excelToFall(excelPath);
 		
 //		showDbTable( dbPatTbl );

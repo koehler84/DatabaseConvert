@@ -210,7 +210,7 @@ public class StringReader {
 			if (Character.toUpperCase(textSub[3].charAt(i)) == 'R') {
 				if (textSub[3].charAt(i+1) == '0' || textSub[3].charAt(i+1) == '1' ||
 						textSub[3].charAt(i+1) == '2' || Character.toUpperCase(textSub[3].charAt(i+1)) == 'X'){
-					R=textSub[3].charAt(i+1);
+					R=textSub[3].charAt(i+1)-'0';
 				}
 				if (Character.toUpperCase(textSub[3].charAt(i+1)) == 'X') {
 					R=5;
@@ -218,7 +218,7 @@ public class StringReader {
 			}
 
 			int a=3;
-			while (a!=0 || !ER.equals("mis") && !PR.equals("mis")) {
+			while (a!=0) {
 				FindER_PR(textSub[3], i);
 				a--;
 			}
