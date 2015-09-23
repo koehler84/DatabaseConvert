@@ -1,25 +1,26 @@
 public class StringReader {
-
+	
 	String source;
+	//Init with Failsafe
 	//--Klassifikation--
 	String Quadrant;
-	int G;								//Klassifikation =0,1,2,3,5=X,9 Not in Dataset 
+	int G=9;							//Klassifikation =0,1,2,3,5=X,9 Not in Dataset 
 	//erkennbar (siehe Task 2)
-	String T;							//Tumor [c,p,][1,2,3,4,X][a,b,c] or "mis" (see Task 2)
-	String N;							//Metastasen [1,2,3,4,X][a,b,c] or "mis" (see Task 2) 
+	String T="mis";						//Tumor [c,p,][1,2,3,4,X][a,b,c] or "mis" (see Task 2)
+	String N="mis";						//Metastasen [1,2,3,4,X][a,b,c] or "mis" (see Task 2) 
 	//=> Task 5
-	String M;							//Fernmetastasen [0,1]{later maybe localisation code} or 
+	String M="mis";						//Fernmetastasen [0,1]{later maybe localisation code} or 
 	//"mis" (see Task 2)
-	int L;								//9 - Not in Dataset
-	int V;								//9 - Not in Dataset
-	int R;
+	int L=9;							//9 - Not in Dataset
+	int V=9;							//9 - Not in Dataset
+	int R=9;
 	String nSum;
 	String nMeta;
-	String ER;
+	String ER="mis";
 	String erIrs;
-	String PR;
+	String PR="mis";
 	String prIrs;
-	String her2_Neu;
+	String her2_Neu="mis";
 	int her2_NeuScore;
 	String K67;
 	//--Tumor--
@@ -28,13 +29,13 @@ public class StringReader {
 	String Material;
 	int size;
 	java.sql.Date progressDate;
-	
+
 	//TODO:	her2_Neu implementieren (X), SubString (V), R (V)
 
 	public StringReader () {
 		this.source = null;
 	}
-	
+
 	public StringReader (String source) {
 		this.source = source;
 		this.StringAnalyse();
@@ -76,7 +77,7 @@ public class StringReader {
 	private void StringAnalyse() {
 
 		int makroskopStart=0,mikroskopStart=0,diagStart=0,tumorclassStart=0;
-		String makroSub="",mikroSub="", diagSub="",tumorclassSub=this.source;
+		String[] textSub = {"", "", "",this.source};
 
 
 		for (int i = 0; i < this.source.length() - 20; i++) {
@@ -85,16 +86,16 @@ public class StringReader {
 			}
 			if (source.substring(i, i+"Mikroskopie:".length()).equals("Mikroskopie:")) {
 				mikroskopStart = i;
-				makroSub = source.substring(makroskopStart, mikroskopStart);				
+				textSub[0] = source.substring(makroskopStart, mikroskopStart);				
 			}
 			if (source.substring(i, i+"Diagnose:".length()).equals("Diagnose:")) {
 				diagStart = i;
-				mikroSub = source.substring(mikroskopStart, diagStart);
+				textSub[1] = source.substring(mikroskopStart, diagStart);
 			}
 			if (i+"Tumorklassifikation".length() < this.source.length() && source.substring(i, i+"Tumorklassifikation:".length()).equals("Tumorklassifikation:")) {
 				tumorclassStart = i;
-				diagSub = source.substring(diagStart, tumorclassStart);
-				tumorclassSub = source.substring(tumorclassStart, this.source.length());
+				textSub[2] = source.substring(diagStart, tumorclassStart);
+				textSub[3] = source.substring(tumorclassStart, this.source.length());
 				break;
 			}
 		}
@@ -112,36 +113,36 @@ public class StringReader {
 		ER="mis";
 		PR="mis";
 
-		for (int i = 0; i < tumorclassSub.length() - 5; i++) {
+		for (int i = 0; i < textSub[3].length() - 5; i++) {
 			//-------------
 
-			if (Character.toUpperCase(tumorclassSub.charAt(i)) == 'G'){
-				if (tumorclassSub.charAt(i+1) == '1' || tumorclassSub.charAt(i+1) == '2' || 
-						tumorclassSub.charAt(i+1) == '3' || tumorclassSub.charAt(i+1) == '0'){
-					G=tumorclassSub.charAt(i+1)-'0';
-				} else if (tumorclassSub.charAt(i+1) == ' ' && (tumorclassSub.charAt(i+2) == '1' || tumorclassSub.charAt(i+2) == '2' || 
-						tumorclassSub.charAt(i+2) == '3'|| tumorclassSub.charAt(i+2) == '0')) {
-					G=tumorclassSub.charAt(i+2)-'0';
+			if (Character.toUpperCase(textSub[3].charAt(i)) == 'G'){
+				if (textSub[3].charAt(i+1) == '1' || textSub[3].charAt(i+1) == '2' || 
+						textSub[3].charAt(i+1) == '3' || textSub[3].charAt(i+1) == '0'){
+					G=textSub[3].charAt(i+1)-'0';
+				} else if (textSub[3].charAt(i+1) == ' ' && (textSub[3].charAt(i+2) == '1' || textSub[3].charAt(i+2) == '2' || 
+						textSub[3].charAt(i+2) == '3'|| textSub[3].charAt(i+2) == '0')) {
+					G=textSub[3].charAt(i+2)-'0';
 				}
-				if (tumorclassSub.substring(i+1, i+4).equals("III") || tumorclassSub.substring(i+1, i+5).equals(" III")) {
+				if (textSub[3].substring(i+1, i+4).equals("III") || textSub[3].substring(i+1, i+5).equals(" III")) {
 					G=3;
-				} else if (tumorclassSub.substring(i+1, i+3).equals("II") || tumorclassSub.substring(i+1, i+4).equals(" II")){
+				} else if (textSub[3].substring(i+1, i+3).equals("II") || textSub[3].substring(i+1, i+4).equals(" II")){
 					G=2;
-				} else if (tumorclassSub.substring(i+1, i+2).equals("I") || tumorclassSub.substring(i+1, i+3).equals(" I")){
+				} else if (textSub[3].substring(i+1, i+2).equals("I") || textSub[3].substring(i+1, i+3).equals(" I")){
 					G=1;
-				} else if (tumorclassSub.substring(i+1, i+2).toUpperCase().equals("X") || 
-						tumorclassSub.substring(i+1, i+3).toUpperCase().equals(" X")){
+				} else if (textSub[3].substring(i+1, i+2).toUpperCase().equals("X") || 
+						textSub[3].substring(i+1, i+3).toUpperCase().equals(" X")){
 					G=5;
 				}
 			}
 
-			if (Character.toUpperCase(tumorclassSub.charAt(i)) == 'T') {
-				if ((tumorclassSub.charAt(i+1) == '1' || tumorclassSub.charAt(i+1) == '2' || 
-						tumorclassSub.charAt(i+1) == '3' || tumorclassSub.charAt(i+1) == '4'|| 
-						Character.toUpperCase(tumorclassSub.charAt(i+1)) == 'X')){
-					T=""+ tumorclassSub.charAt(i+1);
+			if (Character.toUpperCase(textSub[3].charAt(i)) == 'T') {
+				if ((textSub[3].charAt(i+1) == '1' || textSub[3].charAt(i+1) == '2' || 
+						textSub[3].charAt(i+1) == '3' || textSub[3].charAt(i+1) == '4'|| 
+						Character.toUpperCase(textSub[3].charAt(i+1)) == 'X')){
+					T=""+ textSub[3].charAt(i+1);
 
-					switch (tumorclassSub.charAt(i-1)){
+					switch (textSub[3].charAt(i-1)){
 					case 'p': T="p"+T;
 					break;
 					case 'c': T="c"+T;
@@ -149,7 +150,7 @@ public class StringReader {
 					default:
 					}
 
-					switch (tumorclassSub.charAt(i+2)){
+					switch (textSub[3].charAt(i+2)){
 					case 'a':	T+="a";
 					break;
 					case 'b':	T+="b";
@@ -161,12 +162,12 @@ public class StringReader {
 				}
 			}
 
-			if (Character.toUpperCase(tumorclassSub.charAt(i)) == 'N') {
-				if ((tumorclassSub.charAt(i+1) == '1' || tumorclassSub.charAt(i+1) == '2' || 
-						tumorclassSub.charAt(i+1) == '3' || Character.toUpperCase(tumorclassSub.charAt(i+1)) == 'X')){
-					N=""+ tumorclassSub.charAt(i+1);
+			if (Character.toUpperCase(textSub[3].charAt(i)) == 'N') {
+				if ((textSub[3].charAt(i+1) == '1' || textSub[3].charAt(i+1) == '2' || 
+						textSub[3].charAt(i+1) == '3' || Character.toUpperCase(textSub[3].charAt(i+1)) == 'X')){
+					N=""+ textSub[3].charAt(i+1);
 
-					switch (tumorclassSub.charAt(i+2)){
+					switch (textSub[3].charAt(i+2)){
 					case 'a':	N+="a";
 					break;
 					case 'b':	N+="b";
@@ -182,44 +183,48 @@ public class StringReader {
 				}
 			}
 
-			if (Character.toUpperCase(tumorclassSub.charAt(i)) == 'M') {
-				if (tumorclassSub.charAt(i+1) == '1' || tumorclassSub.charAt(i+1) == '0' ||
-						Character.toUpperCase(tumorclassSub.charAt(i+1)) == 'X'){
-					M=""+ tumorclassSub.charAt(i+1);
+			if (Character.toUpperCase(textSub[3].charAt(i)) == 'M') {
+				if (textSub[3].charAt(i+1) == '1' || textSub[3].charAt(i+1) == '0' ||
+						Character.toUpperCase(textSub[3].charAt(i+1)) == 'X'){
+					M=""+ textSub[3].charAt(i+1);
 
 					//TODO: localisation code (extrem low priority)
 				}
 			}
 
-			if (Character.toUpperCase(tumorclassSub.charAt(i)) == 'L'){
-				if (tumorclassSub.charAt(i+1) == '/'){
-					if (tumorclassSub.charAt(i+3) == '0') {
+			if (Character.toUpperCase(textSub[3].charAt(i)) == 'L'){
+				if (textSub[3].charAt(i+1) == '/'){
+					if (textSub[3].charAt(i+3) == '0') {
 						L=V=0;
 					} else {
 						L=1;
-						V=tumorclassSub.charAt(i+3)-'0';
+						V=textSub[3].charAt(i+3)-'0';
 					}
-					if (Character.toUpperCase(tumorclassSub.charAt(i+2)) == 'V' && tumorclassSub.charAt(i+1) != '/'){
-						L=tumorclassSub.charAt(i+1)-'0';
-						V=tumorclassSub.charAt(i+3)-'0';
+					if (Character.toUpperCase(textSub[3].charAt(i+2)) == 'V' && textSub[3].charAt(i+1) != '/'){
+						L=textSub[3].charAt(i+1)-'0';
+						V=textSub[3].charAt(i+3)-'0';
 					}
 				}
 			}
-			
-			if (Character.toUpperCase(tumorclassSub.charAt(i)) == 'R') {
-				if (tumorclassSub.charAt(i+1) == '0' || tumorclassSub.charAt(i+1) == '1' ||
-						tumorclassSub.charAt(i+1) == '2' || Character.toUpperCase(tumorclassSub.charAt(i+1)) == 'X'){
-					R=tumorclassSub.charAt(i+1);
+
+			if (Character.toUpperCase(textSub[3].charAt(i)) == 'R') {
+				if (textSub[3].charAt(i+1) == '0' || textSub[3].charAt(i+1) == '1' ||
+						textSub[3].charAt(i+1) == '2' || Character.toUpperCase(textSub[3].charAt(i+1)) == 'X'){
+					R=textSub[3].charAt(i+1);
 				}
-				if (Character.toUpperCase(tumorclassSub.charAt(i+1)) == 'X') {
+				if (Character.toUpperCase(textSub[3].charAt(i+1)) == 'X') {
 					R=5;
 				}
 			}
 
-			FindER_PR(tumorclassSub, i);
+			int a=3;
+			while (a!=0 || !ER.equals("mis") && !PR.equals("mis")) {
+				FindER_PR(textSub[3], i);
+				a--;
+			}
 
 		}
-		System.out.println("G: " + G + ", T: " + T + ", N: " + N + ", M:" + M + ", L:" + L + ", V:" + V + ", ER:"+ ER + ", PR:"+ PR);	
+		//System.out.println("G: " + G + ", T: " + T + ", N: " + N + ", M:" + M + ", L:" + L + ", V:" + V + ", ER:"+ ER + ", PR:"+ PR);	
 		/*
 		 *  pT3L1V0R1
 		 *  pT3N1aL1V0R0
