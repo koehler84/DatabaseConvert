@@ -468,7 +468,7 @@ public class start {
 		}
 
 		//----------------------------------------------------
-//		excelToPatient(excelPath);
+		excelToPatient(excelPath);
 		excelToFall(excelPath);
 		
 //		showDbTable( dbPatTbl );

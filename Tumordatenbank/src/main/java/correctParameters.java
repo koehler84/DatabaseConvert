@@ -192,6 +192,7 @@ public class correctParameters extends JFrame {
 		textField_Geburtsdatum.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent e) {
+				doubleCheck = false;
 				//Geburtsdatum, daher nur Zahlen und '-'
 				if (!(e.getKeyChar() >= '0' && e.getKeyChar() <= '9' || e.getKeyChar() == '-')) {
 					e.consume();
@@ -201,24 +202,30 @@ public class correctParameters extends JFrame {
 		textField_Geburtsdatum.setColumns(10);
 		
 		textField_Vorname = new JTextField();
+		textField_Vorname.addKeyListener(resetDoubleCheck());
 		textField_Vorname.setColumns(10);
 		
 		textField_Name = new JTextField();
+		textField_Name.addKeyListener(resetDoubleCheck());
 		textField_Name.setColumns(10);
 		
 		textField_Strasse = new JTextField();
+		textField_Strasse.addKeyListener(resetDoubleCheck());
 		textField_Strasse.setColumns(10);
 		
 		textField_Hausnummer = new JTextField();
+		textField_Hausnummer.addKeyListener(resetDoubleCheck());
 		textField_Hausnummer.setColumns(10);
 		
 		textField_Land = new JTextField();
+		textField_Land.addKeyListener(resetDoubleCheck());
 		textField_Land.setColumns(10);
 		
 		textField_PLZ = new JTextField();
 		textField_PLZ.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent e) {
+				doubleCheck = false;
 				//PLZ textField, daher nur Zahlen
 				if (!(e.getKeyChar() >= '0' && e.getKeyChar() <= '9')) {
 					e.consume();
@@ -228,16 +235,31 @@ public class correctParameters extends JFrame {
 		textField_PLZ.setColumns(10);
 		
 		textField_Ort = new JTextField();
+		textField_Ort.addKeyListener(resetDoubleCheck());
 		textField_Ort.setColumns(10);
 		
 		JButton btnFertig = new JButton("Fertig");
 		btnFertig.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
+				textField_Geburtsdatum.setBackground(Color.WHITE);
+				textField_Vorname.setBackground(Color.WHITE);
+				textField_Name.setBackground(Color.WHITE);
+				textField_Strasse.setBackground(Color.WHITE);
+				textField_Hausnummer.setBackground(Color.WHITE);
+				textField_Land.setBackground(Color.WHITE);
+				textField_PLZ.setBackground(Color.WHITE);
+				textField_Ort.setBackground(Color.WHITE);
+				
 				if (table.getSelectedRow() != -1) {
 					
 					//If textFields Geburtsdatum, Name, Vorname are empty, skip update method
-					if (doubleCheck && textField_Geburtsdatum.getText().length() != 0 && textField_Name.getText().length() != 0 
+					if (textField_Geburtsdatum.getText().length() != 0 && textField_Name.getText().length() != 0 
+							&& textField_Vorname.getText().length() != 0 && textField_Strasse.getText().length() != 0
+							&& textField_Hausnummer.getText().length() != 0 && textField_Land.getText().length() != 0
+							&& textField_PLZ.getText().length() != 0 && textField_Ort.getText().length() != 0) {
+						updatePatientenDB();						
+					} else if (doubleCheck && textField_Geburtsdatum.getText().length() != 0 && textField_Name.getText().length() != 0 
 							&& textField_Vorname.getText().length() != 0) {
 						//writeInputToDB();
 						updatePatientenDB();
@@ -440,6 +462,16 @@ public class correctParameters extends JFrame {
 		toFront();
 	}
 	
+	private KeyAdapter resetDoubleCheck() {
+		
+		return new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				doubleCheck = false;
+			}
+		};
+	}
+	
 	private void rowToTextField() {
 		
 		int row = table.getSelectedRow();
@@ -593,7 +625,6 @@ public class correctParameters extends JFrame {
 				data[3] = res.getString("Strasse");
 				data[4] = res.getString("Hausnummer");
 				data[5] = res.getString("Land");
-				//data[6] = res.getInt("PLZ");
 				data[6] = res.getString("PLZ");
 				data[7] = res.getString("Ort");
 				
