@@ -71,8 +71,8 @@ public class start {
 		
 		try {
 
-			PreparedStatement Pst = cn.prepareStatement("insert into patientendaten (`Geburtsdatum`, `Vorname`, `Name`, `Strasse`, `Hausnummer`, `Land`, `PLZ`, `Ort`)"
-					+ " values ( ? , ? , ? , ? , ? , ? , ? , ? );");
+			PreparedStatement Pst = cn.prepareStatement("insert into patientendaten (`Geburtsdatum`, `Vorname`, `Name`, `Strasse`, `Hausnummer`, `Land`, `PLZ`, `Ort`, `Vollständig`)"
+					+ " values ( ? , ? , ? , ? , ? , ? , ? , ? , ? );");
 
 			File excel = new File(excelPath);
 			FileInputStream fis = new FileInputStream(excel);
@@ -87,7 +87,7 @@ public class start {
 
 			int i = 0;	//stop after 30 rows for testing
 			
-			int[][] positions = {{3,4,5,6,7,8,9,10},{1,2,3,4,5,6,7,8,9}};
+			int[][] positions = {{3,4,5,6,7,8,9,10},{1,2,3,4,5,6,7,8}};
 
 			//Max. Reihen: sheet.getPhysicalNumberOfRows()
 			while (itr.hasNext() && i<30) {	//stop after 30 rows for testing
@@ -100,13 +100,20 @@ public class start {
 				Pst.clearParameters();		//clear parameters in Pst for next insert
 				boolean writeToDB = true;
 				Cell cell = null;
+				boolean RowContinue = true;
+				Pst.setInt(9, 0);
 				
-				for (int j=0; j<positions[0].length;j++) {
+				for (int j=0; j<positions[0].length && RowContinue;j++) {
 					cell = row.getCell(positions[0][j]);
 
 					switch (cell.getCellType()) {
 					case Cell.CELL_TYPE_STRING:
-						Pst.setString(positions[1][j], cell.getStringCellValue());
+						if (positions[0][j] != 9) {
+							Pst.setString(positions[1][j], cell.getStringCellValue());
+						} else {
+							//fehlerToWindow("excelToPatient", row, positions);
+							Pst.setInt(9, 1);
+						}
 						break;
 					case Cell.CELL_TYPE_NUMERIC:
 						if (positions[0][j]==3){
@@ -126,17 +133,26 @@ public class start {
 						break;
 					case Cell.CELL_TYPE_BLANK:
 						
-						if (positions[0][j] >= 3 && positions[0][j] <= 5) {
-							writeToDB = false;
-							System.out.println("Fehler: Geburtsdatum, Vorname oder Nachmame fehlt!");
+						if (positions[0][j] == 3) {
+							Pst.setString(positions[1][j], "0001-01-01");
+							System.out.println("Fehler: Geburtsdatum fehlt!");
+							//fehlerToWindow("excelToPatient", row, positions);
+							Pst.setInt(9, 1);
 							break;
-						}
-						if (positions[0][j] == 7 && row.getCell(positions[0][j-1]).getCellType() == Cell.CELL_TYPE_STRING) {
+						} else if (positions[0][j] == 4 || positions[0][j] == 5) {
+							Pst.setString(positions[1][j], "INVALID_NAME");
+							System.out.println("Fehler: Vorname oder Nachmame fehlt!");
+							//fehlerToWindow("excelToPatient", row, positions);
+							Pst.setInt(9, 1);
+							break;
+						} else if (positions[0][j] == 7 && row.getCell(positions[0][j-1]).getCellType() == Cell.CELL_TYPE_STRING) {
 							//Es gibt keine Hausnummer zu vorhandener Straße
-							writeToDB = false;
 							System.out.println("Fehler: Hausnummer fehlt!");
-							fehlerToWindow("excelToPatient", row, positions);
-							break;
+							//fehlerToWindow("excelToPatient", row, positions);
+							Pst.setInt(9, 1);
+						} else {
+							//fehlerToWindow("excelToPatient", row, positions);
+							Pst.setInt(9, 1);
 						}
 						
 						//Abfrage in der Datenbank: "select * from mydb.patientendaten where PLZ is null;"
@@ -401,14 +417,15 @@ public class start {
 			// Select fitting database driver and connect:
 	/*???	*/Class.forName( dbDrv );
 			cn = DriverManager.getConnection( dbUrl, dbUsr, dbPwd );
-
+			UIFenster1.lblConnected.setVisible(true);
+			UIFenster1.insertModel();
 
 		} catch ( Exception ex ) {
 			System.out.println( ex );
 		}
 
 		//----------------------------------------------------
-//		excelToPatient(excelPath);
+		excelToPatient(excelPath);
 //		excelToFall(excelPath);
 		
 //		showDbTable( dbPatTbl );
@@ -431,6 +448,7 @@ public class start {
 		//Tumorklassifikation: C 57, M 8441/3, G 3, pT3c pN1(15/34) L/V1. Der Tumor ist Östrogen- und Progesteronrezeptor-negativ. Sonstiges: ip
 
 		methodsCompleted = true;
+		UIFenster1.insertModel();
 		
 		try {
 			if (cn != null && !cn.isClosed() && !UIFenster1.isShowing()) {

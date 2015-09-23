@@ -17,7 +17,10 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JTable;
 import java.awt.event.ActionListener;
+import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.awt.event.ActionEvent;
@@ -34,7 +37,7 @@ public class correctParameters extends JFrame {
 	public JProgressBar progressBar;
 	public JTable table;
 	public JScrollPane scrollPane;
-	private JTextField textField;
+	private JTextField textField_0;
 	private JTextField textField_1;
 	private JTextField textField_2;
 	private JTextField textField_3;
@@ -42,6 +45,7 @@ public class correctParameters extends JFrame {
 	private JTextField textField_5;
 	private JTextField textField_6;
 	private JTextField textField_7;
+	public JLabel lblConnected;
 
 	/**
 	 * Launch the application.
@@ -139,12 +143,12 @@ public class correctParameters extends JFrame {
 		scrollPane.setVisible(false);
 		
 		table = new JTable();
-		table.setVisible(false);
+		//table.setVisible(false);
 		
 		scrollPane.setViewportView(table);
 		
-		textField = new JTextField();
-		textField.setColumns(10);
+		textField_0 = new JTextField();
+		textField_0.setColumns(10);
 		
 		textField_1 = new JTextField();
 		textField_1.setColumns(10);
@@ -179,9 +183,13 @@ public class correctParameters extends JFrame {
 		JButton btnFertig = new JButton("Fertig");
 		btnFertig.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				writeInputToDB();
+				//writeInputToDB();
+				updateDB();
 			}
 		});
+		
+		lblConnected = new JLabel("connected");
+		lblConnected.setVisible(false);
 		
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
@@ -191,17 +199,14 @@ public class correctParameters extends JFrame {
 					.addComponent(lblFortschritt, GroupLayout.PREFERRED_SIZE, 58, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(progressBar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, 177, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(lblConnected)
+					.addPreferredGap(ComponentPlacement.RELATED, 117, Short.MAX_VALUE)
 					.addComponent(btnOk)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(btnAbbrechen))
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-						.addComponent(scrollPane, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 523, Short.MAX_VALUE)
-						.addComponent(separator, GroupLayout.DEFAULT_SIZE, 523, Short.MAX_VALUE))
-					.addGap(1))
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addComponent(textField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addComponent(textField_0, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(textField_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
@@ -221,15 +226,20 @@ public class correctParameters extends JFrame {
 								.addPreferredGap(ComponentPlacement.RELATED)
 								.addComponent(textField_5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
 					.addGap(20))
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+						.addComponent(scrollPane, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 523, Short.MAX_VALUE)
+						.addComponent(separator, GroupLayout.DEFAULT_SIZE, 523, Short.MAX_VALUE))
+					.addGap(1))
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addGap(31)
-					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
-					.addGap(18)
+					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 62, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(textField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(textField_0, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(textField_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(textField_2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(textField_3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
@@ -249,7 +259,8 @@ public class correctParameters extends JFrame {
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 								.addComponent(btnAbbrechen)
 								.addComponent(btnOk)
-								.addComponent(lblFortschritt, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE)))
+								.addComponent(lblFortschritt, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblConnected)))
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addGap(4)
 							.addComponent(progressBar, GroupLayout.PREFERRED_SIZE, 18, GroupLayout.PREFERRED_SIZE)))
@@ -267,7 +278,7 @@ public class correctParameters extends JFrame {
 		try {
 			PreparedStatement Pst = start.cn.prepareStatement("insert into patientendaten (`Geburtsdatum`, `Vorname`, `Name`, `Strasse`, `Hausnummer`, `Land`, `PLZ`, `Ort`)"
 					+ " values ( ? , ? , ? , ? , ? , ? , ? , ? );");
-			Pst.setString(1, textField.getText());
+			Pst.setString(1, textField_0.getText());
 			Pst.setString(2, textField_1.getText());
 			Pst.setString(3, textField_2.getText());
 			Pst.setString(4, textField_3.getText());
@@ -284,7 +295,7 @@ public class correctParameters extends JFrame {
 				((DefaultTableModel)table.getModel()).removeRow(0);
 			}
 			
-			textField.setText("");
+			textField_0.setText("");
 			textField_1.setText("");
 			textField_2.setText("");
 			textField_3.setText("");
@@ -296,6 +307,102 @@ public class correctParameters extends JFrame {
 		} catch (SQLException e) {
 			System.out.println("Fehler in writeInputToDB: Person ggf. schon erfasst!");
 		}		
+		
+	}
+	
+	private void updateDB() {
+		
+		try {
+			
+			PreparedStatement Pst = start.cn.prepareStatement("update mydb.patientendaten set `Geburtsdatum` = ? , `Vorname` = ? , "
+					+ "`Name` = ? , `Strasse` = ? , `Hausnummer` = ? , `Land` = ? , `PLZ` = ? , `Ort` = ?"
+					+ " where `Geburtsdatum` = ? and `Vorname` = ? and `Name` = ? ;");
+			
+			if (table.getSelectedRow() != -1) {
+				Pst.setString(9, table.getValueAt(table.getSelectedRow(), 0).toString());		//where Geb
+				Pst.setString(10, table.getValueAt(table.getSelectedRow(), 1).toString());		//where Vorname
+				Pst.setString(11, table.getValueAt(table.getSelectedRow(), 2).toString());		//where Name
+			} else {
+				Pst.setString(9, table.getValueAt(0, 0).toString());		//where Geb
+				Pst.setString(10, table.getValueAt(0, 1).toString());		//where Vorname
+				Pst.setString(11, table.getValueAt(0, 2).toString());		//where Name
+			}
+			
+			Pst.setString(1, textField_0.getText());	//set Geb
+			Pst.setString(2, textField_1.getText());	//set Vorname
+			Pst.setString(3, textField_2.getText());	//set Name
+			Pst.setString(4, textField_3.getText());	//set Strasse
+			Pst.setString(5, textField_4.getText());	//set Hausnummer
+			Pst.setString(6, textField_5.getText());	//set Land
+			Pst.setString(7, textField_6.getText());	//set PLZ
+			Pst.setString(8, textField_7.getText());	//set Ort
+			
+			System.out.println("Zeilen manuell ge‰ndert: " + Pst.executeUpdate());
+			
+			Pst.close();
+			
+			if (table.getRowCount() > 0 && table.getSelectedRow() != -1) {
+				((DefaultTableModel)table.getModel()).removeRow(table.getSelectedRow());
+			} else {
+				((DefaultTableModel)table.getModel()).removeRow(0);
+			}
+			
+			textField_0.setText("");
+			textField_1.setText("");
+			textField_2.setText("");
+			textField_3.setText("");
+			textField_4.setText("");
+			textField_5.setText("");
+			textField_6.setText("");
+			textField_7.setText("");
+			
+		} catch (SQLException e) {
+			System.out.println("e");
+		}
+		
+	}
+	
+	@SuppressWarnings("serial")
+	public void insertModel() {
+		
+		try {
+			Statement st = start.cn.createStatement();
+			ResultSet res = st.executeQuery("select * from mydb.vPatientendaten_Hauptparameter where `Vollst‰ndig` != 0");
+			
+			DefaultTableModel tableModel = new DefaultTableModel(
+					new String[]{"Geburtsdatum", "Vorname", "Name", "Straﬂe", "Hausnummer", "Land", "PLZ", "Ort"}, 0) {
+				
+				public boolean isCellEditable(int row, int column) {
+				       //all cells false
+				       return false;
+				}
+			};
+			
+			table.setModel(tableModel);
+			scrollPane.setVisible(true);
+			getContentPane().revalidate();
+			getContentPane().repaint();
+			
+			Object[] data = new Object[8];
+			
+			while (res.next()) {
+								
+				data[0] = res.getDate("Geburtsdatum");
+				data[1] = res.getString("Vorname");
+				data[2] = res.getString("Name");
+				data[3] = res.getString("Strasse");
+				data[4] = res.getString("Hausnummer");
+				data[5] = res.getString("Land");
+				//data[6] = res.getInt("PLZ");
+				data[6] = res.getString("PLZ");
+				data[7] = res.getString("Ort");
+				
+				tableModel.addRow(data);
+			}
+			
+		} catch (SQLException e) {
+			System.out.println(e);
+		}
 		
 	}
 }
