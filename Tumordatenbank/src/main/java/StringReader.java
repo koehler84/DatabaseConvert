@@ -38,37 +38,35 @@ public class StringReader {
 
 	private void FindER_PR (String textSub, int i) {
 
-		int k =0;
-		int factor = 9;
-		String mode = "ÖSTROGEN";
-		do{
-			k++;
-			if ((i < textSub.length() - factor - 7) && textSub.substring(i+1, i+factor).toUpperCase().equals(mode)) {
-				for (int j = i + factor; j < textSub.length() - 8; j++) {
-					if (textSub.substring(j+1, j+8).toUpperCase().equals("positiv".toUpperCase())) {
-						if (mode.equals("ÖSTROGEN")) {
-							ER="true";
-						} else {
-							PR="true";
+		String[] receptor = {" ER", "ÖSTROGEN", " PR", "PROGESTERON"};
+		String[] value = {"+", "POSITIV", "-", "NEGATIV"};
+
+		for (int l = 0; l < receptor.length; l++) {
+			if ((i < textSub.length() - receptor[l].length()) && textSub.substring(i, i + receptor[l].length()).toUpperCase().equals(receptor[l])) {
+				for (int m = 0; m < value.length; m++) {
+					for (int j = i + receptor[l].length(); j <= textSub.length() - value[m].length(); j++) {
+						if (textSub.substring(j, j+value[m].length()).toUpperCase().equals(value[m])) {
+							if ((l==0 || l==1) && (m==0 || m==1)) {
+								ER="true";
+							}
+							if ((l==2 || l==3) && (m==0 || m==1)){
+								PR="true";
+							}
+							if ((l==0 || l==1) && (m==2 || m==3)) {
+								ER="false";
+							} 
+							if ((l==2 || l==3) && (m==2 || m==3)){
+								PR="false";
+							}
+							break;
 						}
-						break;
-					}
-					if (textSub.substring(j+1, j+8).toUpperCase().equals("negativ".toUpperCase())) {
-						if (mode.equals("ÖSTROGEN")) {
-							ER="false";
-						} else {
-							PR="false";
+						if ((j - i > 35 && (l==1 || l==3)) || (j - i > 4 && (l==0 || l==2))) {
+							break;
 						}
-						break;
-					}
-					if (j - i > 35) {
-						break;
 					}
 				}
 			}
-			factor = 12;
-			mode = "PROGESTERON";
-		} while (k<2);
+		}
 	}
 
 	private void StringAnalyse() {
@@ -92,7 +90,7 @@ public class StringReader {
 			if (i+"Tumorklassifikation".length() < this.source.length() && source.substring(i, i+"Tumorklassifikation:".length()).equals("Tumorklassifikation:")) {
 				tumorclassStart = i;
 				diagSub = source.substring(diagStart, tumorclassStart);
-				tumorclassSub = source.substring(tumorclassStart, this.source.length()-1);
+				tumorclassSub = source.substring(tumorclassStart, this.source.length());
 				break;
 			}
 		}
