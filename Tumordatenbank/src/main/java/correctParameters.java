@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import javax.swing.JFrame;
@@ -17,10 +18,8 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JTable;
 import java.awt.event.ActionListener;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.awt.event.ActionEvent;
@@ -58,6 +57,7 @@ public class correctParameters extends JFrame {
 	private JLabel lblPostleitzahl;
 	private JLabel lblOrt;
 	private JCheckBox checkBox_Vollstaendig;
+	private boolean doubleCheck = false;
 
 	/**
 	 * Launch the application.
@@ -168,7 +168,17 @@ public class correctParameters extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() == 2) {
 					//Put row content into textfields on double click
-					rowToTextField();					
+					rowToTextField();
+					
+					textField_Geburtsdatum.setBackground(Color.WHITE);
+					textField_Vorname.setBackground(Color.WHITE);
+					textField_Name.setBackground(Color.WHITE);
+					textField_Strasse.setBackground(Color.WHITE);
+					textField_Hausnummer.setBackground(Color.WHITE);
+					textField_Land.setBackground(Color.WHITE);
+					textField_PLZ.setBackground(Color.WHITE);
+					textField_Ort.setBackground(Color.WHITE);
+					
 				}
 			}
 		});
@@ -222,14 +232,61 @@ public class correctParameters extends JFrame {
 		btnFertig.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				//If textFields Geburtsdatum, Name, Vorname are empty, skip update method 
-				if (!(textField_Geburtsdatum.getText().length() == 0 && textField_Name.getText().length() == 0 && textField_Vorname.getText().length() == 0)) {
-					//writeInputToDB();
-					updateDB();
+				if (table.getSelectedRow() != -1) {
+					
+					//If textFields Geburtsdatum, Name, Vorname are empty, skip update method
+					if (doubleCheck && textField_Geburtsdatum.getText().length() != 0 && textField_Name.getText().length() != 0 
+							&& textField_Vorname.getText().length() != 0) {
+						//writeInputToDB();
+						updatePatientenDB();
+						doubleCheck = false;
+					} else {
+						if (textField_Geburtsdatum.getText().length() == 0) {
+							textField_Geburtsdatum.setBackground(Color.RED);
+							doubleCheck = true;
+						}
+						
+						if (textField_Vorname.getText().length() == 0) {
+							textField_Vorname.setBackground(Color.RED);
+							doubleCheck = true;
+						}
+						
+						if (textField_Name.getText().length() == 0) {
+							textField_Name.setBackground(Color.RED);
+							doubleCheck = true;
+						}
+						
+						if (textField_Strasse.getText().length() == 0) {
+							textField_Strasse.setBackground(Color.decode("#ff8080"));
+							doubleCheck = true;
+						}
+						
+						if (textField_Hausnummer.getText().length() == 0) {
+							textField_Hausnummer.setBackground(Color.decode("#ff8080"));
+							doubleCheck = true;
+						}
+						
+						if (textField_Land.getText().length() == 0) {
+							textField_Land.setBackground(Color.decode("#ff8080"));
+							doubleCheck = true;
+						}
+						
+						if (textField_PLZ.getText().length() == 0) {
+							textField_PLZ.setBackground(Color.decode("#ff8080"));
+							doubleCheck = true;
+						}
+						
+						if (textField_Ort.getText().length() == 0) {
+							textField_Ort.setBackground(Color.decode("#ff8080"));
+							doubleCheck = true;
+						}
+						
+					}
+					
 				} else {
 					System.out.println("Fehler: Keine Eingabe!");
 				}
-				
+								
 			}
 		});
 		
@@ -433,7 +490,7 @@ public class correctParameters extends JFrame {
 		
 	}
 	
-	private void updateDB() {
+	private void updatePatientenDB() {
 		
 		try {
 			
@@ -490,6 +547,15 @@ public class correctParameters extends JFrame {
 			textField_PLZ.setText("");
 			textField_Ort.setText("");
 			checkBox_Vollstaendig.setSelected(false);
+			
+			textField_Geburtsdatum.setBackground(Color.WHITE);
+			textField_Vorname.setBackground(Color.WHITE);
+			textField_Name.setBackground(Color.WHITE);
+			textField_Strasse.setBackground(Color.WHITE);
+			textField_Hausnummer.setBackground(Color.WHITE);
+			textField_Land.setBackground(Color.WHITE);
+			textField_PLZ.setBackground(Color.WHITE);
+			textField_Ort.setBackground(Color.WHITE);
 			
 		} catch (SQLException e) {
 			System.out.println(e);
