@@ -228,8 +228,11 @@ public class start {
 				cell = row.getCell(28);
 				String abc = cell.getStringCellValue();
 				
+				String E_NR = null;
+				Befundtyp befundtyp = null;
+				StringReader srObject = null;				
 				try {
-					new StringReader(abc);
+					srObject = new StringReader(abc);
 				} catch (Exception e) {
 					System.out.println("Objektfehler!");
 				}
@@ -244,24 +247,31 @@ public class start {
 							switch (cell.getStringCellValue())	{
 								case "Hauptbefund":
 									Pst.setInt(7, Befundtyp.Hauptbefund.getValue());
+									befundtyp = Befundtyp.Hauptbefund;
 									break;
 								case "Nachbericht 1":
 									Pst.setInt(7, Befundtyp.Nachbericht_1.getValue());
+									befundtyp = Befundtyp.Nachbericht_1;
 									break;
 								case "Nachbericht 2":
 									Pst.setInt(7, Befundtyp.Nachbericht_2.getValue());
+									befundtyp = Befundtyp.Nachbericht_2;
 									break;
 								case "Korrekturbefund 1":
 									Pst.setInt(7, Befundtyp.Korrekturbefund_1.getValue());
+									befundtyp = Befundtyp.Korrekturbefund_1;
 									break;
 								case "Korrekturbefund 2":
 									Pst.setInt(7, Befundtyp.Korrekturbefund_2.getValue());
+									befundtyp = Befundtyp.Korrekturbefund_2;
 									break;
 								case "Korrekturbefund 3":
 									Pst.setInt(7, Befundtyp.Korrekturbefund_3.getValue());
+									befundtyp = Befundtyp.Korrekturbefund_3;
 									break;
 								case "Konsiliarbericht 1":
 									Pst.setInt(7, Befundtyp.Konsiliarbericht_1.getValue());
+									befundtyp = Befundtyp.Konsiliarbericht_1;
 									break;
 								default:
 									//TODO Ask User for input
@@ -271,6 +281,7 @@ public class start {
 									break;
 							}
 						} else {
+							if (positions[0][j] == 1) E_NR = cell.getStringCellValue();
 							Pst.setString(positions[1][j], cell.getStringCellValue());
 						}
 						break;
@@ -308,6 +319,29 @@ public class start {
 					}
 				} else {
 					System.out.println("Fehler beim Einlesen des Falls! Abbruch des Schreibvorgangs.");
+				}
+				
+				PreparedStatement st = cn.prepareStatement("insert into mydb.klassifikation (`Fall_E.-Nummer`, `Fall_Befundtyp`, "
+						+ "G, T, N, M, L, V, R, ER, PR, `Her2/neu`) values ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? );");
+				
+				st.setString(1, E_NR);
+				st.setInt(2, befundtyp.getValue());
+				st.setInt(3, srObject.G);
+				st.setString(4, srObject.T);
+				st.setString(5, srObject.N);
+				st.setString(6, srObject.M);
+				st.setInt(7, srObject.L);
+				st.setInt(8, srObject.V);
+				st.setInt(9, srObject.R);
+				st.setString(10, srObject.ER);
+				st.setString(11, srObject.PR);
+				st.setString(12, srObject.her2_Neu);
+				
+				try {
+					System.out.println("Einfügen in Klassifikation, geänderte Zeilen: " + st.executeUpdate());
+					st.close();
+				} catch (Exception e) {
+					System.out.println("Fehler beim Einfügen der Falldaten.");
 				}
 				
 			}
