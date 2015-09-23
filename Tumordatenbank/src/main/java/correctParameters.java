@@ -170,6 +170,8 @@ public class correctParameters extends JFrame {
 					//Put row content into textfields on double click
 					rowToTextField();
 					
+					doubleCheck = false;
+					
 					textField_Geburtsdatum.setBackground(Color.WHITE);
 					textField_Vorname.setBackground(Color.WHITE);
 					textField_Name.setBackground(Color.WHITE);
