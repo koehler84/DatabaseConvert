@@ -36,6 +36,41 @@ public class StringReader {
 		this.StringAnalyse();
 	}
 
+	private void FindER_PR (String textSub, int i) {
+
+		int k =0;
+		int factor = 9;
+		String mode = "ÖSTROGEN";
+		do{
+			k++;
+			if ((i < textSub.length() - factor - 7) && textSub.substring(i+1, i+factor).toUpperCase().equals(mode)) {
+				for (int j = i + factor; j < textSub.length() - 8; j++) {
+					if (textSub.substring(j+1, j+8).toUpperCase().equals("positiv".toUpperCase())) {
+						if (mode.equals("ÖSTROGEN")) {
+							ER="true";
+						} else {
+							PR="true";
+						}
+						break;
+					}
+					if (textSub.substring(j+1, j+8).toUpperCase().equals("negativ".toUpperCase())) {
+						if (mode.equals("ÖSTROGEN")) {
+							ER="false";
+						} else {
+							PR="false";
+						}
+						break;
+					}
+					if (j - i > 35) {
+						break;
+					}
+				}
+			}
+			factor = 12;
+			mode = "PROGESTERON";
+		} while (k<2);
+	}
+
 	private void StringAnalyse() {
 
 		int makroskopStart=0,mikroskopStart=0,diagStart=0,tumorclassStart=0;
@@ -168,40 +203,41 @@ public class StringReader {
 				}
 			}
 
+			FindER_PR(tumorclassSub, i);
 
-			if ((i < tumorclassSub.length() - 16) && tumorclassSub.substring(i+1, i+9).toUpperCase().equals("ÖSTROGEN")) {
-				for (int j = i + 9; j < tumorclassSub.length() - 8; j++) {
-					if (tumorclassSub.substring(j+1, j+8).toUpperCase().equals("positiv".toUpperCase())) {
-						ER="true";	
-						break;
-					}
-					if (tumorclassSub.substring(j+1, j+8).toUpperCase().equals("negativ".toUpperCase())) {
-						ER="false";	
-						break;
-					}
-					if (j - i > 35) {
-						break;
-					}
-				}
-
-			}
-
-			if ((i < tumorclassSub.length() - 19) && tumorclassSub.substring(i+1, i+12).toUpperCase().equals("PROGESTERON")) {
-				for (int j = i + 12; j < tumorclassSub.length() - 8; j++) {
-					if (tumorclassSub.substring(j+1, j+8).toUpperCase().equals("positiv".toUpperCase())) {
-						PR="true";						
-						break;
-					}
-					if (tumorclassSub.substring(j+1, j+8).toUpperCase().equals("negativ".toUpperCase())) {
-						PR="false";		
-						break;
-					}
-					if (j-i > 35) {
-						break;
-					}
-				}
-
-			}
+			//			if ((i < tumorclassSub.length() - 16) && tumorclassSub.substring(i+1, i+9).toUpperCase().equals("ÖSTROGEN")) {
+			//				for (int j = i + 9; j < tumorclassSub.length() - 8; j++) {
+			//					if (tumorclassSub.substring(j+1, j+8).toUpperCase().equals("positiv".toUpperCase())) {
+			//						ER="true";	
+			//						break;
+			//					}
+			//					if (tumorclassSub.substring(j+1, j+8).toUpperCase().equals("negativ".toUpperCase())) {
+			//						ER="false";	
+			//						break;
+			//					}
+			//					if (j - i > 35) {
+			//						break;
+			//					}
+			//				}
+			//
+			//			}
+			//
+			//			if ((i < tumorclassSub.length() - 19) && tumorclassSub.substring(i+1, i+12).toUpperCase().equals("PROGESTERON")) {
+			//				for (int j = i + 12; j < tumorclassSub.length() - 8; j++) {
+			//					if (tumorclassSub.substring(j+1, j+8).toUpperCase().equals("positiv".toUpperCase())) {
+			//						PR="true";						
+			//						break;
+			//					}
+			//					if (tumorclassSub.substring(j+1, j+8).toUpperCase().equals("negativ".toUpperCase())) {
+			//						PR="false";		
+			//						break;
+			//					}
+			//					if (j-i > 35) {
+			//						break;
+			//					}
+			//				}
+			//
+			//			}
 		}
 		System.out.println("G: " + G + ", T: " + T + ", N: " + N + ", M:" + M + ", L:" + L + ", V:" + V + ", ER:"+ ER + ", PR:"+ PR);	
 		/*
