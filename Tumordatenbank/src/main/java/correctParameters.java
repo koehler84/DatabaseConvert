@@ -59,7 +59,7 @@ public class correctParameters extends JFrame {
 	private JLabel lblLand;
 	private JLabel lblPostleitzahl;
 	private JLabel lblOrt;
-	private JCheckBox checkBox_Vollstaendig;
+	private JCheckBox checkBox_Fehler;
 	private boolean doubleCheck = false;
 	private JPanel pnCards;
 	private JMenuItem mntmOther;
@@ -219,15 +219,14 @@ public class correctParameters extends JFrame {
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(btnAbbrechen))
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-						.addComponent(pnCards, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 523, Short.MAX_VALUE)
-						.addComponent(separator, GroupLayout.DEFAULT_SIZE, 523, Short.MAX_VALUE))
+					.addComponent(separator, GroupLayout.DEFAULT_SIZE, 523, Short.MAX_VALUE)
 					.addGap(1))
+				.addComponent(pnCards, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 524, Short.MAX_VALUE)
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addComponent(pnCards, GroupLayout.DEFAULT_SIZE, 506, Short.MAX_VALUE)
+					.addComponent(pnCards, GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(separator, GroupLayout.PREFERRED_SIZE, 3, GroupLayout.PREFERRED_SIZE)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -343,7 +342,7 @@ public class correctParameters extends JFrame {
 		
 		JLabel lblDatensatzIstVollstndig = new JLabel("Datensatz ist vollst\u00E4ndig:");
 		
-		checkBox_Vollstaendig = new JCheckBox("");
+		checkBox_Fehler = new JCheckBox("");
 		
 		JButton btnFertig = new JButton("Fertig");
 		btnFertig.addActionListener(new ActionListener() {
@@ -420,12 +419,18 @@ public class correctParameters extends JFrame {
 								
 			}
 		});
+		
+		JButton btnTabelleAktualisieren = new JButton("Tabelle aktualisieren");
+		btnTabelleAktualisieren.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				insertModel();
+			}
+		});
 		GroupLayout gl_panel_submitPatientendaten = new GroupLayout(panel_submitPatientendaten);
 		gl_panel_submitPatientendaten.setHorizontalGroup(
 			gl_panel_submitPatientendaten.createParallelGroup(Alignment.LEADING)
-				.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 523, Short.MAX_VALUE)
 				.addGroup(gl_panel_submitPatientendaten.createSequentialGroup()
-					.addGap(209)
+					.addGap(221)
 					.addComponent(lblNachname)
 					.addGap(49)
 					.addComponent(lblStrae)
@@ -434,7 +439,7 @@ public class correctParameters extends JFrame {
 					.addContainerGap())
 				.addGroup(gl_panel_submitPatientendaten.createSequentialGroup()
 					.addComponent(lblGeburtsdatum)
-					.addGap(33)
+					.addGap(45)
 					.addComponent(lblVorname)
 					.addGap(372))
 				.addGroup(gl_panel_submitPatientendaten.createSequentialGroup()
@@ -455,7 +460,7 @@ public class correctParameters extends JFrame {
 							.addComponent(lblLand)
 							.addGap(36)
 							.addComponent(lblPostleitzahl)
-							.addGap(15)
+							.addGap(47)
 							.addComponent(lblOrt))
 						.addGroup(gl_panel_submitPatientendaten.createSequentialGroup()
 							.addGap(10)
@@ -467,12 +472,17 @@ public class correctParameters extends JFrame {
 							.addGap(18)
 							.addComponent(lblDatensatzIstVollstndig)
 							.addGap(6)
-							.addComponent(checkBox_Vollstaendig)))
-					.addContainerGap(43, Short.MAX_VALUE))
-				.addGroup(Alignment.TRAILING, gl_panel_submitPatientendaten.createSequentialGroup()
-					.addContainerGap(452, Short.MAX_VALUE)
+							.addComponent(checkBox_Fehler)))
+					.addContainerGap(55, Short.MAX_VALUE))
+				.addGroup(gl_panel_submitPatientendaten.createSequentialGroup()
+					.addContainerGap(369, Short.MAX_VALUE)
+					.addComponent(btnTabelleAktualisieren)
+					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(btnFertig)
 					.addContainerGap())
+				.addGroup(gl_panel_submitPatientendaten.createSequentialGroup()
+					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 524, Short.MAX_VALUE)
+					.addGap(11))
 		);
 		gl_panel_submitPatientendaten.setVerticalGroup(
 			gl_panel_submitPatientendaten.createParallelGroup(Alignment.LEADING)
@@ -494,7 +504,6 @@ public class correctParameters extends JFrame {
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(lblHausnummer)))
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(gl_panel_submitPatientendaten.createParallelGroup(Alignment.LEADING)
 						.addComponent(textField_Geburtsdatum, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(textField_Vorname, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
@@ -514,9 +523,11 @@ public class correctParameters extends JFrame {
 						.addGroup(gl_panel_submitPatientendaten.createSequentialGroup()
 							.addGap(3)
 							.addComponent(lblDatensatzIstVollstndig))
-						.addComponent(checkBox_Vollstaendig))
-					.addPreferredGap(ComponentPlacement.RELATED, 83, Short.MAX_VALUE)
-					.addComponent(btnFertig)
+						.addComponent(checkBox_Fehler))
+					.addPreferredGap(ComponentPlacement.RELATED, 82, Short.MAX_VALUE)
+					.addGroup(gl_panel_submitPatientendaten.createParallelGroup(Alignment.BASELINE)
+						.addComponent(btnFertig)
+						.addComponent(btnTabelleAktualisieren))
 					.addContainerGap())
 		);
 		panel_submitPatientendaten.setLayout(gl_panel_submitPatientendaten);
@@ -597,31 +608,41 @@ public class correctParameters extends JFrame {
 					+ "`Name` = ? , `Strasse` = ? , `Hausnummer` = ? , `Land` = ? , `PLZ` = ? , `Ort` = ?, `Fehler` = ? "
 					+ " where `Geburtsdatum` = ? and `Vorname` = ? and `Name` = ? ;");
 			
-			if (table.getSelectedRow() != -1) {
-				Pst.setString(10, table.getValueAt(table.getSelectedRow(), 0).toString());		//where Geb
-				Pst.setString(11, table.getValueAt(table.getSelectedRow(), 1).toString());		//where Vorname
-				Pst.setString(12, table.getValueAt(table.getSelectedRow(), 2).toString());		//where Name
-			} else {
-				Pst.setString(10, table.getValueAt(0, 0).toString());		//where Geb
-				Pst.setString(11, table.getValueAt(0, 1).toString());		//where Vorname
-				Pst.setString(12, table.getValueAt(0, 2).toString());		//where Name
-			}
+			Pst.setString(10, table.getValueAt(table.getSelectedRow(), 0).toString());		//where Geb
+			Pst.setString(11, table.getValueAt(table.getSelectedRow(), 1).toString());		//where Vorname
+			Pst.setString(12, table.getValueAt(table.getSelectedRow(), 2).toString());		//where Name
 			
 			Pst.setString(1, textField_Geburtsdatum.getText());	//set Geb
 			Pst.setString(2, textField_Vorname.getText());	//set Vorname
 			Pst.setString(3, textField_Name.getText());	//set Name
-			Pst.setString(4, textField_Strasse.getText());	//set Strasse
-			Pst.setString(5, textField_Hausnummer.getText());	//set Hausnummer
-			Pst.setString(6, textField_Land.getText());	//set Land
-			Pst.setString(8, textField_Ort.getText());	//set Ort
 			
-			if (textField_PLZ.getText().length() != 0) {
-				Pst.setInt(7, Integer.parseInt(textField_PLZ.getText()));
+			if (!textField_Strasse.getText().equals("")) {
+				Pst.setString(4, textField_Strasse.getText());	//set Strasse
 			} else {
-				Pst.setString(7, null);
+				Pst.setNull(4, java.sql.Types.NULL);
+			}
+			if (!textField_Hausnummer.getText().equals("")) {
+				Pst.setString(5, textField_Hausnummer.getText());	//set Hausnummer
+			} else {
+				Pst.setNull(5, java.sql.Types.NULL);
+			}
+			if (!textField_Land.getText().equals("")) {
+				Pst.setString(6, textField_Land.getText());	//set Land
+			} else {
+				Pst.setNull(6, java.sql.Types.NULL);
+			}
+			if (!textField_PLZ.getText().equals("")) {
+				Pst.setInt(7, Integer.parseInt(textField_PLZ.getText()));	//set PLZ
+			} else {
+				Pst.setNull(7, java.sql.Types.NULL);
+			}
+			if (!textField_Ort.getText().equals("")) {
+				Pst.setString(8, textField_Ort.getText());	//set Ort
+			} else {
+				Pst.setNull(8, java.sql.Types.NULL);
 			}
 			
-			if (checkBox_Vollstaendig.isSelected()) {
+			if (checkBox_Fehler.isSelected()) {
 				Pst.setInt(9, 0);
 			} else {
 				Pst.setInt(9, 1);
@@ -645,7 +666,7 @@ public class correctParameters extends JFrame {
 			textField_Land.setText("");
 			textField_PLZ.setText("");
 			textField_Ort.setText("");
-			checkBox_Vollstaendig.setSelected(false);
+			checkBox_Fehler.setSelected(false);
 			
 			textField_Geburtsdatum.setBackground(Color.WHITE);
 			textField_Vorname.setBackground(Color.WHITE);
@@ -658,6 +679,7 @@ public class correctParameters extends JFrame {
 			
 		} catch (SQLException e) {
 			System.out.println(e);
+			//TODO Fenster "Diese Person existiert bereits in der Datenbank!"
 		}
 		
 	}

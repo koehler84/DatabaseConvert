@@ -7,7 +7,8 @@ public enum Befundtyp {
 	Korrekturbefund_1(3),
 	Korrekturbefund_2(4),
 	Korrekturbefund_3(5),
-	Konsiliarbericht_1(6);
+	Konsiliarbericht_1(6),
+	Fehler(9);
 	private int value;
 		
 	Befundtyp (int val) {
