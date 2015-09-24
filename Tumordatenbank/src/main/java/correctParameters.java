@@ -32,6 +32,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.JCheckBox;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.CardLayout;
 
 public class correctParameters extends JFrame {
 
@@ -59,6 +60,7 @@ public class correctParameters extends JFrame {
 	private JLabel lblOrt;
 	private JCheckBox checkBox_Vollstaendig;
 	private boolean doubleCheck = false;
+	private JPanel pnCards;
 
 	/**
 	 * Launch the application.
@@ -166,18 +168,24 @@ public class correctParameters extends JFrame {
 		lblConnected = new JLabel("connected");
 		lblConnected.setVisible(false);
 		
-		panel_submitPatientendaten = new JPanel();
+		final CardLayout pnCards_Layout = new CardLayout(0, 0);
 		
 		JButton btnNewButton = new JButton("New button");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (panel_submitPatientendaten.isVisible()) {
-					panel_submitPatientendaten.setVisible(false);
-				} else {
-					panel_submitPatientendaten.setVisible(true);
-				}
+				
+				pnCards_Layout.next(pnCards);
+				
+//				if (panel_submitPatientendaten.isVisible()) {
+//					panel_submitPatientendaten.setVisible(false);
+//				} else {
+//					panel_submitPatientendaten.setVisible(true);
+//				}
 			}
 		});
+		
+		pnCards = new JPanel();
+		pnCards.setLayout(pnCards_Layout);
 		
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
@@ -197,14 +205,14 @@ public class correctParameters extends JFrame {
 					.addComponent(btnAbbrechen))
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-						.addComponent(panel_submitPatientendaten, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 523, Short.MAX_VALUE)
+						.addComponent(pnCards, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 523, Short.MAX_VALUE)
 						.addComponent(separator, GroupLayout.DEFAULT_SIZE, 523, Short.MAX_VALUE))
 					.addGap(1))
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addComponent(panel_submitPatientendaten, GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE)
+					.addComponent(pnCards, GroupLayout.DEFAULT_SIZE, 506, Short.MAX_VALUE)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(separator, GroupLayout.PREFERRED_SIZE, 3, GroupLayout.PREFERRED_SIZE)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -221,6 +229,10 @@ public class correctParameters extends JFrame {
 							.addComponent(progressBar, GroupLayout.PREFERRED_SIZE, 18, GroupLayout.PREFERRED_SIZE)))
 					.addGap(1))
 		);
+		
+		panel_submitPatientendaten = new JPanel();
+		pnCards.add(panel_submitPatientendaten, "submitPatientendaten");
+		pnCards.add(new JPanel(), "test");
 		
 		table = new JTable();
 		table.addMouseListener(new MouseAdapter() {
