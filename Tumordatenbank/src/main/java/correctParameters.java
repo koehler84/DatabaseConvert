@@ -529,7 +529,7 @@ public class correctParameters extends JFrame {
 		try {
 			
 			PreparedStatement Pst = start.cn.prepareStatement("update mydb.patientendaten set `Geburtsdatum` = ? , `Vorname` = ? , "
-					+ "`Name` = ? , `Strasse` = ? , `Hausnummer` = ? , `Land` = ? , `PLZ` = ? , `Ort` = ?, `Vollst‰ndig` = ? "
+					+ "`Name` = ? , `Strasse` = ? , `Hausnummer` = ? , `Land` = ? , `PLZ` = ? , `Ort` = ?, `Fehler` = ? "
 					+ " where `Geburtsdatum` = ? and `Vorname` = ? and `Name` = ? ;");
 			
 			if (table.getSelectedRow() != -1) {
@@ -602,7 +602,7 @@ public class correctParameters extends JFrame {
 		
 		try {
 			Statement st = start.cn.createStatement();
-			ResultSet res = st.executeQuery("select * from mydb.vPatientendaten_Hauptparameter where `Vollst‰ndig` != 0");
+			ResultSet res = st.executeQuery("select * from mydb.vPatientendaten_Hauptparameter where `Fehler` != 0");
 			
 			DefaultTableModel tableModel = new DefaultTableModel(
 					new String[]{"Geburtsdatum", "Vorname", "Name", "Straﬂe", "Hausnummer", "Land", "PLZ", "Ort"}, 0) {
