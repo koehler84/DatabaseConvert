@@ -36,6 +36,7 @@ import java.awt.CardLayout;
 
 public class correctParameters extends JFrame {
 
+	private final CardLayout pnCards_Layout;
 	private JPanel contentPane;
 	private JPanel panel_submitPatientendaten;
 	public JProgressBar progressBar;
@@ -61,6 +62,7 @@ public class correctParameters extends JFrame {
 	private JCheckBox checkBox_Vollstaendig;
 	private boolean doubleCheck = false;
 	private JPanel pnCards;
+	private JMenuItem mntmOther;
 
 	/**
 	 * Launch the application.
@@ -118,8 +120,21 @@ public class correctParameters extends JFrame {
 		JMenu mnNewMenu = new JMenu("New menu");
 		mnTest.add(mnNewMenu);
 		
-		JMenuItem mntmNewMenuItem = new JMenuItem("New menu item");
-		mnTest.add(mntmNewMenuItem);
+		JMenuItem menu_showSubmitPat = new JMenuItem("Patientendaten bearbeiten");
+		menu_showSubmitPat.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				pnCards_Layout.show(pnCards, "submitPatientendaten");
+			}
+		});
+		mnTest.add(menu_showSubmitPat);
+		
+		mntmOther = new JMenuItem("other");
+		mntmOther.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				pnCards_Layout.show(pnCards, "test");
+			}
+		});
+		mnTest.add(mntmOther);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -168,7 +183,7 @@ public class correctParameters extends JFrame {
 		lblConnected = new JLabel("connected");
 		lblConnected.setVisible(false);
 		
-		final CardLayout pnCards_Layout = new CardLayout(0, 0);
+		pnCards_Layout = new CardLayout(0, 0);
 		
 		JButton btnNewButton = new JButton("New button");
 		btnNewButton.addActionListener(new ActionListener() {
