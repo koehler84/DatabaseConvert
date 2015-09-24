@@ -179,6 +179,7 @@ public class start {
 			book.close();
 			fis.close();
 			System.out.println("Write patientendaten success");
+			System.out.println();
 		} catch (IOException ie) {
 			ie.printStackTrace();
 		} catch (SQLException e) {
@@ -312,10 +313,10 @@ public class start {
 				
 				if (writeToDB) {
 					try {
-						System.out.println("Updated rows in mydb.patientendaten: " + Pst.executeUpdate());
+						System.out.print("Updated rows in mydb.patientendaten: " + Pst.executeUpdate() + " ");
 					} catch (SQLException e) {
 						//e.printStackTrace();
-						System.out.println("Fehler beim Ausführen von \"insert into fall\": Fall ggf. doppelt!");
+						System.out.print("Fehler beim Ausführen von \"insert into fall\": Fall ggf. doppelt!" + " ");
 					}
 				} else {
 					System.out.println("Fehler beim Einlesen des Falls! Abbruch des Schreibvorgangs.");
@@ -350,6 +351,7 @@ public class start {
 			book.close();
 			fis.close();
 			System.out.println("Write fall success");
+			System.out.println();
 		} catch (SQLException SQLex) {
 			System.out.println("Fehler beim Erstellen des PreparedStatement \"insert into fall\"!");
 		} catch (IOException e) {
