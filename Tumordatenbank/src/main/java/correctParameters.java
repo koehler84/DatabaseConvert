@@ -36,6 +36,7 @@ import java.awt.event.MouseEvent;
 public class correctParameters extends JFrame {
 
 	private JPanel contentPane;
+	private JPanel panel_submitPatientendaten;
 	public JProgressBar progressBar;
 	public JTable table;
 	public JScrollPane scrollPane;
@@ -162,6 +163,65 @@ public class correctParameters extends JFrame {
 		progressBar = new JProgressBar();
 		progressBar.setMaximum(1000);
 		
+		lblConnected = new JLabel("connected");
+		lblConnected.setVisible(false);
+		
+		panel_submitPatientendaten = new JPanel();
+		
+		JButton btnNewButton = new JButton("New button");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (panel_submitPatientendaten.isVisible()) {
+					panel_submitPatientendaten.setVisible(false);
+				} else {
+					panel_submitPatientendaten.setVisible(true);
+				}
+			}
+		});
+		
+		GroupLayout gl_contentPane = new GroupLayout(contentPane);
+		gl_contentPane.setHorizontalGroup(
+			gl_contentPane.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addGap(1)
+					.addComponent(lblFortschritt, GroupLayout.PREFERRED_SIZE, 58, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(progressBar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(lblConnected)
+					.addPreferredGap(ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
+					.addComponent(btnNewButton)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(btnOk)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(btnAbbrechen))
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+						.addComponent(panel_submitPatientendaten, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 523, Short.MAX_VALUE)
+						.addComponent(separator, GroupLayout.DEFAULT_SIZE, 523, Short.MAX_VALUE))
+					.addGap(1))
+		);
+		gl_contentPane.setVerticalGroup(
+			gl_contentPane.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addComponent(panel_submitPatientendaten, GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(separator, GroupLayout.PREFERRED_SIZE, 3, GroupLayout.PREFERRED_SIZE)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGap(2)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+								.addComponent(btnAbbrechen)
+								.addComponent(btnOk)
+								.addComponent(lblFortschritt, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblConnected)
+								.addComponent(btnNewButton)))
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGap(4)
+							.addComponent(progressBar, GroupLayout.PREFERRED_SIZE, 18, GroupLayout.PREFERRED_SIZE)))
+					.addGap(1))
+		);
+		
 		table = new JTable();
 		table.addMouseListener(new MouseAdapter() {
 			@Override
@@ -187,6 +247,16 @@ public class correctParameters extends JFrame {
 		
 		scrollPane = new JScrollPane();
 		scrollPane.setViewportView(table);
+		
+		lblGeburtsdatum = new JLabel("Geburtsdatum:");
+		
+		lblVorname = new JLabel("Vorname:");
+		
+		lblNachname = new JLabel("Nachname:");
+		
+		lblStrae = new JLabel("Stra\u00DFe:");
+		
+		lblHausnummer = new JLabel("Hausnummer:");
 		
 		textField_Geburtsdatum = new JTextField();
 		textField_Geburtsdatum.addKeyListener(new KeyAdapter() {
@@ -217,9 +287,9 @@ public class correctParameters extends JFrame {
 		textField_Hausnummer.addKeyListener(resetDoubleCheck());
 		textField_Hausnummer.setColumns(10);
 		
-		textField_Land = new JTextField();
-		textField_Land.addKeyListener(resetDoubleCheck());
-		textField_Land.setColumns(10);
+		textField_Ort = new JTextField();
+		textField_Ort.addKeyListener(resetDoubleCheck());
+		textField_Ort.setColumns(10);
 		
 		textField_PLZ = new JTextField();
 		textField_PLZ.addKeyListener(new KeyAdapter() {
@@ -234,9 +304,19 @@ public class correctParameters extends JFrame {
 		});
 		textField_PLZ.setColumns(10);
 		
-		textField_Ort = new JTextField();
-		textField_Ort.addKeyListener(resetDoubleCheck());
-		textField_Ort.setColumns(10);
+		textField_Land = new JTextField();
+		textField_Land.addKeyListener(resetDoubleCheck());
+		textField_Land.setColumns(10);
+		
+		lblLand = new JLabel("Land:");
+		
+		lblPostleitzahl = new JLabel("Postleitzahl:");
+		
+		lblOrt = new JLabel("Ort:");
+		
+		JLabel lblDatensatzIstVollstndig = new JLabel("Datensatz ist vollst\u00E4ndig:");
+		
+		checkBox_Vollstaendig = new JCheckBox("");
 		
 		JButton btnFertig = new JButton("Fertig");
 		btnFertig.addActionListener(new ActionListener() {
@@ -313,148 +393,106 @@ public class correctParameters extends JFrame {
 								
 			}
 		});
-		
-		lblConnected = new JLabel("connected");
-		lblConnected.setVisible(false);
-		
-		lblGeburtsdatum = new JLabel("Geburtsdatum:");
-		
-		lblVorname = new JLabel("Vorname:");
-		
-		lblNachname = new JLabel("Nachname:");
-		
-		lblStrae = new JLabel("Stra\u00DFe:");
-		
-		lblHausnummer = new JLabel("Hausnummer:");
-		
-		lblLand = new JLabel("Land:");
-		
-		lblPostleitzahl = new JLabel("Postleitzahl:");
-		
-		lblOrt = new JLabel("Ort:");
-		
-		JLabel lblDatensatzIstVollstndig = new JLabel("Datensatz ist vollst\u00E4ndig:");
-		
-		checkBox_Vollstaendig = new JCheckBox("");
-		
-		GroupLayout gl_contentPane = new GroupLayout(contentPane);
-		gl_contentPane.setHorizontalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGap(1)
-					.addComponent(lblFortschritt, GroupLayout.PREFERRED_SIZE, 58, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(progressBar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(lblConnected)
-					.addPreferredGap(ComponentPlacement.RELATED, 117, Short.MAX_VALUE)
-					.addComponent(btnOk)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(btnAbbrechen))
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-						.addComponent(scrollPane, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 523, Short.MAX_VALUE)
-						.addComponent(separator, GroupLayout.DEFAULT_SIZE, 523, Short.MAX_VALUE))
-					.addGap(1))
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addComponent(lblGeburtsdatum)
-							.addGap(33)
-							.addComponent(lblVorname))
-						.addGroup(gl_contentPane.createSequentialGroup()
+		GroupLayout gl_panel_submitPatientendaten = new GroupLayout(panel_submitPatientendaten);
+		gl_panel_submitPatientendaten.setHorizontalGroup(
+			gl_panel_submitPatientendaten.createParallelGroup(Alignment.LEADING)
+				.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 523, Short.MAX_VALUE)
+				.addGroup(gl_panel_submitPatientendaten.createSequentialGroup()
+					.addGap(209)
+					.addComponent(lblNachname)
+					.addGap(49)
+					.addComponent(lblStrae)
+					.addGap(69)
+					.addComponent(lblHausnummer)
+					.addContainerGap())
+				.addGroup(gl_panel_submitPatientendaten.createSequentialGroup()
+					.addComponent(lblGeburtsdatum)
+					.addGap(33)
+					.addComponent(lblVorname)
+					.addGap(372))
+				.addGroup(gl_panel_submitPatientendaten.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_panel_submitPatientendaten.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panel_submitPatientendaten.createSequentialGroup()
+							.addGap(10)
+							.addComponent(textField_Geburtsdatum, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addGap(18)
+							.addComponent(textField_Vorname, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addGap(18)
+							.addComponent(textField_Name, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addGap(18)
+							.addComponent(textField_Strasse, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addGap(18)
+							.addComponent(textField_Hausnummer, GroupLayout.PREFERRED_SIZE, 44, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_panel_submitPatientendaten.createSequentialGroup()
 							.addComponent(lblLand)
 							.addGap(36)
-							.addComponent(lblPostleitzahl)))
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGap(58)
-							.addComponent(lblNachname)
-							.addGap(49)
-							.addComponent(lblStrae)
-							.addGap(69)
-							.addComponent(lblHausnummer))
-						.addGroup(gl_contentPane.createSequentialGroup()
+							.addComponent(lblPostleitzahl)
 							.addGap(15)
-							.addComponent(lblOrt)))
-					.addContainerGap(41, Short.MAX_VALUE))
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(textField_Geburtsdatum, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addGap(18)
-					.addComponent(textField_Vorname, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addGap(18)
-					.addComponent(textField_Name, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addGap(18)
-					.addComponent(textField_Strasse, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addGap(18)
-					.addComponent(textField_Hausnummer, GroupLayout.PREFERRED_SIZE, 44, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(54, Short.MAX_VALUE))
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(textField_Land, GroupLayout.PREFERRED_SIZE, 44, GroupLayout.PREFERRED_SIZE)
-					.addGap(18)
-					.addComponent(textField_PLZ, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addGap(18)
-					.addComponent(textField_Ort, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addGap(18)
-					.addComponent(lblDatensatzIstVollstndig)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(checkBox_Vollstaendig)
-					.addContainerGap(96, Short.MAX_VALUE))
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addContainerGap(453, Short.MAX_VALUE)
+							.addComponent(lblOrt))
+						.addGroup(gl_panel_submitPatientendaten.createSequentialGroup()
+							.addGap(10)
+							.addComponent(textField_Land, GroupLayout.PREFERRED_SIZE, 44, GroupLayout.PREFERRED_SIZE)
+							.addGap(18)
+							.addComponent(textField_PLZ, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addGap(18)
+							.addComponent(textField_Ort, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addGap(18)
+							.addComponent(lblDatensatzIstVollstndig)
+							.addGap(6)
+							.addComponent(checkBox_Vollstaendig)))
+					.addContainerGap(43, Short.MAX_VALUE))
+				.addGroup(Alignment.TRAILING, gl_panel_submitPatientendaten.createSequentialGroup()
+					.addContainerGap(452, Short.MAX_VALUE)
 					.addComponent(btnFertig)
 					.addContainerGap())
 		);
-		gl_contentPane.setVerticalGroup(
-			gl_contentPane.createParallelGroup(Alignment.TRAILING)
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGap(31)
+		gl_panel_submitPatientendaten.setVerticalGroup(
+			gl_panel_submitPatientendaten.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel_submitPatientendaten.createSequentialGroup()
+					.addGap(27)
 					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 85, GroupLayout.PREFERRED_SIZE)
-					.addGap(17)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblGeburtsdatum)
-						.addComponent(lblVorname)
-						.addComponent(lblHausnummer)
-						.addComponent(lblNachname)
-						.addComponent(lblStrae))
+					.addGap(18)
+					.addGroup(gl_panel_submitPatientendaten.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panel_submitPatientendaten.createParallelGroup(Alignment.BASELINE)
+							.addComponent(lblGeburtsdatum)
+							.addComponent(lblVorname))
+						.addGroup(gl_panel_submitPatientendaten.createSequentialGroup()
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(lblNachname))
+						.addGroup(gl_panel_submitPatientendaten.createSequentialGroup()
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(lblStrae))
+						.addGroup(gl_panel_submitPatientendaten.createSequentialGroup()
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(lblHausnummer)))
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_panel_submitPatientendaten.createParallelGroup(Alignment.LEADING)
 						.addComponent(textField_Geburtsdatum, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(textField_Vorname, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(textField_Name, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(textField_Strasse, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(textField_Hausnummer, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addGap(18)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+					.addGroup(gl_panel_submitPatientendaten.createParallelGroup(Alignment.LEADING)
 						.addComponent(lblLand)
 						.addComponent(lblPostleitzahl)
 						.addComponent(lblOrt))
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+					.addGap(6)
+					.addGroup(gl_panel_submitPatientendaten.createParallelGroup(Alignment.LEADING)
 						.addComponent(textField_Land, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(textField_PLZ, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(textField_Ort, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lblDatensatzIstVollstndig)
+						.addGroup(gl_panel_submitPatientendaten.createSequentialGroup()
+							.addGap(3)
+							.addComponent(lblDatensatzIstVollstndig))
 						.addComponent(checkBox_Vollstaendig))
-					.addPreferredGap(ComponentPlacement.RELATED, 78, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.RELATED, 83, Short.MAX_VALUE)
 					.addComponent(btnFertig)
-					.addGap(18)
-					.addComponent(separator, GroupLayout.PREFERRED_SIZE, 3, GroupLayout.PREFERRED_SIZE)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGap(2)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-								.addComponent(btnAbbrechen)
-								.addComponent(btnOk)
-								.addComponent(lblFortschritt, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE)
-								.addComponent(lblConnected)))
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGap(4)
-							.addComponent(progressBar, GroupLayout.PREFERRED_SIZE, 18, GroupLayout.PREFERRED_SIZE)))
-					.addGap(1))
+					.addContainerGap())
 		);
+		panel_submitPatientendaten.setLayout(gl_panel_submitPatientendaten);
 		
 		contentPane.setLayout(gl_contentPane);
 		
