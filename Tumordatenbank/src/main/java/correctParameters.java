@@ -39,9 +39,10 @@ public class correctParameters extends JFrame {
 	private final CardLayout pnCards_Layout;
 	private JPanel contentPane;
 	private JPanel panel_submitPatientendaten;
+	private JPanel panel_submitFall;
 	public JProgressBar progressBar;
-	public JTable table;
-	public JScrollPane scrollPane;
+	public JTable table_Patientendaten;
+	public JScrollPane scrollPane_Patientendaten;
 	private JTextField textField_Geburtsdatum;
 	private JTextField textField_Vorname;
 	private JTextField textField_Name;
@@ -63,6 +64,7 @@ public class correctParameters extends JFrame {
 	private boolean doubleCheck = false;
 	private JPanel pnCards;
 	private JMenuItem mntmOther;
+	private JTable table_Fall;
 
 	/**
 	 * Launch the application.
@@ -114,7 +116,7 @@ public class correctParameters extends JFrame {
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		
-		JMenu mnTest = new JMenu("Test");
+		JMenu mnTest = new JMenu("Men\u00FC");
 		menuBar.add(mnTest);
 		
 		JMenu mnNewMenu = new JMenu("New menu");
@@ -128,10 +130,10 @@ public class correctParameters extends JFrame {
 		});
 		mnTest.add(menu_showSubmitPat);
 		
-		mntmOther = new JMenuItem("other");
+		mntmOther = new JMenuItem("F‰lle bearbeiten");
 		mntmOther.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				pnCards_Layout.show(pnCards, "test");
+				pnCards_Layout.show(pnCards, "submitFall");
 			}
 		});
 		mnTest.add(mntmOther);
@@ -185,17 +187,10 @@ public class correctParameters extends JFrame {
 		
 		pnCards_Layout = new CardLayout(0, 0);
 		
-		JButton btnNewButton = new JButton("New button");
+		JButton btnNewButton = new JButton("switch Cards");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
 				pnCards_Layout.next(pnCards);
-				
-//				if (panel_submitPatientendaten.isVisible()) {
-//					panel_submitPatientendaten.setVisible(false);
-//				} else {
-//					panel_submitPatientendaten.setVisible(true);
-//				}
 			}
 		});
 		
@@ -246,10 +241,68 @@ public class correctParameters extends JFrame {
 		
 		panel_submitPatientendaten = new JPanel();
 		pnCards.add(panel_submitPatientendaten, "submitPatientendaten");
-		pnCards.add(new JPanel(), "test");
 		
-		table = new JTable();
-		table.addMouseListener(new MouseAdapter() {
+		panel_submitFall = new JPanel();
+		pnCards.add(panel_submitFall, "submitFall");
+		
+		JScrollPane scrollPane_Fall = new JScrollPane();
+		
+		JButton btnTabelleAktualisieren_Fall = new JButton("Tabelle aktualisieren");
+		btnTabelleAktualisieren_Fall.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				DBtoTable_Fall();
+			}
+		});
+		
+		JButton btnFertig_Fall = new JButton("Fertig");
+		GroupLayout gl_panel_submitFall = new GroupLayout(panel_submitFall);
+		gl_panel_submitFall.setHorizontalGroup(
+			gl_panel_submitFall.createParallelGroup(Alignment.TRAILING)
+				.addComponent(scrollPane_Fall, GroupLayout.DEFAULT_SIZE, 524, Short.MAX_VALUE)
+				.addGroup(gl_panel_submitFall.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(btnTabelleAktualisieren_Fall, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE)
+					.addGap(6)
+					.addComponent(btnFertig_Fall, GroupLayout.PREFERRED_SIZE, 61, GroupLayout.PREFERRED_SIZE))
+		);
+		gl_panel_submitFall.setVerticalGroup(
+			gl_panel_submitFall.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel_submitFall.createSequentialGroup()
+					.addGap(27)
+					.addComponent(scrollPane_Fall, GroupLayout.PREFERRED_SIZE, 85, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED, 199, Short.MAX_VALUE)
+					.addGroup(gl_panel_submitFall.createParallelGroup(Alignment.LEADING)
+						.addComponent(btnTabelleAktualisieren_Fall)
+						.addComponent(btnFertig_Fall))
+					.addContainerGap())
+		);
+		
+		table_Fall = new JTable();
+		@SuppressWarnings("serial")
+		DefaultTableModel tableModel_Fall = new DefaultTableModel(
+				new String[]{"E.-Nummer", "Befundtyp", "Arzt", "Eingangsdatum", "Einsender", "Geburtsdatum", "Vorname", "Name"}, 0) {
+			
+			public boolean isCellEditable(int row, int column) {
+			       //all cells false
+			       return false;
+			}
+		};
+		table_Fall.setModel(tableModel_Fall);
+		scrollPane_Fall.setViewportView(table_Fall);
+		panel_submitFall.setLayout(gl_panel_submitFall);
+		
+		table_Patientendaten = new JTable();
+		@SuppressWarnings({ "serial" })
+		DefaultTableModel tableModel_Patientendaten = new DefaultTableModel(
+				new String[]{"Geburtsdatum", "Vorname", "Name", "Straﬂe", "Hausnummer", "Land", "PLZ", "Ort"}, 0) {
+			
+			public boolean isCellEditable(int row, int column) {
+			       //all cells false
+			       return false;
+			}
+		};
+		table_Patientendaten.setModel(tableModel_Patientendaten);
+		table_Patientendaten.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() == 2) {
@@ -271,8 +324,8 @@ public class correctParameters extends JFrame {
 			}
 		});
 		
-		scrollPane = new JScrollPane();
-		scrollPane.setViewportView(table);
+		scrollPane_Patientendaten = new JScrollPane();
+		scrollPane_Patientendaten.setViewportView(table_Patientendaten);
 		
 		lblGeburtsdatum = new JLabel("Geburtsdatum:");
 		
@@ -357,7 +410,7 @@ public class correctParameters extends JFrame {
 				textField_PLZ.setBackground(Color.WHITE);
 				textField_Ort.setBackground(Color.WHITE);
 				
-				if (table.getSelectedRow() != -1) {
+				if (table_Patientendaten.getSelectedRow() != -1) {
 					
 					//If textFields Geburtsdatum, Name, Vorname are empty, skip update method
 					if (textField_Geburtsdatum.getText().length() != 0 && textField_Name.getText().length() != 0 
@@ -423,7 +476,7 @@ public class correctParameters extends JFrame {
 		JButton btnTabelleAktualisieren = new JButton("Tabelle aktualisieren");
 		btnTabelleAktualisieren.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				insertModel();
+				DBtoTable_Patientendaten();
 			}
 		});
 		GroupLayout gl_panel_submitPatientendaten = new GroupLayout(panel_submitPatientendaten);
@@ -481,14 +534,14 @@ public class correctParameters extends JFrame {
 					.addComponent(btnFertig)
 					.addContainerGap())
 				.addGroup(gl_panel_submitPatientendaten.createSequentialGroup()
-					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 524, Short.MAX_VALUE)
+					.addComponent(scrollPane_Patientendaten, GroupLayout.DEFAULT_SIZE, 524, Short.MAX_VALUE)
 					.addGap(11))
 		);
 		gl_panel_submitPatientendaten.setVerticalGroup(
 			gl_panel_submitPatientendaten.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel_submitPatientendaten.createSequentialGroup()
 					.addGap(27)
-					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 85, GroupLayout.PREFERRED_SIZE)
+					.addComponent(scrollPane_Patientendaten, GroupLayout.PREFERRED_SIZE, 85, GroupLayout.PREFERRED_SIZE)
 					.addGap(18)
 					.addGroup(gl_panel_submitPatientendaten.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_panel_submitPatientendaten.createParallelGroup(Alignment.BASELINE)
@@ -550,19 +603,20 @@ public class correctParameters extends JFrame {
 	
 	private void rowToTextField() {
 		
-		int row = table.getSelectedRow();
+		int row = table_Patientendaten.getSelectedRow();
 		
-		textField_Geburtsdatum.setText(table.getValueAt(row, 0).toString());
-		textField_Vorname.setText((String) table.getValueAt(row, 1));
-		textField_Name.setText((String) table.getValueAt(row, 2));
-		textField_Strasse.setText((String) table.getValueAt(row, 3));
-		textField_Hausnummer.setText((String) table.getValueAt(row, 4));
-		textField_Land.setText((String) table.getValueAt(row, 5));
-		textField_PLZ.setText((String) table.getValueAt(row, 6));
-		textField_Ort.setText((String) table.getValueAt(row, 7));
+		textField_Geburtsdatum.setText(table_Patientendaten.getValueAt(row, 0).toString());
+		textField_Vorname.setText((String) table_Patientendaten.getValueAt(row, 1));
+		textField_Name.setText((String) table_Patientendaten.getValueAt(row, 2));
+		textField_Strasse.setText((String) table_Patientendaten.getValueAt(row, 3));
+		textField_Hausnummer.setText((String) table_Patientendaten.getValueAt(row, 4));
+		textField_Land.setText((String) table_Patientendaten.getValueAt(row, 5));
+		textField_PLZ.setText((String) table_Patientendaten.getValueAt(row, 6));
+		textField_Ort.setText((String) table_Patientendaten.getValueAt(row, 7));
 		
 	}
 	
+	@SuppressWarnings("unused")
 	private void writeInputToDB() {
 		
 		try {
@@ -581,8 +635,8 @@ public class correctParameters extends JFrame {
 			System.out.println("Manueller Input: Zeilen ge‰ndert: " + changedRows);
 			Pst.close();
 			
-			if (table.getRowCount() > 0) {
-				((DefaultTableModel)table.getModel()).removeRow(0);
+			if (table_Patientendaten.getRowCount() > 0) {
+				((DefaultTableModel)table_Patientendaten.getModel()).removeRow(0);
 			}
 			
 			textField_Geburtsdatum.setText("");
@@ -608,9 +662,9 @@ public class correctParameters extends JFrame {
 					+ "`Name` = ? , `Strasse` = ? , `Hausnummer` = ? , `Land` = ? , `PLZ` = ? , `Ort` = ?, `Fehler` = ? "
 					+ " where `Geburtsdatum` = ? and `Vorname` = ? and `Name` = ? ;");
 			
-			Pst.setString(10, table.getValueAt(table.getSelectedRow(), 0).toString());		//where Geb
-			Pst.setString(11, table.getValueAt(table.getSelectedRow(), 1).toString());		//where Vorname
-			Pst.setString(12, table.getValueAt(table.getSelectedRow(), 2).toString());		//where Name
+			Pst.setString(10, table_Patientendaten.getValueAt(table_Patientendaten.getSelectedRow(), 0).toString());		//where Geb
+			Pst.setString(11, table_Patientendaten.getValueAt(table_Patientendaten.getSelectedRow(), 1).toString());		//where Vorname
+			Pst.setString(12, table_Patientendaten.getValueAt(table_Patientendaten.getSelectedRow(), 2).toString());		//where Name
 			
 			Pst.setString(1, textField_Geburtsdatum.getText());	//set Geb
 			Pst.setString(2, textField_Vorname.getText());	//set Vorname
@@ -652,10 +706,10 @@ public class correctParameters extends JFrame {
 			
 			Pst.close();
 			
-			if (table.getRowCount() > 0 && table.getSelectedRow() != -1) {
-				((DefaultTableModel)table.getModel()).removeRow(table.getSelectedRow());
+			if (table_Patientendaten.getRowCount() > 0 && table_Patientendaten.getSelectedRow() != -1) {
+				((DefaultTableModel)table_Patientendaten.getModel()).removeRow(table_Patientendaten.getSelectedRow());
 			} else {
-				((DefaultTableModel)table.getModel()).removeRow(0);
+				((DefaultTableModel)table_Patientendaten.getModel()).removeRow(0);
 			}
 			
 			textField_Geburtsdatum.setText("");
@@ -684,13 +738,13 @@ public class correctParameters extends JFrame {
 		
 	}
 	
-	@SuppressWarnings("serial")
-	public void insertModel() {
+	public void DBtoTable_Patientendaten() {
 		
 		try {
 			Statement st = start.cn.createStatement();
 			ResultSet res = st.executeQuery("select * from mydb.vPatientendaten_Hauptparameter where `Fehler` != 0");
 			
+			@SuppressWarnings("serial")
 			DefaultTableModel tableModel = new DefaultTableModel(
 					new String[]{"Geburtsdatum", "Vorname", "Name", "Straﬂe", "Hausnummer", "Land", "PLZ", "Ort"}, 0) {
 				
@@ -700,7 +754,7 @@ public class correctParameters extends JFrame {
 				}
 			};
 			
-			table.setModel(tableModel);
+			table_Patientendaten.setModel(tableModel);
 			
 			Object[] data = new Object[8];
 			
@@ -720,6 +774,50 @@ public class correctParameters extends JFrame {
 			
 		} catch (SQLException e) {
 			System.out.println(e);
+		} catch (Exception ex) {
+			System.out.println(ex + " - ggf keine Verbindung zur Datenbank");
+		}
+		
+	}
+	
+	public void DBtoTable_Fall() {
+		
+		try {
+			Statement st = start.cn.createStatement();
+			ResultSet res = st.executeQuery("select * from vFehlerFall;");
+			
+			@SuppressWarnings("serial")
+			DefaultTableModel tableModel = new DefaultTableModel(
+					new String[]{"E.-Nummer", "Befundtyp", "Arzt", "Eingangsdatum", "Einsender", "Geburtsdatum", "Vorname", "Name"}, 0) {
+				
+				public boolean isCellEditable(int row, int column) {
+				       //all cells false
+				       return false;
+				}
+			};
+			
+			table_Fall.setModel(tableModel);
+			
+			Object[] data = new Object[8];
+			
+			while (res.next()) {
+				
+				data[0] = res.getString("E.-Nummer");
+				data[1] = Befundtyp.getBefundtyp(res.getInt("Befundtyp")).name();
+				data[2] = res.getString("Arzt");
+				data[3] = res.getDate("Eingangsdatum");
+				data[4] = res.getString("Einsender");
+				data[5] = res.getDate("Geburtsdatum");
+				data[6] = res.getString("Vorname");
+				data[7] = res.getString("Name");
+				
+				tableModel.addRow(data);
+			}
+			
+		} catch (SQLException e) {
+			System.out.println(e);
+		} catch (Exception ex) {
+			System.out.println(ex + " - ggf keine Verbindung zur Datenbank");
 		}
 		
 	}

@@ -19,4 +19,28 @@ public enum Befundtyp {
 		return this.value;
 	}
 	
+	public static Befundtyp getBefundtyp(int a) {
+		
+		switch (a) {
+		case 0:
+			return Befundtyp.Hauptbefund;
+		case 1:
+			return Befundtyp.Nachbericht_1;
+		case 2:
+			return Befundtyp.Nachbericht_2;
+		case 3:
+			return Befundtyp.Korrekturbefund_1;
+		case 4:
+			return Befundtyp.Korrekturbefund_2;
+		case 5:
+			return Befundtyp.Korrekturbefund_3;
+		case 6:
+			return Befundtyp.Konsiliarbericht_1;
+		case 9:
+			return Befundtyp.Fehler;
+		}
+		
+		return null;
+	}
+	
 }

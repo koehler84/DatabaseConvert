@@ -358,19 +358,19 @@ public class start {
 	
 	public static void fehlerToWindow(String method, Row row, int[][] positions) {
 		
-		UIFenster1.scrollPane.setVisible(true);
+		UIFenster1.scrollPane_Patientendaten.setVisible(true);
 		UIFenster1.getContentPane().revalidate();		//essential for the scrollPane to be visible
 		UIFenster1.getContentPane().repaint();
-		UIFenster1.table.setVisible(true);
+		UIFenster1.table_Patientendaten.setVisible(true);
 		
 		if (method.equals("excelToPatient")) {
 			
 			DefaultTableModel tableModel = new DefaultTableModel();
-			if (UIFenster1.table.getModel().getColumnCount() == 0) {
+			if (UIFenster1.table_Patientendaten.getModel().getColumnCount() == 0) {
 				System.out.println("TableModel null");
 				tableModel = new DefaultTableModel(
 						new String[]{"Geburtsdatum", "Vorname", "Name", "Straﬂe", "Hausnummer", "Land", "PLZ", "Ort"}, 0);
-				UIFenster1.table.setModel(tableModel);
+				UIFenster1.table_Patientendaten.setModel(tableModel);
 			}
 			
 			Object[] parameterArray = new Object[8];
@@ -403,7 +403,7 @@ public class start {
 				
 			}
 			
-			((DefaultTableModel) UIFenster1.table.getModel()).addRow(parameterArray);
+			((DefaultTableModel) UIFenster1.table_Patientendaten.getModel()).addRow(parameterArray);
 			
 		} else if (method.equals("excelToFall")) {
 			
@@ -459,7 +459,7 @@ public class start {
 	/*???	*/Class.forName( dbDrv );
 			cn = DriverManager.getConnection( dbUrl, dbUsr, dbPwd );
 			UIFenster1.lblConnected.setVisible(true);
-			UIFenster1.insertModel();
+			UIFenster1.DBtoTable_Patientendaten();
 
 		} catch ( Exception ex ) {
 			System.out.println( ex );
@@ -489,7 +489,8 @@ public class start {
 		//Tumorklassifikation: C 57, M 8441/3, G 3, pT3c pN1(15/34) L/V1. Der Tumor ist ÷strogen- und Progesteronrezeptor-negativ. Sonstiges: ip
 
 		methodsCompleted = true;
-		UIFenster1.insertModel();
+		UIFenster1.DBtoTable_Patientendaten();
+		UIFenster1.DBtoTable_Fall();
 		
 		try {
 			if (cn != null && !cn.isClosed() && !UIFenster1.isShowing()) {
