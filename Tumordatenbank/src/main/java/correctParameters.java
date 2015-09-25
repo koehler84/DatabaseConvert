@@ -1,9 +1,14 @@
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.Graphics;
+import java.awt.Insets;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JButton;
@@ -33,6 +38,9 @@ import javax.swing.JCheckBox;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.CardLayout;
+import javax.swing.JComboBox;
+import javax.swing.BorderFactory;
+import javax.swing.DefaultComboBoxModel;
 
 public class correctParameters extends JFrame {
 
@@ -52,19 +60,20 @@ public class correctParameters extends JFrame {
 	private JTextField textField_PLZ;
 	private JTextField textField_Ort;
 	public JLabel lblConnected;
-	private JLabel lblGeburtsdatum;
-	private JLabel lblVorname;
-	private JLabel lblNachname;
-	private JLabel lblStrae;
-	private JLabel lblHausnummer;
-	private JLabel lblLand;
-	private JLabel lblPostleitzahl;
-	private JLabel lblOrt;
 	private JCheckBox checkBox_Fehler;
 	private boolean doubleCheck = false;
 	private JPanel pnCards;
 	private JMenuItem mntmOther;
 	private JTable table_Fall;
+	private JTextField textField_Geburtsdatum_1;
+	private JTextField textField_Vorname_1;
+	private JTextField textField_Name_1;
+	private JTextField textField_Enummer;
+	private JTextField textField_Eingangsdatum;
+	private JTextField textField_Einsender;
+	private JTextField textField_Arzt;
+	private JComboBox<Befundtyp> comboBox_Befundtyp;
+	private JCheckBox checkBox_Fehler_1;
 
 	/**
 	 * Launch the application.
@@ -117,6 +126,11 @@ public class correctParameters extends JFrame {
 		setJMenuBar(menuBar);
 		
 		JMenu mnTest = new JMenu("Men\u00FC");
+		mnTest.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				doubleCheck = false;
+			}
+		});
 		menuBar.add(mnTest);
 		
 		JMenu mnNewMenu = new JMenu("New menu");
@@ -191,6 +205,7 @@ public class correctParameters extends JFrame {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				pnCards_Layout.next(pnCards);
+				doubleCheck = false;
 			}
 		});
 		
@@ -255,29 +270,254 @@ public class correctParameters extends JFrame {
 		});
 		
 		JButton btnFertig_Fall = new JButton("Fertig");
+		btnFertig_Fall.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				if (table_Fall.getSelectedRow() != -1) {
+					
+					//If textFields Geburtsdatum, Name, Vorname are empty, skip update method
+					if (textField_Geburtsdatum_1.getText().length() != 0 && textField_Name_1.getText().length() != 0 
+							&& textField_Vorname_1.getText().length() != 0 && textField_Enummer.getText().length() != 0
+							&& comboBox_Befundtyp.getSelectedIndex() != -1 && textField_Eingangsdatum.getText().length() != 0
+							&& textField_Einsender.getText().length() != 0 && textField_Arzt.getText().length() != 0) {
+						updateFallDB();						
+					} else if (doubleCheck && textField_Enummer.getText().length() != 0 && comboBox_Befundtyp.getSelectedIndex() != -1) {
+						updateFallDB();
+						doubleCheck = false;
+					} else {
+						if (textField_Geburtsdatum_1.getText().length() == 0) {
+							textField_Geburtsdatum_1.setBackground(Color.decode("#ff8080"));
+							doubleCheck = true;
+						}
+						
+						if (textField_Vorname_1.getText().length() == 0) {
+							textField_Vorname_1.setBackground(Color.decode("#ff8080"));
+							doubleCheck = true;
+						}
+						
+						if (textField_Name_1.getText().length() == 0) {
+							textField_Name_1.setBackground(Color.decode("#ff8080"));
+							doubleCheck = true;
+						}
+						
+						if (textField_Enummer.getText().length() == 0) {
+							textField_Enummer.setBackground(Color.RED);
+						}
+						
+						if (comboBox_Befundtyp.getSelectedIndex() == -1) {
+							comboBox_Befundtyp.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+							//comboBox_Befundtyp
+						}
+						
+						if (textField_Eingangsdatum.getText().length() == 0) {
+							textField_Eingangsdatum.setBackground(Color.decode("#ff8080"));
+							doubleCheck = true;
+						}
+						
+						if (textField_Einsender.getText().length() == 0) {
+							textField_Einsender.setBackground(Color.decode("#ff8080"));
+							doubleCheck = true;
+						}
+						
+						if (textField_Arzt.getText().length() == 0) {
+							textField_Arzt.setBackground(Color.decode("#ff8080"));
+							doubleCheck = true;
+						}
+						
+					}
+					
+				} else {
+					System.out.println("Fehler: Keine Eingabe!");
+				}
+				
+			}
+		});
+		
+		JLabel lblGeburtsdatum_1 = new JLabel("Geburtsdatum:");
+		
+		JLabel lblVorname_1 = new JLabel("Vorname:");
+		
+		JLabel lblNachname_1 = new JLabel("Nachname:");
+		
+		textField_Geburtsdatum_1 = new JTextField();
+		textField_Geburtsdatum_1.addKeyListener(resetDoubleCheck());
+		textField_Geburtsdatum_1.setColumns(10);
+		
+		textField_Vorname_1 = new JTextField();
+		textField_Vorname_1.addKeyListener(resetDoubleCheck());
+		textField_Vorname_1.setColumns(10);
+		
+		textField_Name_1 = new JTextField();
+		textField_Name_1.addKeyListener(resetDoubleCheck());
+		textField_Name_1.setColumns(10);
+		
+		JLabel lblEnummer = new JLabel("E.-Nummer:");
+		
+		textField_Enummer = new JTextField();
+		textField_Enummer.addKeyListener(resetDoubleCheck());
+		textField_Enummer.setColumns(10);
+		
+		JLabel lblBefundtyp = new JLabel("Befundtyp:");
+		
+		comboBox_Befundtyp = new JComboBox<Befundtyp>();
+		comboBox_Befundtyp.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				doubleCheck = false;
+			}
+		});
+		comboBox_Befundtyp.setModel(new DefaultComboBoxModel<Befundtyp>(Befundtyp.values()));
+		comboBox_Befundtyp.setSelectedIndex(-1);
+		
+		textField_Eingangsdatum = new JTextField();
+		textField_Eingangsdatum.addKeyListener(resetDoubleCheck());
+		textField_Eingangsdatum.setColumns(10);
+		
+		JLabel lblEingangsdatum = new JLabel("Eingangsdatum:");
+		
+		textField_Einsender = new JTextField();
+		textField_Einsender.addKeyListener(resetDoubleCheck());
+		textField_Einsender.setColumns(10);
+		
+		JLabel lblEinsender = new JLabel("Einsender:");
+		
+		JLabel lblArzt = new JLabel("Arzt:");
+		
+		textField_Arzt = new JTextField();
+		textField_Arzt.addKeyListener(resetDoubleCheck());
+		textField_Arzt.setColumns(10);
+		
+		JLabel lblDatensatzIstVollstndig_1 = new JLabel("Datensatz ist vollst\u00E4ndig:");
+		
+		checkBox_Fehler_1 = new JCheckBox("");
 		GroupLayout gl_panel_submitFall = new GroupLayout(panel_submitFall);
 		gl_panel_submitFall.setHorizontalGroup(
 			gl_panel_submitFall.createParallelGroup(Alignment.TRAILING)
-				.addComponent(scrollPane_Fall, GroupLayout.DEFAULT_SIZE, 524, Short.MAX_VALUE)
+				.addGroup(gl_panel_submitFall.createSequentialGroup()
+					.addComponent(lblGeburtsdatum_1)
+					.addGap(45)
+					.addComponent(lblVorname_1)
+					.addGap(58)
+					.addComponent(lblNachname_1, GroupLayout.PREFERRED_SIZE, 54, GroupLayout.PREFERRED_SIZE)
+					.addGap(250))
+				.addGroup(gl_panel_submitFall.createSequentialGroup()
+					.addGap(20)
+					.addComponent(textField_Geburtsdatum_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addGap(18)
+					.addComponent(textField_Vorname_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addGap(18)
+					.addComponent(textField_Name_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(211, Short.MAX_VALUE))
+				.addGroup(gl_panel_submitFall.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_panel_submitFall.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panel_submitFall.createSequentialGroup()
+							.addComponent(lblEnummer)
+							.addGap(49)
+							.addComponent(lblBefundtyp)
+							.addGap(80)
+							.addComponent(lblEingangsdatum)
+							.addGap(27)
+							.addComponent(lblEinsender))
+						.addGroup(gl_panel_submitFall.createSequentialGroup()
+							.addGap(10)
+							.addGroup(gl_panel_submitFall.createParallelGroup(Alignment.TRAILING)
+								.addComponent(textField_Arzt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(textField_Enummer, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addGap(18)
+							.addGroup(gl_panel_submitFall.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_panel_submitFall.createSequentialGroup()
+									.addComponent(comboBox_Befundtyp, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+									.addGap(18)
+									.addComponent(textField_Eingangsdatum, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+									.addGap(18)
+									.addComponent(textField_Einsender, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+								.addGroup(gl_panel_submitFall.createSequentialGroup()
+									.addComponent(lblDatensatzIstVollstndig_1)
+									.addPreferredGap(ComponentPlacement.UNRELATED)
+									.addComponent(checkBox_Fehler_1)))))
+					.addContainerGap(77, Short.MAX_VALUE))
 				.addGroup(gl_panel_submitFall.createSequentialGroup()
 					.addContainerGap()
 					.addComponent(btnTabelleAktualisieren_Fall, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE)
 					.addGap(6)
 					.addComponent(btnFertig_Fall, GroupLayout.PREFERRED_SIZE, 61, GroupLayout.PREFERRED_SIZE))
+				.addGroup(gl_panel_submitFall.createSequentialGroup()
+					.addComponent(scrollPane_Fall, GroupLayout.DEFAULT_SIZE, 524, Short.MAX_VALUE)
+					.addGap(1))
+				.addGroup(gl_panel_submitFall.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(lblArzt)
+					.addContainerGap(491, Short.MAX_VALUE))
 		);
 		gl_panel_submitFall.setVerticalGroup(
 			gl_panel_submitFall.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel_submitFall.createSequentialGroup()
 					.addGap(27)
 					.addComponent(scrollPane_Fall, GroupLayout.PREFERRED_SIZE, 85, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, 199, Short.MAX_VALUE)
+					.addGap(18)
 					.addGroup(gl_panel_submitFall.createParallelGroup(Alignment.LEADING)
-						.addComponent(btnTabelleAktualisieren_Fall)
-						.addComponent(btnFertig_Fall))
+						.addGroup(gl_panel_submitFall.createSequentialGroup()
+							.addComponent(lblGeburtsdatum_1)
+							.addGap(44)
+							.addGroup(gl_panel_submitFall.createParallelGroup(Alignment.BASELINE)
+								.addComponent(lblEnummer)
+								.addComponent(lblBefundtyp)
+								.addComponent(lblEingangsdatum)
+								.addComponent(lblEinsender)))
+						.addGroup(gl_panel_submitFall.createSequentialGroup()
+							.addGroup(gl_panel_submitFall.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblVorname_1)
+								.addComponent(lblNachname_1))
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGroup(gl_panel_submitFall.createParallelGroup(Alignment.BASELINE)
+								.addComponent(textField_Geburtsdatum_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(textField_Vorname_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(textField_Name_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_panel_submitFall.createParallelGroup(Alignment.BASELINE)
+						.addComponent(textField_Enummer, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(comboBox_Befundtyp, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(textField_Eingangsdatum, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(textField_Einsender, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(18)
+					.addComponent(lblArzt)
+					.addGap(6)
+					.addGroup(gl_panel_submitFall.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panel_submitFall.createSequentialGroup()
+							.addGroup(gl_panel_submitFall.createParallelGroup(Alignment.BASELINE)
+								.addComponent(textField_Arzt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblDatensatzIstVollstndig_1))
+							.addPreferredGap(ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
+							.addGroup(gl_panel_submitFall.createParallelGroup(Alignment.LEADING)
+								.addComponent(btnTabelleAktualisieren_Fall)
+								.addComponent(btnFertig_Fall)))
+						.addComponent(checkBox_Fehler_1))
 					.addContainerGap())
 		);
 		
 		table_Fall = new JTable();
+		table_Fall.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 2) {
+					//Put row content into textfields on double click
+					rowToTextField("Fall");
+					
+					doubleCheck = false;
+					
+					textField_Geburtsdatum_1.setBackground(Color.WHITE);
+					textField_Vorname_1.setBackground(Color.WHITE);
+					textField_Name_1.setBackground(Color.WHITE);
+					textField_Enummer.setBackground(Color.WHITE);
+					comboBox_Befundtyp.setBorder(null);
+					textField_Eingangsdatum.setBackground(Color.WHITE);
+					textField_Einsender.setBackground(Color.WHITE);
+					textField_Arzt.setBackground(Color.WHITE);
+					
+				}
+			}
+		});
 		@SuppressWarnings("serial")
 		DefaultTableModel tableModel_Fall = new DefaultTableModel(
 				new String[]{"E.-Nummer", "Befundtyp", "Arzt", "Eingangsdatum", "Einsender", "Geburtsdatum", "Vorname", "Name"}, 0) {
@@ -307,7 +547,7 @@ public class correctParameters extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() == 2) {
 					//Put row content into textfields on double click
-					rowToTextField();
+					rowToTextField("Patientendaten");
 					
 					doubleCheck = false;
 					
@@ -327,15 +567,15 @@ public class correctParameters extends JFrame {
 		scrollPane_Patientendaten = new JScrollPane();
 		scrollPane_Patientendaten.setViewportView(table_Patientendaten);
 		
-		lblGeburtsdatum = new JLabel("Geburtsdatum:");
+		JLabel lblGeburtsdatum = new JLabel("Geburtsdatum:");
 		
-		lblVorname = new JLabel("Vorname:");
+		JLabel lblVorname = new JLabel("Vorname:");
 		
-		lblNachname = new JLabel("Nachname:");
+		JLabel lblNachname = new JLabel("Nachname:");
 		
-		lblStrae = new JLabel("Stra\u00DFe:");
+		JLabel lblStrasse = new JLabel("Stra\u00DFe:");
 		
-		lblHausnummer = new JLabel("Hausnummer:");
+		JLabel lblHausnummer = new JLabel("Hausnummer:");
 		
 		textField_Geburtsdatum = new JTextField();
 		textField_Geburtsdatum.addKeyListener(new KeyAdapter() {
@@ -387,11 +627,11 @@ public class correctParameters extends JFrame {
 		textField_Land.addKeyListener(resetDoubleCheck());
 		textField_Land.setColumns(10);
 		
-		lblLand = new JLabel("Land:");
+		JLabel lblLand = new JLabel("Land:");
 		
-		lblPostleitzahl = new JLabel("Postleitzahl:");
+		JLabel lblPostleitzahl = new JLabel("Postleitzahl:");
 		
-		lblOrt = new JLabel("Ort:");
+		JLabel lblOrt = new JLabel("Ort:");
 		
 		JLabel lblDatensatzIstVollstndig = new JLabel("Datensatz ist vollst\u00E4ndig:");
 		
@@ -426,17 +666,14 @@ public class correctParameters extends JFrame {
 					} else {
 						if (textField_Geburtsdatum.getText().length() == 0) {
 							textField_Geburtsdatum.setBackground(Color.RED);
-							doubleCheck = true;
 						}
 						
 						if (textField_Vorname.getText().length() == 0) {
 							textField_Vorname.setBackground(Color.RED);
-							doubleCheck = true;
 						}
 						
 						if (textField_Name.getText().length() == 0) {
 							textField_Name.setBackground(Color.RED);
-							doubleCheck = true;
 						}
 						
 						if (textField_Strasse.getText().length() == 0) {
@@ -486,7 +723,7 @@ public class correctParameters extends JFrame {
 					.addGap(221)
 					.addComponent(lblNachname)
 					.addGap(49)
-					.addComponent(lblStrae)
+					.addComponent(lblStrasse)
 					.addGap(69)
 					.addComponent(lblHausnummer)
 					.addContainerGap())
@@ -552,7 +789,7 @@ public class correctParameters extends JFrame {
 							.addComponent(lblNachname))
 						.addGroup(gl_panel_submitPatientendaten.createSequentialGroup()
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(lblStrae))
+							.addComponent(lblStrasse))
 						.addGroup(gl_panel_submitPatientendaten.createSequentialGroup()
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(lblHausnummer)))
@@ -601,18 +838,46 @@ public class correctParameters extends JFrame {
 		};
 	}
 	
-	private void rowToTextField() {
+	private void rowToTextField(String tabelle) {
 		
-		int row = table_Patientendaten.getSelectedRow();
+		if (tabelle.equals("Patientendaten")) {
+			int row = table_Patientendaten.getSelectedRow();
+			
+			try {
+				textField_Geburtsdatum.setText(table_Patientendaten.getValueAt(row, 0).toString());
+			} catch (Exception e) {
+				textField_Geburtsdatum.setText(null);
+			}
+			textField_Vorname.setText((String) table_Patientendaten.getValueAt(row, 1));
+			textField_Name.setText((String) table_Patientendaten.getValueAt(row, 2));
+			textField_Strasse.setText((String) table_Patientendaten.getValueAt(row, 3));
+			textField_Hausnummer.setText((String) table_Patientendaten.getValueAt(row, 4));
+			textField_Land.setText((String) table_Patientendaten.getValueAt(row, 5));
+			textField_PLZ.setText((String) table_Patientendaten.getValueAt(row, 6));
+			textField_Ort.setText((String) table_Patientendaten.getValueAt(row, 7));
+		} else if (tabelle.equals("Fall")) {
+			int row = table_Fall.getSelectedRow();
+			
+			try {
+				textField_Geburtsdatum_1.setText(table_Fall.getValueAt(row, 5).toString());;
+			} catch (Exception e) {
+				textField_Geburtsdatum_1.setText(null);
+			}
+			textField_Vorname_1.setText((String) table_Fall.getValueAt(row, 6));
+			textField_Name_1.setText((String) table_Fall.getValueAt(row, 7));
+			textField_Enummer.setText((String) table_Fall.getValueAt(row, 0));
+			comboBox_Befundtyp.setSelectedItem(Befundtyp.getBefundtyp(table_Fall.getValueAt(row, 1).toString()));
+			textField_Einsender.setText((String) table_Fall.getValueAt(row, 4));;
+			textField_Arzt.setText((String) table_Fall.getValueAt(row, 2));;
+			
+			try {
+				textField_Eingangsdatum.setText(table_Fall.getValueAt(row, 3).toString());
+			} catch (Exception e) {
+				textField_Eingangsdatum.setText(null);
+			}
+			
+		}
 		
-		textField_Geburtsdatum.setText(table_Patientendaten.getValueAt(row, 0).toString());
-		textField_Vorname.setText((String) table_Patientendaten.getValueAt(row, 1));
-		textField_Name.setText((String) table_Patientendaten.getValueAt(row, 2));
-		textField_Strasse.setText((String) table_Patientendaten.getValueAt(row, 3));
-		textField_Hausnummer.setText((String) table_Patientendaten.getValueAt(row, 4));
-		textField_Land.setText((String) table_Patientendaten.getValueAt(row, 5));
-		textField_PLZ.setText((String) table_Patientendaten.getValueAt(row, 6));
-		textField_Ort.setText((String) table_Patientendaten.getValueAt(row, 7));
 		
 	}
 	
@@ -706,11 +971,7 @@ public class correctParameters extends JFrame {
 			
 			Pst.close();
 			
-			if (table_Patientendaten.getRowCount() > 0 && table_Patientendaten.getSelectedRow() != -1) {
-				((DefaultTableModel)table_Patientendaten.getModel()).removeRow(table_Patientendaten.getSelectedRow());
-			} else {
-				((DefaultTableModel)table_Patientendaten.getModel()).removeRow(0);
-			}
+			((DefaultTableModel)table_Patientendaten.getModel()).removeRow(table_Patientendaten.getSelectedRow());
 			
 			textField_Geburtsdatum.setText("");
 			textField_Vorname.setText("");
@@ -734,6 +995,88 @@ public class correctParameters extends JFrame {
 		} catch (SQLException e) {
 			System.out.println(e);
 			//TODO Fenster "Diese Person existiert bereits in der Datenbank!"
+		}
+		
+	}
+	
+	private void updateFallDB() {
+		
+		try {
+			
+			PreparedStatement Pst = start.cn.prepareStatement("update mydb.fall set `E.-Nummer` = ? , Befundtyp = ? ,  Arzt = ? , "
+					+ "Eingangsdatum = ? , Einsender = ? , Patientendaten_PatientenID = (select PatientenID from mydb.Patientendaten "
+					+ "where Geburtsdatum = ? and Vorname = ? and Name = ? ), Fehler = ? where `E.-Nummer` = ? and Befundtyp = ? ;");
+			
+			Pst.setString(10, table_Fall.getValueAt(table_Fall.getSelectedRow(), 0).toString());
+			Pst.setInt(11, Befundtyp.getBefundtyp(table_Fall.getValueAt(table_Fall.getSelectedRow(), 1).toString()).getValue());
+			
+			Pst.setString(1, textField_Enummer.getText());
+			Pst.setInt(2, ((Befundtyp) comboBox_Befundtyp.getSelectedItem()).getValue());
+			
+			if (!textField_Geburtsdatum_1.getText().equals("")) {
+				Pst.setString(6, textField_Geburtsdatum_1.getText());
+			} else {
+				Pst.setNull(6, java.sql.Types.NULL);
+			}
+			if (!textField_Vorname_1.getText().equals("")) {
+				Pst.setString(7, textField_Vorname_1.getText());
+			} else {
+				Pst.setNull(7, java.sql.Types.NULL);
+			}
+			if (!textField_Name_1.getText().equals("")) {
+				Pst.setString(8, textField_Name_1.getText());
+			} else {
+				Pst.setNull(8, java.sql.Types.NULL);
+			}
+			if (!textField_Eingangsdatum.getText().equals("")) {
+				Pst.setString(4, textField_Eingangsdatum.getText());
+			} else {
+				Pst.setNull(4, java.sql.Types.NULL);
+			}
+			if (!textField_Einsender.getText().equals("")) {
+				Pst.setString(5, textField_Einsender.getText());
+			} else {
+				Pst.setNull(5, java.sql.Types.NULL);
+			}
+			if (!textField_Arzt.getText().equals("")) {
+				Pst.setString(3, textField_Arzt.getText());
+			} else {
+				Pst.setNull(3, java.sql.Types.NULL);
+			}
+			
+			if (checkBox_Fehler_1.isSelected()) {
+				Pst.setInt(9, 0);
+			} else {
+				Pst.setInt(9, 1);
+			}
+			
+			System.out.println("Zeilen manuell geändert: " + Pst.executeUpdate());
+			
+			Pst.close();
+			
+			((DefaultTableModel)table_Fall.getModel()).removeRow(table_Fall.getSelectedRow());
+			
+			textField_Geburtsdatum_1.setText("");
+			textField_Vorname_1.setText("");
+			textField_Name_1.setText("");
+			textField_Enummer.setText("");
+			comboBox_Befundtyp.setSelectedIndex(-1);
+			textField_Eingangsdatum.setText("");
+			textField_Einsender.setText("");
+			textField_Arzt.setText("");
+			checkBox_Fehler_1.setSelected(false);
+			
+			textField_Geburtsdatum_1.setBackground(Color.WHITE);
+			textField_Vorname_1.setBackground(Color.WHITE);
+			textField_Name_1.setBackground(Color.WHITE);
+			textField_Enummer.setBackground(Color.WHITE);
+			comboBox_Befundtyp.setBorder(null);
+			textField_Eingangsdatum.setBackground(Color.WHITE);
+			textField_Einsender.setBackground(Color.WHITE);
+			textField_Arzt.setBackground(Color.WHITE);
+			
+		} catch (SQLException e) {
+			System.out.println(e);
 		}
 		
 	}
