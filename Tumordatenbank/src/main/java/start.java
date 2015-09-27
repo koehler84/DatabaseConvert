@@ -98,12 +98,10 @@ public class start {
 				
 				// Iterating over each column of Excel file
 				Pst.clearParameters();		//clear parameters in Pst for next insert
-				boolean writeToDB = true;
 				Cell cell = null;
-				boolean RowContinue = true;
 				Pst.setInt(9, 0);
 				
-				for (int j=0; j<positions[0].length && RowContinue;j++) {
+				for (int j=0; j<positions[0].length;j++) {
 					cell = row.getCell(positions[0][j]);
 
 					switch (cell.getCellType()) {
@@ -162,23 +160,20 @@ public class start {
 					
 				}
 				
-				if (writeToDB) {
-					try {
-						//Execution of PreparedStatement, SQL Exeption if person is already in database
-						System.out.println("Updated rows in mydb.patientendaten: " + Pst.executeUpdate());
-					} catch (SQLException se){
-						System.out.println("Fehler beim Ausführen von \"insert into patientendaten\": Person ggf. schon erfasst!");
-					}
-				} else {
-					System.out.println("Fehler beim Einlesen der Patientendaten! Abbruch des Schreibvorgangs.");
+				try {
+					//Execution of PreparedStatement, SQL Exeption if person is already in database
+					System.out.println("Updated rows in mydb.patientendaten: " + Pst.executeUpdate());
+				} catch (SQLException se){
+					System.out.println("Fehler beim Ausführen von \"insert into patientendaten\": Person ggf. schon erfasst!");
 				}
-
+				
 			}
 			
 			Pst.close();
 			book.close();
 			fis.close();
 			System.out.println("Write patientendaten success");
+			System.out.println();
 		} catch (IOException ie) {
 			ie.printStackTrace();
 		} catch (SQLException e) {
@@ -192,9 +187,9 @@ public class start {
 		try {
 			
 			PreparedStatement Pst = cn.prepareStatement("insert into mydb.fall (`Patientendaten_PatientenID`, `Eingangsdatum`, "
-					+ "`E.-Nummer`, `Arzt`, `Befundtyp`) values "
+					+ "`E.-Nummer`, `Arzt`, `Befundtyp`, `Fehler`) values "
 					+ "((select PatientenID from mydb.patientendaten where Name = ? and Vorname = ? and Geburtsdatum = ? ),"
-					+ " ? , ? , ? , ? );");
+					+ " ? , ? , ? , ? , ? );");
 
 			File excel = new File(excelPath);
 			FileInputStream fis = new FileInputStream(excel);
@@ -222,8 +217,8 @@ public class start {
 				Row row = itr.next();
 				// Iterating over each column of Excel file
 				Pst.clearParameters();
-				boolean writeToDB = true;
 				Cell cell = null;
+				Pst.setInt(8, 0);
 				
 				cell = row.getCell(28);
 				String abc = cell.getStringCellValue();
@@ -274,10 +269,9 @@ public class start {
 									befundtyp = Befundtyp.Konsiliarbericht_1;
 									break;
 								default:
-									//TODO Ask User for input
-									//Es ist keiner der normalen Befundtypen, Rechtschreibfehler?
-									writeToDB = false;
-									System.out.println("FEHLER: Keiner der bekannten Befundtypen!");
+									Pst.setInt(8, 1);
+									Pst.setInt(7, Befundtyp.Fehler.getValue());
+									befundtyp = Befundtyp.Fehler;
 									break;
 							}
 						} else {
@@ -290,7 +284,7 @@ public class start {
 							//Eingangsdatum bzw Geburtsdatum
 							Pst.setString(positions[1][j], new java.sql.Date(cell.getDateCellValue().getTime())+"");
 						} else {
-							//Befundtyp
+							//Befundtyp - nope der steht als Text in excel
 							Pst.setInt(positions[1][j], (int)cell.getNumericCellValue());
 						}
 						break;
@@ -298,11 +292,18 @@ public class start {
 						//TODO Ask for User input
 						break;
 					case Cell.CELL_TYPE_BLANK:
-						
-						if (positions[0][j] >= 0 && positions[0][j] <= 5 || positions[0][j] == 26) {		//TODO Wie wichtig ist der Einsender?
-							writeToDB = false;
-							System.out.println("Fehler: Wichtiger Parameter fehlt!");
+												
+						if (positions[0][j] == 1) {		//E.-Nummer fehlt
+							Pst.setString(positions[1][j], "INVALID");
+							Pst.setInt(8, 1);
 							break;
+						} else if (positions[0][j] == 26) {	//Befundtyp fehlt
+							Pst.setInt(positions[1][j], Befundtyp.Fehler.getValue());
+							befundtyp = Befundtyp.Fehler;
+							Pst.setInt(8, 1);
+							break;
+						} else {
+							Pst.setInt(8, 1);
 						}
 						
 						Pst.setNull(positions[1][j], java.sql.Types.NULL);
@@ -310,15 +311,11 @@ public class start {
 					}
 				}
 				
-				if (writeToDB) {
-					try {
-						System.out.println("Updated rows in mydb.patientendaten: " + Pst.executeUpdate());
-					} catch (SQLException e) {
-						e.printStackTrace();
-						System.out.println("Fehler beim Ausführen von \"insert into fall\": Fall ggf. doppelt!");
-					}
-				} else {
-					System.out.println("Fehler beim Einlesen des Falls! Abbruch des Schreibvorgangs.");
+				try {
+					System.out.print("Updated rows in mydb.patientendaten: " + Pst.executeUpdate() + " ");
+				} catch (SQLException e) {
+					//e.printStackTrace();
+					System.out.print("Fehler beim Ausführen von \"insert into fall\": Fall ggf. doppelt!" + " ");
 				}
 				
 				PreparedStatement st = cn.prepareStatement("insert into mydb.klassifikation (`Fall_E.-Nummer`, `Fall_Befundtyp`, "
@@ -350,6 +347,7 @@ public class start {
 			book.close();
 			fis.close();
 			System.out.println("Write fall success");
+			System.out.println();
 		} catch (SQLException SQLex) {
 			System.out.println("Fehler beim Erstellen des PreparedStatement \"insert into fall\"!");
 		} catch (IOException e) {
@@ -360,19 +358,19 @@ public class start {
 	
 	public static void fehlerToWindow(String method, Row row, int[][] positions) {
 		
-		UIFenster1.scrollPane.setVisible(true);
+		UIFenster1.scrollPane_Patientendaten.setVisible(true);
 		UIFenster1.getContentPane().revalidate();		//essential for the scrollPane to be visible
 		UIFenster1.getContentPane().repaint();
-		UIFenster1.table.setVisible(true);
+		UIFenster1.table_Patientendaten.setVisible(true);
 		
 		if (method.equals("excelToPatient")) {
 			
 			DefaultTableModel tableModel = new DefaultTableModel();
-			if (UIFenster1.table.getModel().getColumnCount() == 0) {
+			if (UIFenster1.table_Patientendaten.getModel().getColumnCount() == 0) {
 				System.out.println("TableModel null");
 				tableModel = new DefaultTableModel(
 						new String[]{"Geburtsdatum", "Vorname", "Name", "Straße", "Hausnummer", "Land", "PLZ", "Ort"}, 0);
-				UIFenster1.table.setModel(tableModel);
+				UIFenster1.table_Patientendaten.setModel(tableModel);
 			}
 			
 			Object[] parameterArray = new Object[8];
@@ -405,7 +403,7 @@ public class start {
 				
 			}
 			
-			((DefaultTableModel) UIFenster1.table.getModel()).addRow(parameterArray);
+			((DefaultTableModel) UIFenster1.table_Patientendaten.getModel()).addRow(parameterArray);
 			
 		} else if (method.equals("excelToFall")) {
 			
@@ -461,14 +459,14 @@ public class start {
 	/*???	*/Class.forName( dbDrv );
 			cn = DriverManager.getConnection( dbUrl, dbUsr, dbPwd );
 			UIFenster1.lblConnected.setVisible(true);
-			UIFenster1.insertModel();
+			UIFenster1.DBtoTable_Patientendaten();
 
 		} catch ( Exception ex ) {
 			System.out.println( ex );
 		}
 
 		//----------------------------------------------------
-		//excelToPatient(excelPath);
+		excelToPatient(excelPath);
 		excelToFall(excelPath);
 		
 //		showDbTable( dbPatTbl );
@@ -491,7 +489,8 @@ public class start {
 		//Tumorklassifikation: C 57, M 8441/3, G 3, pT3c pN1(15/34) L/V1. Der Tumor ist Östrogen- und Progesteronrezeptor-negativ. Sonstiges: ip
 
 		methodsCompleted = true;
-		UIFenster1.insertModel();
+		UIFenster1.DBtoTable_Patientendaten();
+		UIFenster1.DBtoTable_Fall();
 		
 		try {
 			if (cn != null && !cn.isClosed() && !UIFenster1.isShowing()) {

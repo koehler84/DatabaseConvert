@@ -251,8 +251,21 @@ public class StringReader {
 
 
 
+		readyForDB();
 
-
+	}
+	
+	private void readyForDB() {
+		
+		//default-Werte bitte auf null setzen, bei int o.ä. default-Werte unverändert lassen
+		
+		if (this.ER.equals("mis")) {
+			this.ER = null;
+		}
+		if (this.PR.equals("mis")) {
+			this.PR = null;
+		}
+		
 	}
 
 }
