@@ -393,7 +393,7 @@ public class correctParameters extends JFrame {
 		GroupLayout gl_panel_submitFall = new GroupLayout(panel_submitFall);
 		gl_panel_submitFall.setHorizontalGroup(
 			gl_panel_submitFall.createParallelGroup(Alignment.TRAILING)
-				.addGroup(gl_panel_submitFall.createSequentialGroup()
+				.addGroup(Alignment.LEADING, gl_panel_submitFall.createSequentialGroup()
 					.addComponent(lblGeburtsdatum_1)
 					.addGap(45)
 					.addComponent(lblVorname_1)
