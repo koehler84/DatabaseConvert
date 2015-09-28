@@ -37,8 +37,16 @@ public class StringReader {
 	}
 
 	public StringReader (String source) {
-		this.source = source;
-		this.StringAnalyse();
+		
+		if (!source.equals("")) {
+			this.source = source;
+			this.StringAnalyse();
+			this.readyForDB();
+		} else {
+			this.source = null;
+			this.readyForDB();
+		}
+		
 	}
 
 
@@ -263,20 +271,28 @@ public class StringReader {
 
 
 
-		readyForDB();
 
 	}
 
 	private void readyForDB() {
 
 		//default-Werte bitte auf null setzen, bei int o.ä. default-Werte unverändert lassen
-
-		if (this.ER.equals("mis")) {
-			this.ER = null;
-		}
-		if (this.PR.equals("mis")) {
-			this.PR = null;
-		}
+		if (this.Quadrant != null && this.Quadrant.equals("")) ;
+		if (this.T.equals("mis")) this.T = null;
+		if (this.N.equals("mis")) this.N = null;
+		if (this.M.equals("mis")) this.M = null;
+		if (this.nSum != null && this.nSum.equals("")) {};
+		if (this.nMeta != null && this.nMeta.equals("")) {};
+		if (this.ER.equals("mis")) this.ER = null;
+		if (this.erIrs != null && this.erIrs.equals("")) {};
+		if (this.PR.equals("mis")) this.PR = null;
+		if (this.prIrs != null && this.prIrs.equals("")) {};
+		if (this.her2_Neu.equals("mis")) this.her2_Neu = null;
+		if (this.K67 != null && this.K67.equals("")) {};
+		if (this.Localisation != null && this.Localisation.equals("")) {};
+		if (this.Side != null && this.Side.equals("")) {};
+		if (this.Material != null && this.Material.equals("")) {};
+		if (this.progressDate != null && this.progressDate.toString().equals("")) {};
 
 	}
 

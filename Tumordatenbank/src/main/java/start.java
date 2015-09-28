@@ -4,8 +4,6 @@ import java.net.Socket;
 import java.sql.*;
 import java.util.Iterator;
 
-import javax.swing.table.DefaultTableModel;
-
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -323,16 +321,36 @@ public class start {
 				
 				st.setString(1, E_NR);
 				st.setInt(2, befundtyp.getValue());
-				st.setInt(3, srObject.G);
 				st.setString(4, srObject.T);
 				st.setString(5, srObject.N);
 				st.setString(6, srObject.M);
-				st.setInt(7, srObject.L);
-				st.setInt(8, srObject.V);
-				st.setInt(9, srObject.R);
 				st.setString(10, srObject.ER);
 				st.setString(11, srObject.PR);
 				st.setString(12, srObject.her2_Neu);
+				
+				if (srObject.G != 9) {
+					st.setInt(3, srObject.G);
+				} else {
+					st.setNull(3, java.sql.Types.NULL);
+				}
+				
+				if (srObject.L != 9) {
+					st.setInt(7, srObject.L);
+				} else {
+					st.setNull(7, java.sql.Types.NULL);
+				}
+				
+				if (srObject.V != 9) {
+					st.setInt(8, srObject.V);
+				} else {
+					st.setNull(8, java.sql.Types.NULL);
+				}
+				
+				if (srObject.R != 9) {
+					st.setInt(9, srObject.R);
+				} else {
+					st.setNull(9, java.sql.Types.NULL);
+				}
 				
 				try {
 					System.out.println("Einfügen in Klassifikation, geänderte Zeilen: " + st.executeUpdate());
@@ -356,62 +374,6 @@ public class start {
 
 	}
 	
-//	public static void fehlerToWindow(String method, Row row, int[][] positions) {
-//		
-//		UIFenster1.scrollPane_Patientendaten.setVisible(true);
-//		UIFenster1.getContentPane().revalidate();		//essential for the scrollPane to be visible
-//		UIFenster1.getContentPane().repaint();
-//		UIFenster1.table_Patientendaten.setVisible(true);
-//		
-//		if (method.equals("excelToPatient")) {
-//			
-//			DefaultTableModel tableModel = new DefaultTableModel();
-//			if (UIFenster1.table_Patientendaten.getModel().getColumnCount() == 0) {
-//				System.out.println("TableModel null");
-//				tableModel = new DefaultTableModel(
-//						new String[]{"Geburtsdatum", "Vorname", "Name", "Straße", "Hausnummer", "Land", "PLZ", "Ort"}, 0);
-//				UIFenster1.table_Patientendaten.setModel(tableModel);
-//			}
-//			
-//			Object[] parameterArray = new Object[8];
-//			
-//			for (int j=0; j < positions[0].length;j++) {
-//				Cell cell = row.getCell(positions[0][j]);
-//
-//				switch (cell.getCellType()) {
-//				case Cell.CELL_TYPE_STRING:
-//					parameterArray[j] = cell.getStringCellValue();
-//					break;
-//				case Cell.CELL_TYPE_NUMERIC:
-//					if (positions[0][j]==3){
-//						parameterArray[j] = new java.sql.Date(cell.getDateCellValue().getTime()) + "";
-//					} else {
-//						parameterArray[j] = (int)cell.getNumericCellValue();
-//					}
-//					break;
-//				case Cell.CELL_TYPE_BOOLEAN:
-//					if (cell.getBooleanCellValue()) {
-//						parameterArray[j] = "True";
-//					} else {
-//						parameterArray[j] = "False";
-//					}
-//					break;
-//				case Cell.CELL_TYPE_BLANK:
-//					parameterArray[j] = null;
-//					break;
-//				}
-//				
-//			}
-//			
-//			((DefaultTableModel) UIFenster1.table_Patientendaten.getModel()).addRow(parameterArray);
-//			
-//		} else if (method.equals("excelToFall")) {
-//			
-//		}
-//		
-//	}
-
-
 	public static void main(String[] args) {
 		
 		String dbPatTbl=null, dbFallTbl=null, dbDrv=null, dbUrl=null, dbUsr="", dbPwd="", excelPath="";
