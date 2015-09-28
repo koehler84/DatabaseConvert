@@ -356,60 +356,60 @@ public class start {
 
 	}
 	
-	public static void fehlerToWindow(String method, Row row, int[][] positions) {
-		
-		UIFenster1.scrollPane_Patientendaten.setVisible(true);
-		UIFenster1.getContentPane().revalidate();		//essential for the scrollPane to be visible
-		UIFenster1.getContentPane().repaint();
-		UIFenster1.table_Patientendaten.setVisible(true);
-		
-		if (method.equals("excelToPatient")) {
-			
-			DefaultTableModel tableModel = new DefaultTableModel();
-			if (UIFenster1.table_Patientendaten.getModel().getColumnCount() == 0) {
-				System.out.println("TableModel null");
-				tableModel = new DefaultTableModel(
-						new String[]{"Geburtsdatum", "Vorname", "Name", "Straﬂe", "Hausnummer", "Land", "PLZ", "Ort"}, 0);
-				UIFenster1.table_Patientendaten.setModel(tableModel);
-			}
-			
-			Object[] parameterArray = new Object[8];
-			
-			for (int j=0; j < positions[0].length;j++) {
-				Cell cell = row.getCell(positions[0][j]);
-
-				switch (cell.getCellType()) {
-				case Cell.CELL_TYPE_STRING:
-					parameterArray[j] = cell.getStringCellValue();
-					break;
-				case Cell.CELL_TYPE_NUMERIC:
-					if (positions[0][j]==3){
-						parameterArray[j] = new java.sql.Date(cell.getDateCellValue().getTime()) + "";
-					} else {
-						parameterArray[j] = (int)cell.getNumericCellValue();
-					}
-					break;
-				case Cell.CELL_TYPE_BOOLEAN:
-					if (cell.getBooleanCellValue()) {
-						parameterArray[j] = "True";
-					} else {
-						parameterArray[j] = "False";
-					}
-					break;
-				case Cell.CELL_TYPE_BLANK:
-					parameterArray[j] = null;
-					break;
-				}
-				
-			}
-			
-			((DefaultTableModel) UIFenster1.table_Patientendaten.getModel()).addRow(parameterArray);
-			
-		} else if (method.equals("excelToFall")) {
-			
-		}
-		
-	}
+//	public static void fehlerToWindow(String method, Row row, int[][] positions) {
+//		
+//		UIFenster1.scrollPane_Patientendaten.setVisible(true);
+//		UIFenster1.getContentPane().revalidate();		//essential for the scrollPane to be visible
+//		UIFenster1.getContentPane().repaint();
+//		UIFenster1.table_Patientendaten.setVisible(true);
+//		
+//		if (method.equals("excelToPatient")) {
+//			
+//			DefaultTableModel tableModel = new DefaultTableModel();
+//			if (UIFenster1.table_Patientendaten.getModel().getColumnCount() == 0) {
+//				System.out.println("TableModel null");
+//				tableModel = new DefaultTableModel(
+//						new String[]{"Geburtsdatum", "Vorname", "Name", "Straﬂe", "Hausnummer", "Land", "PLZ", "Ort"}, 0);
+//				UIFenster1.table_Patientendaten.setModel(tableModel);
+//			}
+//			
+//			Object[] parameterArray = new Object[8];
+//			
+//			for (int j=0; j < positions[0].length;j++) {
+//				Cell cell = row.getCell(positions[0][j]);
+//
+//				switch (cell.getCellType()) {
+//				case Cell.CELL_TYPE_STRING:
+//					parameterArray[j] = cell.getStringCellValue();
+//					break;
+//				case Cell.CELL_TYPE_NUMERIC:
+//					if (positions[0][j]==3){
+//						parameterArray[j] = new java.sql.Date(cell.getDateCellValue().getTime()) + "";
+//					} else {
+//						parameterArray[j] = (int)cell.getNumericCellValue();
+//					}
+//					break;
+//				case Cell.CELL_TYPE_BOOLEAN:
+//					if (cell.getBooleanCellValue()) {
+//						parameterArray[j] = "True";
+//					} else {
+//						parameterArray[j] = "False";
+//					}
+//					break;
+//				case Cell.CELL_TYPE_BLANK:
+//					parameterArray[j] = null;
+//					break;
+//				}
+//				
+//			}
+//			
+//			((DefaultTableModel) UIFenster1.table_Patientendaten.getModel()).addRow(parameterArray);
+//			
+//		} else if (method.equals("excelToFall")) {
+//			
+//		}
+//		
+//	}
 
 
 	public static void main(String[] args) {

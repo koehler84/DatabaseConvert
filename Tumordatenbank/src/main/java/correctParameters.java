@@ -50,7 +50,6 @@ public class correctParameters extends JFrame {
 	private JPanel panel_submitFall;
 	public JProgressBar progressBar;
 	public JTable table_Patientendaten;
-	public JScrollPane scrollPane_Patientendaten;
 	private JTextField textField_Geburtsdatum;
 	private JTextField textField_Vorname;
 	private JTextField textField_Name;
@@ -120,7 +119,7 @@ public class correctParameters extends JFrame {
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(400, 200, 550, 450);
-		setMinimumSize(new Dimension(550, 400));
+		setMinimumSize(new Dimension(550, 431));
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -390,16 +389,16 @@ public class correctParameters extends JFrame {
 		JLabel lblDatensatzIstVollstndig_1 = new JLabel("Datensatz ist vollst\u00E4ndig:");
 		
 		checkBox_Fehler_1 = new JCheckBox("");
+		//TODO
 		GroupLayout gl_panel_submitFall = new GroupLayout(panel_submitFall);
 		gl_panel_submitFall.setHorizontalGroup(
-			gl_panel_submitFall.createParallelGroup(Alignment.TRAILING)
-				.addGroup(Alignment.LEADING, gl_panel_submitFall.createSequentialGroup()
+			gl_panel_submitFall.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel_submitFall.createSequentialGroup()
 					.addComponent(lblGeburtsdatum_1)
 					.addGap(45)
 					.addComponent(lblVorname_1)
 					.addGap(58)
-					.addComponent(lblNachname_1, GroupLayout.PREFERRED_SIZE, 54, GroupLayout.PREFERRED_SIZE)
-					.addGap(250))
+					.addComponent(lblNachname_1, GroupLayout.PREFERRED_SIZE, 54, GroupLayout.PREFERRED_SIZE))
 				.addGroup(gl_panel_submitFall.createSequentialGroup()
 					.addGap(20)
 					.addComponent(textField_Geburtsdatum_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
@@ -407,7 +406,7 @@ public class correctParameters extends JFrame {
 					.addComponent(textField_Vorname_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 					.addGap(18)
 					.addComponent(textField_Name_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(211, Short.MAX_VALUE))
+					.addContainerGap(210, Short.MAX_VALUE))
 				.addGroup(gl_panel_submitFall.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(gl_panel_submitFall.createParallelGroup(Alignment.LEADING)
@@ -435,20 +434,17 @@ public class correctParameters extends JFrame {
 								.addGroup(gl_panel_submitFall.createSequentialGroup()
 									.addComponent(lblDatensatzIstVollstndig_1)
 									.addPreferredGap(ComponentPlacement.UNRELATED)
-									.addComponent(checkBox_Fehler_1)))))
-					.addContainerGap(77, Short.MAX_VALUE))
-				.addGroup(gl_panel_submitFall.createSequentialGroup()
+									.addComponent(checkBox_Fehler_1))))))
+				.addGroup(Alignment.TRAILING, gl_panel_submitFall.createSequentialGroup()
 					.addContainerGap()
 					.addComponent(btnTabelleAktualisieren_Fall, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE)
 					.addGap(6)
 					.addComponent(btnFertig_Fall, GroupLayout.PREFERRED_SIZE, 61, GroupLayout.PREFERRED_SIZE))
-				.addGroup(gl_panel_submitFall.createSequentialGroup()
-					.addComponent(scrollPane_Fall, GroupLayout.DEFAULT_SIZE, 524, Short.MAX_VALUE)
-					.addGap(1))
+				.addComponent(scrollPane_Fall, GroupLayout.DEFAULT_SIZE, 524, Short.MAX_VALUE)
 				.addGroup(gl_panel_submitFall.createSequentialGroup()
 					.addContainerGap()
 					.addComponent(lblArzt)
-					.addContainerGap(491, Short.MAX_VALUE))
+					.addContainerGap(490, Short.MAX_VALUE))
 		);
 		gl_panel_submitFall.setVerticalGroup(
 			gl_panel_submitFall.createParallelGroup(Alignment.LEADING)
@@ -564,8 +560,7 @@ public class correctParameters extends JFrame {
 			}
 		});
 		
-		scrollPane_Patientendaten = new JScrollPane();
-		scrollPane_Patientendaten.setViewportView(table_Patientendaten);
+		JScrollPane scrollPane_Patientendaten = new JScrollPane();
 		
 		JLabel lblGeburtsdatum = new JLabel("Geburtsdatum:");
 		
@@ -716,22 +711,20 @@ public class correctParameters extends JFrame {
 				DBtoTable_Patientendaten();
 			}
 		});
+		//TODO
 		GroupLayout gl_panel_submitPatientendaten = new GroupLayout(panel_submitPatientendaten);
 		gl_panel_submitPatientendaten.setHorizontalGroup(
 			gl_panel_submitPatientendaten.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel_submitPatientendaten.createSequentialGroup()
-					.addGap(221)
+					.addComponent(lblGeburtsdatum)
+					.addGap(45)
+					.addComponent(lblVorname)
+					.addGap(58)
 					.addComponent(lblNachname)
 					.addGap(49)
 					.addComponent(lblStrasse)
 					.addGap(69)
-					.addComponent(lblHausnummer)
-					.addContainerGap())
-				.addGroup(gl_panel_submitPatientendaten.createSequentialGroup()
-					.addComponent(lblGeburtsdatum)
-					.addGap(45)
-					.addComponent(lblVorname)
-					.addGap(372))
+					.addComponent(lblHausnummer))
 				.addGroup(gl_panel_submitPatientendaten.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(gl_panel_submitPatientendaten.createParallelGroup(Alignment.LEADING)
@@ -763,16 +756,13 @@ public class correctParameters extends JFrame {
 							.addComponent(lblDatensatzIstVollstndig)
 							.addGap(6)
 							.addComponent(checkBox_Fehler)))
-					.addContainerGap(55, Short.MAX_VALUE))
-				.addGroup(gl_panel_submitPatientendaten.createSequentialGroup()
-					.addContainerGap(369, Short.MAX_VALUE)
-					.addComponent(btnTabelleAktualisieren)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(btnFertig)
-					.addContainerGap())
-				.addGroup(gl_panel_submitPatientendaten.createSequentialGroup()
-					.addComponent(scrollPane_Patientendaten, GroupLayout.DEFAULT_SIZE, 524, Short.MAX_VALUE)
-					.addGap(11))
+					.addGap(0, 44, Short.MAX_VALUE))
+				.addGroup(Alignment.TRAILING, gl_panel_submitPatientendaten.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(btnTabelleAktualisieren, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE)
+					.addGap(6)
+					.addComponent(btnFertig, GroupLayout.PREFERRED_SIZE, 61, GroupLayout.PREFERRED_SIZE))
+				.addComponent(scrollPane_Patientendaten, GroupLayout.DEFAULT_SIZE, 524, Short.MAX_VALUE)
 		);
 		gl_panel_submitPatientendaten.setVerticalGroup(
 			gl_panel_submitPatientendaten.createParallelGroup(Alignment.LEADING)
@@ -820,6 +810,7 @@ public class correctParameters extends JFrame {
 						.addComponent(btnTabelleAktualisieren))
 					.addContainerGap())
 		);
+		scrollPane_Patientendaten.setViewportView(table_Patientendaten);
 		panel_submitPatientendaten.setLayout(gl_panel_submitPatientendaten);
 		
 		contentPane.setLayout(gl_contentPane);
