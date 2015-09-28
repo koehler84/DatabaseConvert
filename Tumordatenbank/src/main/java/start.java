@@ -284,7 +284,7 @@ public class start {
 				}
 				
 				try {
-					System.out.print("Updated rows in mydb.patientendaten: " + Pst_Fall.executeUpdate() + " ");
+					System.out.print("Updated rows in mydb.fall: " + Pst_Fall.executeUpdate() + " - ");
 				} catch (SQLException e) {
 					//e.printStackTrace();
 					System.out.print("Fehler beim Ausführen von \"insert into fall\": Fall ggf. doppelt!" + " ");
@@ -382,9 +382,9 @@ public class start {
 		//ist dafür da, das es auf allen meinen rechnern parallel mit einer datenbank funktioniert
 		//-----------------------------------
 		try {
-			Socket sock = new Socket ();
-			sock.connect(new InetSocketAddress("192.168.178.22", 3306), 200 );
-			sock.close();
+			Socket socket = new Socket ();
+			socket.connect(new InetSocketAddress("192.168.178.22", 3306), 200 );
+			socket.close();
 			dbUrl = "jdbc:mysql://192.168.178.22:3306/mydb";
 		} catch (Exception e) {
 			//System.out.println(e);
@@ -431,7 +431,7 @@ public class start {
 			}
 			
 			//Alle Reihen lesen: sheet.getPhysicalNumberOfRows()
-			recordsToRead = 1000;
+			recordsToRead = 30;
 			
 			if (readExcelToPatientendaten && readExcelToFall) {
 				UIFenster1.progressBar.setIndeterminate(false);
