@@ -103,7 +103,9 @@ public class start {
 						if (positions[0][j] != 9) {
 							Pst.setString(positions[1][j], cell.getStringCellValue());
 						} else {
+							//PLZ is no int
 							Pst.setInt(9, 1);
+							Pst.setNull(7, java.sql.Types.NULL);
 						}
 						break;
 					case Cell.CELL_TYPE_NUMERIC:
@@ -132,10 +134,6 @@ public class start {
 							System.out.println("Fehler: Vorname oder Nachmame fehlt!");
 							Pst.setInt(9, 1);
 							break;
-						} else if (positions[0][j] == 7 && row.getCell(positions[0][j-1]).getCellType() == Cell.CELL_TYPE_STRING) {
-							//Es gibt keine Hausnummer zu vorhandener Straﬂe
-							System.out.println("Fehler: Hausnummer fehlt!");
-							Pst.setInt(9, 1);
 						} else {
 							Pst.setInt(9, 1);
 						}
@@ -431,7 +429,7 @@ public class start {
 			}
 			
 			//Alle Reihen lesen: sheet.getPhysicalNumberOfRows()
-			recordsToRead = 30;
+			recordsToRead = sheet.getPhysicalNumberOfRows();
 			
 			if (readExcelToPatientendaten && readExcelToFall) {
 				UIFenster1.progressBar.setIndeterminate(false);
