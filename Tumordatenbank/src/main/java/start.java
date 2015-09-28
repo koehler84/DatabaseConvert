@@ -184,10 +184,12 @@ public class start {
 				
 		try {
 			
-			PreparedStatement Pst = cn.prepareStatement("insert into mydb.fall (`Patientendaten_PatientenID`, `Eingangsdatum`, "
+			PreparedStatement Pst_Fall = cn.prepareStatement("insert into mydb.fall (`Patientendaten_PatientenID`, `Eingangsdatum`, "
 					+ "`E.-Nummer`, `Arzt`, `Befundtyp`, `Fehler`) values "
 					+ "((select PatientenID from mydb.patientendaten where Name = ? and Vorname = ? and Geburtsdatum = ? ),"
 					+ " ? , ? , ? , ? , ? );");
+			PreparedStatement Pst_Klassifikation = cn.prepareStatement("insert into mydb.klassifikation (`Fall_E.-Nummer`, `Fall_Befundtyp`, "
+					+ "G, T, N, M, L, V, R, ER, PR, `Her2/neu`) values ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? );");
 
 			File excel = new File(excelPath);
 			FileInputStream fis = new FileInputStream(excel);
@@ -214,21 +216,13 @@ public class start {
 
 				Row row = itr.next();
 				// Iterating over each column of Excel file
-				Pst.clearParameters();
+				Pst_Fall.clearParameters();
+				Pst_Klassifikation.clearParameters();
 				Cell cell = null;
-				Pst.setInt(8, 0);
-				
-				cell = row.getCell(28);
-				String abc = cell.getStringCellValue();
+				Pst_Fall.setInt(8, 0);
 				
 				String E_NR = null;
 				Befundtyp befundtyp = null;
-				StringReader srObject = new StringReader();				
-				try {
-					srObject = new StringReader(abc);
-				} catch (Exception e) {
-					System.out.println("Objektfehler!");
-				}
 				
 				for (int j=0; j<positions[0].length;j++) {
 					
@@ -239,51 +233,51 @@ public class start {
 						if (positions[0][j] == 26) {
 							switch (cell.getStringCellValue())	{
 								case "Hauptbefund":
-									Pst.setInt(7, Befundtyp.Hauptbefund.getValue());
+									Pst_Fall.setInt(7, Befundtyp.Hauptbefund.getValue());
 									befundtyp = Befundtyp.Hauptbefund;
 									break;
 								case "Nachbericht 1":
-									Pst.setInt(7, Befundtyp.Nachbericht_1.getValue());
+									Pst_Fall.setInt(7, Befundtyp.Nachbericht_1.getValue());
 									befundtyp = Befundtyp.Nachbericht_1;
 									break;
 								case "Nachbericht 2":
-									Pst.setInt(7, Befundtyp.Nachbericht_2.getValue());
+									Pst_Fall.setInt(7, Befundtyp.Nachbericht_2.getValue());
 									befundtyp = Befundtyp.Nachbericht_2;
 									break;
 								case "Korrekturbefund 1":
-									Pst.setInt(7, Befundtyp.Korrekturbefund_1.getValue());
+									Pst_Fall.setInt(7, Befundtyp.Korrekturbefund_1.getValue());
 									befundtyp = Befundtyp.Korrekturbefund_1;
 									break;
 								case "Korrekturbefund 2":
-									Pst.setInt(7, Befundtyp.Korrekturbefund_2.getValue());
+									Pst_Fall.setInt(7, Befundtyp.Korrekturbefund_2.getValue());
 									befundtyp = Befundtyp.Korrekturbefund_2;
 									break;
 								case "Korrekturbefund 3":
-									Pst.setInt(7, Befundtyp.Korrekturbefund_3.getValue());
+									Pst_Fall.setInt(7, Befundtyp.Korrekturbefund_3.getValue());
 									befundtyp = Befundtyp.Korrekturbefund_3;
 									break;
 								case "Konsiliarbericht 1":
-									Pst.setInt(7, Befundtyp.Konsiliarbericht_1.getValue());
+									Pst_Fall.setInt(7, Befundtyp.Konsiliarbericht_1.getValue());
 									befundtyp = Befundtyp.Konsiliarbericht_1;
 									break;
 								default:
-									Pst.setInt(8, 1);
-									Pst.setInt(7, Befundtyp.Fehler.getValue());
+									Pst_Fall.setInt(8, 1);
+									Pst_Fall.setInt(7, Befundtyp.Fehler.getValue());
 									befundtyp = Befundtyp.Fehler;
 									break;
 							}
 						} else {
 							if (positions[0][j] == 1) E_NR = cell.getStringCellValue();
-							Pst.setString(positions[1][j], cell.getStringCellValue());
+							Pst_Fall.setString(positions[1][j], cell.getStringCellValue());
 						}
 						break;
 					case Cell.CELL_TYPE_NUMERIC:
 						if (positions[0][j] == 0 || positions[0][j] == 3){
 							//Eingangsdatum bzw Geburtsdatum
-							Pst.setString(positions[1][j], new java.sql.Date(cell.getDateCellValue().getTime())+"");
+							Pst_Fall.setString(positions[1][j], new java.sql.Date(cell.getDateCellValue().getTime())+"");
 						} else {
 							//Befundtyp - nope der steht als Text in excel
-							Pst.setInt(positions[1][j], (int)cell.getNumericCellValue());
+							Pst_Fall.setInt(positions[1][j], (int)cell.getNumericCellValue());
 						}
 						break;
 					case Cell.CELL_TYPE_BOOLEAN:
@@ -292,76 +286,39 @@ public class start {
 					case Cell.CELL_TYPE_BLANK:
 												
 						if (positions[0][j] == 1) {		//E.-Nummer fehlt
-							Pst.setString(positions[1][j], "INVALID");
-							Pst.setInt(8, 1);
+							Pst_Fall.setString(positions[1][j], "INVALID");
+							Pst_Fall.setInt(8, 1);
 							break;
 						} else if (positions[0][j] == 26) {	//Befundtyp fehlt
-							Pst.setInt(positions[1][j], Befundtyp.Fehler.getValue());
+							Pst_Fall.setInt(positions[1][j], Befundtyp.Fehler.getValue());
 							befundtyp = Befundtyp.Fehler;
-							Pst.setInt(8, 1);
+							Pst_Fall.setInt(8, 1);
 							break;
 						} else {
-							Pst.setInt(8, 1);
+							Pst_Fall.setInt(8, 1);
 						}
 						
-						Pst.setNull(positions[1][j], java.sql.Types.NULL);
+						Pst_Fall.setNull(positions[1][j], java.sql.Types.NULL);
 						break;
 					}
 				}
 				
 				try {
-					System.out.print("Updated rows in mydb.patientendaten: " + Pst.executeUpdate() + " ");
+					System.out.print("Updated rows in mydb.patientendaten: " + Pst_Fall.executeUpdate() + " ");
 				} catch (SQLException e) {
 					//e.printStackTrace();
 					System.out.print("Fehler beim Ausführen von \"insert into fall\": Fall ggf. doppelt!" + " ");
 				}
 				
-				PreparedStatement st = cn.prepareStatement("insert into mydb.klassifikation (`Fall_E.-Nummer`, `Fall_Befundtyp`, "
-						+ "G, T, N, M, L, V, R, ER, PR, `Her2/neu`) values ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? );");
+				cell = row.getCell(28);
+				String befundtext = cell.getStringCellValue();
 				
-				st.setString(1, E_NR);
-				st.setInt(2, befundtyp.getValue());
-				st.setString(4, srObject.T);
-				st.setString(5, srObject.N);
-				st.setString(6, srObject.M);
-				st.setString(10, srObject.ER);
-				st.setString(11, srObject.PR);
-				st.setString(12, srObject.her2_Neu);
-				
-				if (srObject.G != 9) {
-					st.setInt(3, srObject.G);
-				} else {
-					st.setNull(3, java.sql.Types.NULL);
-				}
-				
-				if (srObject.L != 9) {
-					st.setInt(7, srObject.L);
-				} else {
-					st.setNull(7, java.sql.Types.NULL);
-				}
-				
-				if (srObject.V != 9) {
-					st.setInt(8, srObject.V);
-				} else {
-					st.setNull(8, java.sql.Types.NULL);
-				}
-				
-				if (srObject.R != 9) {
-					st.setInt(9, srObject.R);
-				} else {
-					st.setNull(9, java.sql.Types.NULL);
-				}
-				
-				try {
-					System.out.println("Einfügen in Klassifikation, geänderte Zeilen: " + st.executeUpdate());
-					st.close();
-				} catch (Exception e) {
-					System.out.println("Fehler beim Einfügen der Falldaten.");
-				}
+				excelToKlassifikation(Pst_Klassifikation, befundtext, E_NR, befundtyp);
 				
 			}
 			
-			Pst.close();
+			Pst_Fall.close();
+			Pst_Klassifikation.close();
 			book.close();
 			fis.close();
 			System.out.println("Write fall success");
@@ -372,6 +329,56 @@ public class start {
 			System.out.println("IO Exeption");
 		}
 
+	}
+	
+	private static void excelToKlassifikation(PreparedStatement Pst, String befundtext, String E_Nr, Befundtyp befundtyp) throws SQLException {
+		
+		StringReader srObject = new StringReader();
+		try {
+			srObject = new StringReader(befundtext);
+		} catch (Exception e) {
+			System.out.println("Objektfehler!");
+		}
+		
+		Pst.setString(1, E_Nr);
+		Pst.setInt(2, befundtyp.getValue());
+		Pst.setString(4, srObject.T);
+		Pst.setString(5, srObject.N);
+		Pst.setString(6, srObject.M);
+		Pst.setString(10, srObject.ER);
+		Pst.setString(11, srObject.PR);
+		Pst.setString(12, srObject.her2_Neu);
+		
+		if (srObject.G != 9) {
+			Pst.setInt(3, srObject.G);
+		} else {
+			Pst.setNull(3, java.sql.Types.NULL);
+		}
+		
+		if (srObject.L != 9) {
+			Pst.setInt(7, srObject.L);
+		} else {
+			Pst.setNull(7, java.sql.Types.NULL);
+		}
+		
+		if (srObject.V != 9) {
+			Pst.setInt(8, srObject.V);
+		} else {
+			Pst.setNull(8, java.sql.Types.NULL);
+		}
+		
+		if (srObject.R != 9) {
+			Pst.setInt(9, srObject.R);
+		} else {
+			Pst.setNull(9, java.sql.Types.NULL);
+		}
+		
+		try {
+			System.out.println("Einfügen in Klassifikation, geänderte Zeilen: " + Pst.executeUpdate());
+		} catch (Exception e) {
+			System.out.println("Fehler beim Einfügen der Falldaten.");
+		}
+		
 	}
 	
 	public static void main(String[] args) {
