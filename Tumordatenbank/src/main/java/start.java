@@ -430,6 +430,7 @@ public class start {
 				book.setMissingCellPolicy(Row.CREATE_NULL_AS_BLANK);
 			}
 			
+			//Alle Reihen lesen: sheet.getPhysicalNumberOfRows()
 			recordsToRead = 1000;
 			
 			if (readExcelToPatientendaten && readExcelToFall) {
