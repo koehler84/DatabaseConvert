@@ -237,31 +237,6 @@ public class StringReader {
 			}
 
 		}
-		/*
-		 *  pT3L1V0R1
-		 *  pT3N1aL1V0R0
-		 *  pT2
-		 *  pT2N1bivR0					--- Sonderfall ist gar kein Brustkrebs
-		 *  pT1b1 pN0(0/11) L/V0 MX R0  
-		 *  C 50, M 8500/3, G2, pT2(3,8 cm) pN1a(3/3) L/V0 R1, ER+, PR+, Her-2/neu-, Ki67-Index niedrig
-		 *  C 57, M 8441/3, G 3, pT3c pN1(15/34) L/V1
-		 *  pT2L0V0R0
-		 *  -> 	G möglicherweise auf 4 erweitern
-		 *  	p - pathologisch
-		 *     	c - klinisch 
-		 *     	T 0-4; 2a, 2b, 2c, 3a, 3b
-		 *     	N 0-3; a-... (keine Begrenzung recherchiert) in Klammern dahinter nSum und nMeta
-		 *		M - 1 oder 0 möglich boolean, aber manchmal Kürzel wo
-		 *		L (= Lymphgefäßinvasion): Gibt an, ob sich auch in Lymphbahnen der Tumorregion Tumorzellen gefunden haben (L1) oder nicht (L0). Nicht zu verwechseln mit "N" für die Angabe zu den regionären Lymphknoten.
-		 *		V (= Veneninvasion): Einbruch des Tumors in Venen (V0 = nicht nachweisbar, V1 = mikroskopisch, V2 = makroskopisch erkennbar), also Blutgefäße, die zum Herzen führen.
-		 *		Deswegen mach es Sinn das zusammenzuziehen wenn V>0 dann L=1 wenn V=0 dann L=0
-		 *		R 0,1,2
-		 *		Überall X für nicht beurteilbar möglich
-		 */ 
-
-
-
-
 
 		readyForDB();
 
