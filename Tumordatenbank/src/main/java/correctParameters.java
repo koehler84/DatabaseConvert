@@ -1,14 +1,10 @@
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
-import java.awt.Graphics;
-import java.awt.Insets;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JButton;
@@ -42,6 +38,7 @@ import javax.swing.JComboBox;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 
+@SuppressWarnings("serial")
 public class correctParameters extends JFrame {
 
 	private final CardLayout pnCards_Layout;
@@ -49,7 +46,8 @@ public class correctParameters extends JFrame {
 	private JPanel panel_submitPatientendaten;
 	private JPanel panel_submitFall;
 	public JProgressBar progressBar;
-	public JTable table_Patientendaten;
+	private JTable table_Patientendaten;
+	private JTable table_Fall;
 	private JTextField textField_Geburtsdatum;
 	private JTextField textField_Vorname;
 	private JTextField textField_Name;
@@ -63,7 +61,6 @@ public class correctParameters extends JFrame {
 	private boolean doubleCheck = false;
 	private JPanel pnCards;
 	private JMenuItem mntmOther;
-	private JTable table_Fall;
 	private JTextField textField_Geburtsdatum_1;
 	private JTextField textField_Vorname_1;
 	private JTextField textField_Name_1;
@@ -514,7 +511,7 @@ public class correctParameters extends JFrame {
 				}
 			}
 		});
-		@SuppressWarnings("serial")
+		
 		DefaultTableModel tableModel_Fall = new DefaultTableModel(
 				new String[]{"E.-Nummer", "Befundtyp", "Arzt", "Eingangsdatum", "Einsender", "Geburtsdatum", "Vorname", "Name"}, 0) {
 			
@@ -528,7 +525,7 @@ public class correctParameters extends JFrame {
 		panel_submitFall.setLayout(gl_panel_submitFall);
 		
 		table_Patientendaten = new JTable();
-		@SuppressWarnings({ "serial" })
+		
 		DefaultTableModel tableModel_Patientendaten = new DefaultTableModel(
 				new String[]{"Geburtsdatum", "Vorname", "Name", "Straﬂe", "Hausnummer", "Land", "PLZ", "Ort"}, 0) {
 			
@@ -1078,7 +1075,6 @@ public class correctParameters extends JFrame {
 			Statement st = start.cn.createStatement();
 			ResultSet res = st.executeQuery("select * from mydb.vPatientendaten_Hauptparameter where `Fehler` != 0");
 			
-			@SuppressWarnings("serial")
 			DefaultTableModel tableModel = new DefaultTableModel(
 					new String[]{"Geburtsdatum", "Vorname", "Name", "Straﬂe", "Hausnummer", "Land", "PLZ", "Ort"}, 0) {
 				
@@ -1120,7 +1116,6 @@ public class correctParameters extends JFrame {
 			Statement st = start.cn.createStatement();
 			ResultSet res = st.executeQuery("select * from vFehlerFall;");
 			
-			@SuppressWarnings("serial")
 			DefaultTableModel tableModel = new DefaultTableModel(
 					new String[]{"E.-Nummer", "Befundtyp", "Arzt", "Eingangsdatum", "Einsender", "Geburtsdatum", "Vorname", "Name"}, 0) {
 				

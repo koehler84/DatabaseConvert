@@ -14,6 +14,7 @@ public class start {
 	public static Connection cn;
 	public static correctParameters UIFenster1;
 	public static boolean methodsCompleted;
+	public static int recordsToRead;
 	
 	static void showDbTable(String dbTbl) {
 		
@@ -65,36 +66,31 @@ public class start {
 		return s;
 	}
 
-	static void excelToPatient(String excelPath) {
-		
+	static void excelToPatient(String excelPath, XSSFSheet sheet) {
+		//TODO
 		try {
 
 			PreparedStatement Pst = cn.prepareStatement("insert into patientendaten (`Geburtsdatum`, `Vorname`, `Name`, `Strasse`, `Hausnummer`, `Land`, `PLZ`, `Ort`, `Fehler`)"
 					+ " values ( ? , ? , ? , ? , ? , ? , ? , ? , ? );");
 
-			File excel = new File(excelPath);
-			FileInputStream fis = new FileInputStream(excel);
-			XSSFWorkbook book = new XSSFWorkbook(fis);
-			XSSFSheet sheet = book.getSheetAt(0);
-			book.setMissingCellPolicy(Row.CREATE_NULL_AS_BLANK);
 			Iterator<Row> itr = sheet.iterator();
 			if (itr.hasNext()) {
 				itr.next();		//skipping the header row			
 			}
 			// Iterating over Excel file in Java
 
-			int i = 0;	//stop after 30 rows for testing
+			int i = 0;	//iterator
 			
 			int[][] positions = {{3,4,5,6,7,8,9,10},{1,2,3,4,5,6,7,8}};
 
-			//Max. Reihen: sheet.getPhysicalNumberOfRows()
-			while (itr.hasNext() && i<30) {	//stop after 30 rows for testing
+			while (itr.hasNext() && i<recordsToRead) {
 
-				i++;	//stop after 30 rows for testing
-
-				Row row = itr.next();
+				i++;
 				
+				UIFenster1.progressBar.setValue(UIFenster1.progressBar.getValue()+1);
+				Row row = itr.next();
 				// Iterating over each column of Excel file
+				
 				Pst.clearParameters();		//clear parameters in Pst for next insert
 				Cell cell = null;
 				Pst.setInt(9, 0);
@@ -107,7 +103,6 @@ public class start {
 						if (positions[0][j] != 9) {
 							Pst.setString(positions[1][j], cell.getStringCellValue());
 						} else {
-							//fehlerToWindow("excelToPatient", row, positions);
 							Pst.setInt(9, 1);
 						}
 						break;
@@ -119,8 +114,6 @@ public class start {
 						}
 						break;
 					case Cell.CELL_TYPE_BOOLEAN:
-						//Do we even have boolean columns to read?
-						//TODO ASK THE USER FOR INPUT!
 						if (cell.getBooleanCellValue()) {
 							Pst.setString(positions[1][j], "True");
 						} else {
@@ -132,22 +125,18 @@ public class start {
 						if (positions[0][j] == 3) {
 							Pst.setString(positions[1][j], "0001-01-01");
 							System.out.println("Fehler: Geburtsdatum fehlt!");
-							//fehlerToWindow("excelToPatient", row, positions);
 							Pst.setInt(9, 1);
 							break;
 						} else if (positions[0][j] == 4 || positions[0][j] == 5) {
 							Pst.setString(positions[1][j], "INVALID_NAME");
 							System.out.println("Fehler: Vorname oder Nachmame fehlt!");
-							//fehlerToWindow("excelToPatient", row, positions);
 							Pst.setInt(9, 1);
 							break;
 						} else if (positions[0][j] == 7 && row.getCell(positions[0][j-1]).getCellType() == Cell.CELL_TYPE_STRING) {
 							//Es gibt keine Hausnummer zu vorhandener Straße
 							System.out.println("Fehler: Hausnummer fehlt!");
-							//fehlerToWindow("excelToPatient", row, positions);
 							Pst.setInt(9, 1);
 						} else {
-							//fehlerToWindow("excelToPatient", row, positions);
 							Pst.setInt(9, 1);
 						}
 						
@@ -168,19 +157,15 @@ public class start {
 			}
 			
 			Pst.close();
-			book.close();
-			fis.close();
 			System.out.println("Write patientendaten success");
 			System.out.println();
-		} catch (IOException ie) {
-			ie.printStackTrace();
 		} catch (SQLException e) {
 			System.out.println("Fehler beim Erstellen des PreparedStatement \"insert into patientendaten\"!");
 		}
 
 	}
 
-	static void excelToFall(String excelPath) {
+	static void excelToFall(String excelPath, XSSFSheet sheet) {
 				
 		try {
 			
@@ -191,11 +176,6 @@ public class start {
 			PreparedStatement Pst_Klassifikation = cn.prepareStatement("insert into mydb.klassifikation (`Fall_E.-Nummer`, `Fall_Befundtyp`, "
 					+ "G, T, N, M, L, V, R, ER, PR, `Her2/neu`) values ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? );");
 
-			File excel = new File(excelPath);
-			FileInputStream fis = new FileInputStream(excel);
-			XSSFWorkbook book = new XSSFWorkbook(fis);
-			XSSFSheet sheet = book.getSheetAt(0);
-			book.setMissingCellPolicy(Row.CREATE_NULL_AS_BLANK);
 			Iterator<Row> itr = sheet.iterator();
 			if (itr.hasNext()) {
 				itr.next();
@@ -207,13 +187,13 @@ public class start {
 			//i:	0,1,2,3,4,5,26		oben: Spalte in excel datei
 			//		4,5,6,3,2,1,7		unten: Position in Pst
 			
-			int k = 0;	//stop after 30 rows for testing
+			int k = 0;	//iterator
 			
-			//Max. Reihen: sheet.getPhysicalNumberOfRows()
-			while (itr.hasNext() && k<29) {	//stop after 30 rows for testing
+			while (itr.hasNext() && k<recordsToRead) {
 
-				k++;	//stop after 30 rows for testing
+				k++;
 
+				UIFenster1.progressBar.setValue(UIFenster1.progressBar.getValue()+1);
 				Row row = itr.next();
 				// Iterating over each column of Excel file
 				Pst_Fall.clearParameters();
@@ -319,14 +299,10 @@ public class start {
 			
 			Pst_Fall.close();
 			Pst_Klassifikation.close();
-			book.close();
-			fis.close();
 			System.out.println("Write fall success");
 			System.out.println();
 		} catch (SQLException SQLex) {
 			System.out.println("Fehler beim Erstellen des PreparedStatement \"insert into fall\"!");
-		} catch (IOException e) {
-			System.out.println("IO Exeption");
 		}
 
 	}
@@ -397,7 +373,10 @@ public class start {
 		dbUrl = "jdbc:mysql://localhost:3306/mydb";
 		dbUsr = "java";
 		dbPwd = "geheim";
-
+		
+		UIFenster1 = new correctParameters();
+		UIFenster1.progressBar.setIndeterminate(true);
+		
 		//-----------------------------------
 		//Um das zu connection mit localhost zu beschleunigen  kannst das auskommentieren,
 		//ist dafür da, das es auf allen meinen rechnern parallel mit einer datenbank funktioniert
@@ -408,7 +387,7 @@ public class start {
 			sock.close();
 			dbUrl = "jdbc:mysql://192.168.178.22:3306/mydb";
 		} catch (Exception e) {
-			
+			//System.out.println(e);
 		}
 
 		//Validate connection data
@@ -419,9 +398,6 @@ public class start {
 			System.out.println( "Fehler: Parameter fehlt." );
 			return;
 		}
-		
-		UIFenster1 = new correctParameters();
-		UIFenster1.progressBar.setIndeterminate(true);
 		
 		try {
 			// Select fitting database driver and connect:
@@ -435,8 +411,53 @@ public class start {
 		}
 
 		//----------------------------------------------------
-		excelToPatient(excelPath);
-		excelToFall(excelPath);
+		
+		boolean readExcelToPatientendaten = true;
+		boolean readExcelToFall = true;
+		
+		try {
+			
+			File excel = null;
+			FileInputStream fis = null;
+			XSSFSheet sheet = null;
+			XSSFWorkbook book = null;
+			
+			if (readExcelToPatientendaten || readExcelToFall) {
+				excel = new File(excelPath);
+				fis = new FileInputStream(excel);
+				book = new XSSFWorkbook(fis);
+				sheet = book.getSheetAt(0);
+				book.setMissingCellPolicy(Row.CREATE_NULL_AS_BLANK);
+			}
+			
+			recordsToRead = 1000;
+			
+			if (readExcelToPatientendaten && readExcelToFall) {
+				UIFenster1.progressBar.setIndeterminate(false);
+				UIFenster1.progressBar.setMaximum(recordsToRead*2);
+				excelToPatient(excelPath, sheet);
+				excelToFall(excelPath, sheet);
+				book.close();
+				fis.close();
+			} else if (readExcelToPatientendaten && !readExcelToFall) {
+				UIFenster1.progressBar.setIndeterminate(false);
+				UIFenster1.progressBar.setMaximum(recordsToRead);
+				excelToPatient(excelPath, sheet);
+				book.close();
+				fis.close();
+			} else if (readExcelToFall && !readExcelToPatientendaten) {
+				UIFenster1.progressBar.setIndeterminate(false);
+				UIFenster1.progressBar.setMaximum(recordsToRead);
+				excelToFall(excelPath, sheet);
+				book.close();
+				fis.close();
+			}
+			
+		} catch (Exception e) {
+			System.out.println(e);
+			System.out.println("Fehler: Irgendetwas stimmt mit der Datei nicht!");
+		}
+		
 		
 //		showDbTable( dbPatTbl );
 //		showDbTable( dbFallTbl );
@@ -470,9 +491,10 @@ public class start {
 			System.out.println("Fehler beim Beenden der Datenbankverbindung!");
 		}
 		
-		UIFenster1.progressBar.setIndeterminate(false);
-		UIFenster1.progressBar.setValue(1000);
-		
+		if (!readExcelToPatientendaten && !readExcelToFall) {
+			UIFenster1.progressBar.setIndeterminate(false);
+			UIFenster1.progressBar.setValue(UIFenster1.progressBar.getMaximum());
+		}
 		
 	}
 
