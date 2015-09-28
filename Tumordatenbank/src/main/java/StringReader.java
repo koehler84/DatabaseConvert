@@ -1,5 +1,5 @@
 public class StringReader {
-	
+
 	String source;
 	//Init with Failsafe
 	//--Klassifikation--
@@ -41,6 +41,30 @@ public class StringReader {
 		this.StringAnalyse();
 	}
 
+
+	private void FindHer2_neu (String textSub, int i) {
+		if ((i < textSub.length() - 8) && (textSub.substring(i, i + 5)).toUpperCase().equals("SCORE")) {
+			if (textSub.substring(i+5, i+7).equals("2+") || textSub.substring(i+5, i+7).equals("3+")) {
+				her2_Neu="+";
+			}
+			if (textSub.substring(i+5, i+7).equals("1+") || textSub.substring(i+5, i+6).equals("0")) {
+				her2_Neu="-";
+			}
+			if (textSub.substring(i+6, i+8).equals("2+") || textSub.substring(i+5, i+8).equals("3+")) {
+				her2_Neu="+";
+			}
+			if (textSub.substring(i+6, i+8).equals("1+") || textSub.substring(i+5, i+7).equals("0")) {
+				her2_Neu="-";
+			}
+		}
+		if ((i < textSub.length() - 5) && (textSub.substring(i, i + 5)).toUpperCase().equals("NEU -")) {
+			her2_Neu="-";
+		}
+		if ((i < textSub.length() - 5) && (textSub.substring(i, i + 5)).toUpperCase().equals("NEU +")) {
+			her2_Neu="+";
+		}
+	}
+
 	private void FindER_PR (String textSub, int i) {
 
 		String[] receptor = {" ER", "ÖSTROGEN", " PR", "PROGESTERON"};
@@ -79,7 +103,6 @@ public class StringReader {
 		int makroskopStart=0,mikroskopStart=0,diagStart=0,tumorclassStart=0;
 		String[] textSub = {"", "", "",this.source};
 
-
 		for (int i = 0; i < this.source.length() - 20; i++) {
 			if (source.substring(i, i+"Makroskopie:".length()).equals("Makroskopie:")) {
 				makroskopStart = i;
@@ -101,17 +124,6 @@ public class StringReader {
 		}
 
 		this.source = null;
-
-		//Init Failsafe
-		G=9;
-		T="mis";
-		N="mis";
-		M="mis";
-		L=9;
-		V=9;
-		R=9;
-		ER="mis";
-		PR="mis";
 
 		for (int i = 0; i < textSub[3].length() - 5; i++) {
 			//-------------
@@ -218,13 +230,13 @@ public class StringReader {
 			}
 
 			int a=3;
-			while (a!=0) {
-				FindER_PR(textSub[3], i);
+			while (a>-1) {
+				FindER_PR(textSub[a], i);
+				FindHer2_neu(textSub[a], i);
 				a--;
 			}
 
 		}
-		//System.out.println("G: " + G + ", T: " + T + ", N: " + N + ", M:" + M + ", L:" + L + ", V:" + V + ", ER:"+ ER + ", PR:"+ PR);	
 		/*
 		 *  pT3L1V0R1
 		 *  pT3N1aL1V0R0
@@ -254,18 +266,18 @@ public class StringReader {
 		readyForDB();
 
 	}
-	
+
 	private void readyForDB() {
-		
+
 		//default-Werte bitte auf null setzen, bei int o.ä. default-Werte unverändert lassen
-		
+
 		if (this.ER.equals("mis")) {
 			this.ER = null;
 		}
 		if (this.PR.equals("mis")) {
 			this.PR = null;
 		}
-		
+
 	}
 
 }
