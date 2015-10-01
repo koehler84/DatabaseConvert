@@ -52,16 +52,16 @@ public class StringReader {
 
 	private void FindHer2_neu (String textSub, int i) {
 		if ((i < textSub.length() - 8) && (textSub.substring(i, i + 5)).toUpperCase().equals("SCORE")) {
-			if (textSub.substring(i+5, i+7).equals("2+") || textSub.substring(i+5, i+7).equals("3+")) {
+			if (textSub.substring(i + 5, i + 7).equals("2+") || textSub.substring(i + 5, i + 7).equals("3+")) {
 				her2_Neu="+";
 			}
-			if (textSub.substring(i+5, i+7).equals("1+") || textSub.substring(i+5, i+6).equals("0")) {
+			if (textSub.substring(i + 5, i + 7).equals("1+") || textSub.substring(i + 5, i + 6).equals("0")) {
 				her2_Neu="-";
 			}
-			if (textSub.substring(i+6, i+8).equals("2+") || textSub.substring(i+5, i+8).equals("3+")) {
+			if (textSub.substring(i + 6, i + 8).equals("2+") || textSub.substring(i + 6, i + 8).equals("3+")) {
 				her2_Neu="+";
 			}
-			if (textSub.substring(i+6, i+8).equals("1+") || textSub.substring(i+5, i+7).equals("0")) {
+			if (textSub.substring(i + 6, i + 8).equals("1+") || textSub.substring(i + 6, i + 7).equals("0")) {
 				her2_Neu="-";
 			}
 		}
