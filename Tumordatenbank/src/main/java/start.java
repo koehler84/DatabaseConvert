@@ -410,8 +410,8 @@ public class start {
 
 		//----------------------------------------------------
 		
-		boolean readExcelToPatientendaten = true;
-		boolean readExcelToFall = true;
+		boolean readExcelToPatientendaten = false;
+		boolean readExcelToFall = false;
 		
 		try {
 			
