@@ -48,7 +48,7 @@ public class StringReader {
 			this.source = null;
 			this.readyForDB();
 		}
-		
+
 	}
 
 	private void FindTumorart (String textSub, int i) {
