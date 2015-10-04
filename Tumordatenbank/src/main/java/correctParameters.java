@@ -1035,6 +1035,10 @@ public class correctParameters extends JFrame {
 			JOptionPane.showMessageDialog(start.UIFenster1, "Bitte geben sie etwas ein.", "Fehler: Keine Eingabe", JOptionPane.PLAIN_MESSAGE);
 		} else {
 
+			if (vorname.length() != 0) vorname += "%";
+			if (name.length() != 0) name += "%";
+			if (eNR.length() != 0) eNR += "%";
+			
 			try {
 
 				ResultSet rs = null;
@@ -1049,25 +1053,25 @@ public class correctParameters extends JFrame {
 							if (eNR.length() != 0) {
 								//E-Nummer eingegeben
 								rs = st.executeQuery("select `E.-Nummer`, `PatientenID`, `Geburtsdatum`, `Vorname`, `Name` from mydb.vfallmitNamen "
-										+ "where Geburtsdatum = \"" + Gebdt + "\" and Vorname = \"" + vorname
-										+ "\" and Name = \"" + name + "\" and `E.-Nummer` = \"" + eNR + "\";");
+										+ "where Geburtsdatum = \"" + Gebdt + "\" and Vorname like \"" + vorname
+										+ "\" and Name like \"" + name + "\" and `E.-Nummer` like \"" + eNR + "\";");
 							} else if (eNR.length() == 0) {
 								//E-Nummer nicht eingegeben
 								rs = st.executeQuery("select `E.-Nummer`, `PatientenID`, `Geburtsdatum`, `Vorname`, `Name` from mydb.vfallmitNamen "
-										+ "where Geburtsdatum = \"" + Gebdt + "\" and Vorname = \"" + vorname
-										+ "\" and Name = \"" + name + "\";");
+										+ "where Geburtsdatum = \"" + Gebdt + "\" and Vorname like \"" + vorname
+										+ "\" and Name like \"" + name + "\";");
 							}
 						} else if (name.length() == 0) {
 							//name nicht eingegeben
 							if (eNR.length() != 0) {
 								//E-Nummer eingegeben
 								rs = st.executeQuery("select `E.-Nummer`, `PatientenID`, `Geburtsdatum`, `Vorname`, `Name` from mydb.vfallmitNamen "
-										+ "where Geburtsdatum = \"" + Gebdt + "\" and Vorname = \"" + vorname
-										+ "\" and `E.-Nummer` = \"" + eNR + "\";");
+										+ "where Geburtsdatum = \"" + Gebdt + "\" and Vorname like \"" + vorname
+										+ "\" and `E.-Nummer` like \"" + eNR + "\";");
 							} else if (eNR.length() == 0) {
 								//E-Nummer nicht eingegeben
 								rs = st.executeQuery("select `E.-Nummer`, `PatientenID`, `Geburtsdatum`, `Vorname`, `Name` from mydb.vfallmitNamen "
-										+ "where Geburtsdatum = \"" + Gebdt + "\" and Vorname = \"" + vorname + "\";");
+										+ "where Geburtsdatum = \"" + Gebdt + "\" and Vorname like \"" + vorname + "\";");
 							}
 						}
 					} else if (vorname.length() == 0) {
@@ -1077,18 +1081,18 @@ public class correctParameters extends JFrame {
 							if (eNR.length() != 0) {
 								//E-Nummer eingegeben
 								rs = st.executeQuery("select `E.-Nummer`, `PatientenID`, `Geburtsdatum`, `Vorname`, `Name` from mydb.vfallmitNamen "
-										+ "where Geburtsdatum = \"" + Gebdt + "\" and Name = \"" + name + "\" and `E.-Nummer` = \"" + eNR + "\";");
+										+ "where Geburtsdatum = \"" + Gebdt + "\" and Name like \"" + name + "\" and `E.-Nummer` like \"" + eNR + "\";");
 							} else if (eNR.length() == 0) {
 								//E-Nummer nicht eingegeben
 								rs = st.executeQuery("select `E.-Nummer`, `PatientenID`, `Geburtsdatum`, `Vorname`, `Name` from mydb.vfallmitNamen "
-										+ "where Geburtsdatum = \"" + Gebdt + "\" and Name = \"" + name + "\";");
+										+ "where Geburtsdatum = \"" + Gebdt + "\" and Name like \"" + name + "\";");
 							}
 						} else if (name.length() == 0) {
 							//name nicht eingegeben
 							if (eNR.length() != 0) {
 								//E-Nummer eingegeben
 								rs = st.executeQuery("select `E.-Nummer`, `PatientenID`, `Geburtsdatum`, `Vorname`, `Name` from mydb.vfallmitNamen "
-										+ "where Geburtsdatum = \"" + Gebdt + "\" and `E.-Nummer` = \"" + eNR + "\";");
+										+ "where Geburtsdatum = \"" + Gebdt + "\" and `E.-Nummer` like \"" + eNR + "\";");
 							} else if (eNR.length() == 0) {
 								//E-Nummer nicht eingegeben
 								rs = st.executeQuery("select `E.-Nummer`, `PatientenID`, `Geburtsdatum`, `Vorname`, `Name` from mydb.vfallmitNamen "
@@ -1105,22 +1109,22 @@ public class correctParameters extends JFrame {
 							if (eNR.length() != 0) {
 								//E-Nummer eingegeben
 								rs = st.executeQuery("select `E.-Nummer`, `PatientenID`, `Geburtsdatum`, `Vorname`, `Name` from mydb.vfallmitNamen "
-										+ "where Vorname = \"" + vorname + "\" and Name = \"" + name + "\" and `E.-Nummer` = \"" + eNR + "\";");
+										+ "where Vorname like \"" + vorname + "\" and Name like \"" + name + "\" and `E.-Nummer` like \"" + eNR + "\";");
 							} else if (eNR.length() == 0) {
 								//E-Nummer nicht eingegeben
 								rs = st.executeQuery("select `E.-Nummer`, `PatientenID`, `Geburtsdatum`, `Vorname`, `Name` from mydb.vfallmitNamen "
-										+ "where Vorname = \"" + vorname + "\" and Name = \"" + name + "\";");
+										+ "where Vorname like \"" + vorname + "\" and Name like \"" + name + "\";");
 							}
 						} else if (name.length() == 0) {
 							//name nicht eingegeben
 							if (eNR.length() != 0) {
 								//E-Nummer eingegeben
 								rs = st.executeQuery("select `E.-Nummer`, `PatientenID`, `Geburtsdatum`, `Vorname`, `Name` from mydb.vfallmitNamen "
-										+ "where Vorname = \"" + vorname + "\" and `E.-Nummer` = \"" + eNR + "\";");
+										+ "where Vorname like \"" + vorname + "\" and `E.-Nummer` like \"" + eNR + "\";");
 							} else if (eNR.length() == 0) {
 								//E-Nummer nicht eingegeben
 								rs = st.executeQuery("select `E.-Nummer`, `PatientenID`, `Geburtsdatum`, `Vorname`, `Name` from mydb.vfallmitNamen "
-										+ "where Vorname = \"" + vorname + "\";");
+										+ "where Vorname like \"" + vorname + "\";");
 							}
 						}
 					} else if (vorname.length() == 0) {
@@ -1130,18 +1134,18 @@ public class correctParameters extends JFrame {
 							if (eNR.length() != 0) {
 								//E-Nummer eingegeben
 								rs = st.executeQuery("select `E.-Nummer`, `PatientenID`, `Geburtsdatum`, `Vorname`, `Name` from mydb.vfallmitNamen "
-										+ "where Name = \"" + name + "\" and `E.-Nummer` = \"" + eNR + "\";");
+										+ "where Name like \"" + name + "\" and `E.-Nummer` like \"" + eNR + "\";");
 							} else if (eNR.length() == 0) {
 								//E-Nummer nicht eingegeben
 								rs = st.executeQuery("select `E.-Nummer`, `PatientenID`, `Geburtsdatum`, `Vorname`, `Name` from mydb.vfallmitNamen "
-										+ "where Name = \"" + name + "\";");
+										+ "where Name like \"" + name + "\";");
 							}
 						} else if (name.length() == 0) {
 							//name nicht eingegeben
 							if (eNR.length() != 0) {
 								//E-Nummer eingegeben
 								rs = st.executeQuery("select `E.-Nummer`, `PatientenID`, `Geburtsdatum`, `Vorname`, `Name` from mydb.vfallmitNamen "
-										+ "where `E.-Nummer` = \"" + eNR + "\";");
+										+ "where `E.-Nummer` like \"" + eNR + "\";");
 							}
 						}
 					}
