@@ -22,6 +22,7 @@ import javax.swing.JTable;
 import java.awt.event.ActionListener;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.awt.event.ActionEvent;
@@ -46,6 +47,7 @@ public class correctParameters extends JFrame {
 	private JPanel contentPane;
 	private JPanel panel_submitPatientendaten;
 	private JPanel panel_submitFall;
+	private JPanel panel_SQLManager;
 	public JProgressBar progressBar;
 	private JTable table_Patientendaten;
 	private JTable table_Fall;
@@ -71,6 +73,8 @@ public class correctParameters extends JFrame {
 	private JTextField textField_Arzt;
 	private JComboBox<Befundtyp> comboBox_Befundtyp;
 	private JCheckBox checkBox_Fehler_1;
+	private JTextField textField_SQLStatement;
+	private JTable table_SQL;
 
 	/**
 	 * Launch the application.
@@ -165,6 +169,14 @@ public class correctParameters extends JFrame {
 			}
 		});
 		mnNewMenu.add(mntmSchemaErneuern);
+		
+		JMenuItem mntmRunSqlStatement = new JMenuItem("Run SQL Statement");
+		mntmRunSqlStatement.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				pnCards_Layout.show(pnCards, "SQL Manager");
+			}
+		});
+		mnNewMenu.add(mntmRunSqlStatement);
 		
 		JMenuItem menu_showSubmitPat = new JMenuItem("Patientendaten bearbeiten");
 		menu_showSubmitPat.addActionListener(new ActionListener() {
@@ -289,6 +301,77 @@ public class correctParameters extends JFrame {
 		
 		panel_submitFall = new JPanel();
 		pnCards.add(panel_submitFall, "submitFall");
+		
+		panel_SQLManager = new JPanel();
+		pnCards.add(panel_SQLManager, "SQL Manager");
+		
+		textField_SQLStatement = new JTextField();
+		textField_SQLStatement.setColumns(10);
+		
+		JScrollPane scrollPane_SQL = new JScrollPane();
+		
+		JButton btnExecute = new JButton("Execute");
+		btnExecute.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				if (textField_SQLStatement.getText().length() != 0) {
+					try {
+						Statement st = start.cn.createStatement();
+						ResultSet rs = st.executeQuery(textField_SQLStatement.getText());
+						ResultSetMetaData rsMeta = rs.getMetaData();
+						String[] columnNames = new String[rsMeta.getColumnCount()];
+						
+						for (int i = 1; i < rsMeta.getColumnCount()+1; i++) {
+							columnNames[i-1] = rsMeta.getColumnLabel(i);
+						}
+						
+						DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
+						table_SQL.setModel(tableModel);
+						
+						while (rs.next()) {
+							Object[] array = new Object[rsMeta.getColumnCount()];
+							
+							for (int i = 1; i < array.length+1; i++) {
+								
+								array[i-1] = rs.getObject(i);
+								
+							}
+							tableModel.addRow(array);
+						}
+						
+						rs.close();
+						
+					} catch (SQLException e1) {
+						System.out.println(e);
+					}
+				}
+			}
+		});
+		
+		GroupLayout gl_panel_SQLManager = new GroupLayout(panel_SQLManager);
+		gl_panel_SQLManager.setHorizontalGroup(
+			gl_panel_SQLManager.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_panel_SQLManager.createSequentialGroup()
+					.addComponent(textField_SQLStatement, GroupLayout.DEFAULT_SIZE, 435, Short.MAX_VALUE)
+					.addGap(18)
+					.addComponent(btnExecute))
+				.addComponent(scrollPane_SQL, GroupLayout.DEFAULT_SIZE, 524, Short.MAX_VALUE)
+		);
+		gl_panel_SQLManager.setVerticalGroup(
+			gl_panel_SQLManager.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel_SQLManager.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_panel_SQLManager.createParallelGroup(Alignment.BASELINE)
+						.addComponent(textField_SQLStatement, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(btnExecute))
+					.addGap(42)
+					.addComponent(scrollPane_SQL, GroupLayout.DEFAULT_SIZE, 217, Short.MAX_VALUE)
+					.addGap(52))
+		);
+		
+		table_SQL = new JTable();
+		scrollPane_SQL.setViewportView(table_SQL);
+		panel_SQLManager.setLayout(gl_panel_SQLManager);
 		
 		JScrollPane scrollPane_Fall = new JScrollPane();
 		
@@ -1430,5 +1513,4 @@ public class correctParameters extends JFrame {
 			return false;
 		}
 	}
-	
 }
