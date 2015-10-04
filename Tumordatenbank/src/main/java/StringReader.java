@@ -1,3 +1,5 @@
+import java.util.regex.Pattern;
+
 public class StringReader {
 
 	String source;
@@ -49,6 +51,12 @@ public class StringReader {
 		
 	}
 
+	private void FindTumorart (String textSub, int i) {
+		if (textSub.charAt(i) == 'M') {
+			boolean b= Pattern.matches("M[ ]?8", textSub);
+			System.out.println(b);
+		}
+	}
 
 	private void FindHer2_neu (String textSub, int i) {
 		if ((i < textSub.length() - 8) && (textSub.substring(i, i + 5)).toUpperCase().equals("SCORE")) {
@@ -241,6 +249,7 @@ public class StringReader {
 			while (a>-1) {
 				FindER_PR(textSub[a], i);
 				FindHer2_neu(textSub[a], i);
+				FindTumorart(textSub[a], i);
 				a--;
 			}
 
