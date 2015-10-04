@@ -31,6 +31,9 @@ public class StringReader {
 	String Material;
 	int size;
 	java.sql.Date progressDate;
+	String tumorart;
+	String lage;
+	
 
 	//TODO:	her2_Neu implementieren (X), SubString (V), R (V)
 
@@ -52,10 +55,37 @@ public class StringReader {
 	}
 
 	private void FindTumorart (String textSub, int i) {
-		if (textSub.charAt(i) == 'M') {
-			boolean b= Pattern.matches(".*M[ ]?8.*", textSub);
-			System.out.println(b);
+		if (Pattern.matches(".*M[ ]?8[\\d]{3}/3.*", textSub)){
+			lage="invasiv";
 		}
+		if (Pattern.matches(".*M[ ]?8[\\d]{3}/2.*", textSub)){
+			lage="in situ";
+		}
+		if (Pattern.matches(".*M[ ]?8500.*", textSub)) {
+			tumorart="duktal";
+		}
+		if (Pattern.matches(".*M[ ]?8520.*", textSub)) {
+			tumorart="lobulär";
+		}
+		if (Pattern.matches(".*M[ ]?8211.*", textSub)) {
+			tumorart="tubulär";
+		}
+		if (Pattern.matches(".*M[ ]?8480.*", textSub)) {
+			tumorart="muzinös";
+		}
+		if (Pattern.matches(".*M[ ]?8503.*", textSub)) {
+			tumorart="papillär";
+		}
+		if (Pattern.matches(".*M[ ]?8201.*", textSub)) {
+			tumorart="kribriform";
+		}
+		if (Pattern.matches(".*M[ ]?8510.*", textSub)) {
+			tumorart="medullär";
+		}
+		if (Pattern.matches(".*M[ ]?8575.*", textSub)) {
+			tumorart="metaplastisch";
+		}
+		 
 	}
 
 	private void FindHer2_neu (String textSub, int i) {
