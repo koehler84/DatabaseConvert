@@ -1571,7 +1571,8 @@ public class correctParameters extends JFrame {
 					"  `Land` VARCHAR(3) NULL DEFAULT NULL COMMENT '',\r\n" + 
 					"  `PLZ` INT(5) UNSIGNED ZEROFILL NULL DEFAULT NULL COMMENT '',\r\n" + 
 					"  `Ort` VARCHAR(45) NULL DEFAULT NULL COMMENT '',\r\n" + 
-					"  `Fehler` INT(1) NULL DEFAULT NULL COMMENT '',\r\n" + 
+					"  `Fehler` INT(1) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `Fehler2` INT(1) NULL DEFAULT NULL COMMENT '',\r\n" + 
 					"  PRIMARY KEY (`PatientenID`)  COMMENT '')\r\n" + 
 					"ENGINE = InnoDB\r\n" + 
 					"AUTO_INCREMENT = 0\r\n" + 

@@ -430,7 +430,7 @@ public class start {
 			}
 			
 			//Alle Reihen lesen: sheet.getPhysicalNumberOfRows()
-			recordsToRead = 30;
+			recordsToRead = 10;
 			
 			if (readExcelToPatientendaten && readExcelToFall) {
 				UIFenster1.progressBar.setIndeterminate(false);
