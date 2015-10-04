@@ -1242,10 +1242,6 @@ public class correctParameters extends JFrame {
 	
 	public void DBtoTable_Fall() {
 		
-		if (start.cn != null) {
-			
-		}
-		
 		try {
 			Statement st = start.cn.createStatement();
 			ResultSet res = st.executeQuery("select * from vFehlerFall;");
