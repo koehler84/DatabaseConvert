@@ -53,7 +53,7 @@ public class StringReader {
 
 	private void FindTumorart (String textSub, int i) {
 		if (textSub.charAt(i) == 'M') {
-			boolean b= Pattern.matches("M[ ]?8", textSub);
+			boolean b= Pattern.matches(".*M[ ]?8.*", textSub);
 			System.out.println(b);
 		}
 	}
