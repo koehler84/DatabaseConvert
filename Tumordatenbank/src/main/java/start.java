@@ -312,6 +312,7 @@ public class start {
 			srObject = new StringReader(befundtext);
 		} catch (Exception e) {
 			System.out.println("Objektfehler!");
+			//e.printStackTrace();
 		}
 		
 		Pst.setString(1, E_Nr);

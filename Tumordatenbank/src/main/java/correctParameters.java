@@ -1330,7 +1330,7 @@ public class correctParameters extends JFrame {
 					"  `Fehler` INT(1) NULL DEFAULT NULL COMMENT '',\r\n" + 
 					"  PRIMARY KEY (`PatientenID`)  COMMENT '')\r\n" + 
 					"ENGINE = InnoDB\r\n" + 
-					"AUTO_INCREMENT = 37781\r\n" + 
+					"AUTO_INCREMENT = 0\r\n" + 
 					"DEFAULT CHARACTER SET = utf8\r\n" + 
 					"PACK_KEYS = 0;\r\n" + 
 					"\r\n" + 
