@@ -322,10 +322,7 @@ public class correctParameters extends JFrame {
 		JButton btnExecute = new JButton("Execute");
 		btnExecute.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				if (textField_SQLStatement.getText().length() != 0) {
-					SQL_ManagerToTable();
-				}
+				SQL_ManagerToTable();
 			}
 		});
 		
@@ -926,35 +923,39 @@ public class correctParameters extends JFrame {
 	
 	private void SQL_ManagerToTable() {
 		
-		try {
-			Statement st = start.cn.createStatement();
-			ResultSet rs = st.executeQuery(textField_SQLStatement.getText());
-			ResultSetMetaData rsMeta = rs.getMetaData();
-			String[] columnNames = new String[rsMeta.getColumnCount()];
+		if (textField_SQLStatement.getText().length() != 0 && start.cn != null) {
 			
-			for (int i = 1; i < rsMeta.getColumnCount()+1; i++) {
-				columnNames[i-1] = rsMeta.getColumnLabel(i);
-			}
-			
-			DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
-			table_SQL.setModel(tableModel);
-			
-			while (rs.next()) {
-				Object[] array = new Object[rsMeta.getColumnCount()];
+			try {
+				Statement st = start.cn.createStatement();
+				ResultSet rs = st.executeQuery(textField_SQLStatement.getText());
+				ResultSetMetaData rsMeta = rs.getMetaData();
+				String[] columnNames = new String[rsMeta.getColumnCount()];
 				
-				for (int i = 1; i < array.length+1; i++) {
-					
-					array[i-1] = rs.getObject(i);
-					
+				for (int i = 1; i < rsMeta.getColumnCount()+1; i++) {
+					columnNames[i-1] = rsMeta.getColumnLabel(i);
 				}
-				tableModel.addRow(array);
+				
+				DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
+				table_SQL.setModel(tableModel);
+				
+				while (rs.next()) {
+					Object[] array = new Object[rsMeta.getColumnCount()];
+					
+					for (int i = 1; i < array.length+1; i++) {
+						
+						array[i-1] = rs.getObject(i);
+						
+					}
+					tableModel.addRow(array);
+				}
+				
+				rs.close();
+				
+			} catch (SQLException e1) {
+				System.out.println(e1);
 			}
-			
-			rs.close();
-			
-		} catch (SQLException e1) {
-			System.out.println(e1);
 		}
+		
 	}
 	
 	private void rowToTextField(String tabelle) {
@@ -994,9 +995,7 @@ public class correctParameters extends JFrame {
 			} catch (Exception e) {
 				textField_Eingangsdatum.setText(null);
 			}
-			
 		}
-		
 		
 	}
 	
@@ -1242,6 +1241,10 @@ public class correctParameters extends JFrame {
 	}
 	
 	public void DBtoTable_Fall() {
+		
+		if (start.cn != null) {
+			
+		}
 		
 		try {
 			Statement st = start.cn.createStatement();
