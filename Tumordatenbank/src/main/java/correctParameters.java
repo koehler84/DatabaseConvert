@@ -48,6 +48,7 @@ public class correctParameters extends JFrame {
 	private JPanel panel_submitPatientendaten;
 	private JPanel panel_submitFall;
 	private JPanel panel_SQLManager;
+	private JPanel panel_ChangePersonFall;
 	public JProgressBar progressBar;
 	private JTable table_Patientendaten;
 	private JTable table_Fall;
@@ -75,6 +76,11 @@ public class correctParameters extends JFrame {
 	private JCheckBox checkBox_Fehler_1;
 	private JTextField textField_SQLStatement;
 	private JTable table_SQL;
+	private JTextField textField_Geburtsdatum_ChangePersonFall;
+	private JTextField textField_Vorname_ChangePersonFall;
+	private JTextField textField_Name_ChangePersonFall;
+	private JTextField textField_ENummer_ChangePersonFall;
+	private JTable table_ChangePersonFall;
 
 	/**
 	 * Launch the application.
@@ -138,7 +144,6 @@ public class correctParameters extends JFrame {
 		mnTest.add(mnNewMenu);
 		
 		JMenuItem mntmSchemaErneuern = new JMenuItem("Schema erneuern");
-		
 		mntmSchemaErneuern.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -192,6 +197,14 @@ public class correctParameters extends JFrame {
 				pnCards_Layout.show(pnCards, "submitFall");
 			}
 		});
+		
+		JMenuItem mntmPersonenVerknpfen = new JMenuItem("Personen verkn\u00FCpfen");
+		mntmPersonenVerknpfen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				pnCards_Layout.show(pnCards, "Change Person Fall");
+			}
+		});
+		mnTest.add(mntmPersonenVerknpfen);
 		mnTest.add(mntmOther);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -304,6 +317,93 @@ public class correctParameters extends JFrame {
 		
 		panel_SQLManager = new JPanel();
 		pnCards.add(panel_SQLManager, "SQL Manager");
+		
+		panel_ChangePersonFall = new JPanel();
+		pnCards.add(panel_ChangePersonFall, "Change Person Fall");
+		
+		JLabel lblGeburtsdatum_2 = new JLabel("Geburtsdatum:");
+		
+		textField_Geburtsdatum_ChangePersonFall = new JTextField();
+		textField_Geburtsdatum_ChangePersonFall.setColumns(10);
+		
+		textField_Vorname_ChangePersonFall = new JTextField();
+		textField_Vorname_ChangePersonFall.setColumns(10);
+		
+		JLabel lblVorname_2 = new JLabel("Vorname:");
+		
+		textField_Name_ChangePersonFall = new JTextField();
+		textField_Name_ChangePersonFall.setColumns(10);
+		
+		JLabel lblName = new JLabel("Name:");
+		
+		textField_ENummer_ChangePersonFall = new JTextField();
+		textField_ENummer_ChangePersonFall.setColumns(10);
+		
+		JLabel lblEnummer_1 = new JLabel("E.-Nummer:");
+		
+		JScrollPane scrollPane_ChangePersonFall = new JScrollPane();
+		
+		JButton btnSuchen = new JButton("Suchen");
+		btnSuchen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (start.cn != null) {
+					ChangePersonFall();
+				} else if (start.cn == null) {
+					JOptionPane.showMessageDialog(start.UIFenster1, "Sie sind nicht mit der Datenbank verbunden!",
+							"Keine Verbindung", JOptionPane.WARNING_MESSAGE);
+				}
+			}
+		});
+		GroupLayout gl_panel_ChangePersonFall = new GroupLayout(panel_ChangePersonFall);
+		gl_panel_ChangePersonFall.setHorizontalGroup(
+			gl_panel_ChangePersonFall.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel_ChangePersonFall.createSequentialGroup()
+					.addComponent(lblGeburtsdatum_2)
+					.addGap(32)
+					.addComponent(lblVorname_2)
+					.addGap(59)
+					.addComponent(lblName)
+					.addGap(73)
+					.addComponent(lblEnummer_1))
+				.addGroup(gl_panel_ChangePersonFall.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(textField_Geburtsdatum_ChangePersonFall, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addGap(18)
+					.addComponent(textField_Vorname_ChangePersonFall, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addGap(18)
+					.addComponent(textField_Name_ChangePersonFall, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addGap(18)
+					.addComponent(textField_ENummer_ChangePersonFall, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+					.addComponent(btnSuchen))
+				.addComponent(scrollPane_ChangePersonFall, GroupLayout.DEFAULT_SIZE, 524, Short.MAX_VALUE)
+		);
+		gl_panel_ChangePersonFall.setVerticalGroup(
+			gl_panel_ChangePersonFall.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel_ChangePersonFall.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_panel_ChangePersonFall.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblGeburtsdatum_2)
+						.addComponent(lblVorname_2)
+						.addComponent(lblName)
+						.addComponent(lblEnummer_1))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_panel_ChangePersonFall.createParallelGroup(Alignment.BASELINE)
+						.addComponent(textField_Geburtsdatum_ChangePersonFall, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(textField_Vorname_ChangePersonFall, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(textField_Name_ChangePersonFall, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(textField_ENummer_ChangePersonFall, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(btnSuchen))
+					.addGap(29)
+					.addComponent(scrollPane_ChangePersonFall, GroupLayout.PREFERRED_SIZE, 88, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(177, Short.MAX_VALUE))
+		);
+		
+		table_ChangePersonFall = new JTable();
+		DefaultTableModel tableModel = new DefaultTableModel(new String[]{"E.-Nummer", "PatientenID", "Geburtsdatum", "Vorname", "Name"}, 0);
+		table_ChangePersonFall.setModel(tableModel);
+		scrollPane_ChangePersonFall.setViewportView(table_ChangePersonFall);
+		panel_ChangePersonFall.setLayout(gl_panel_ChangePersonFall);
 		
 		textField_SQLStatement = new JTextField();
 		textField_SQLStatement.setText("select * from ");
@@ -919,6 +1019,151 @@ public class correctParameters extends JFrame {
 				doubleCheck = false;
 			}
 		};
+	}
+	
+	private void ChangePersonFall() {
+		
+		String Gebdt = textField_Geburtsdatum_ChangePersonFall.getText();
+		String vorname = textField_Vorname_ChangePersonFall.getText();
+		String name = textField_Name_ChangePersonFall.getText();
+		String eNR = textField_ENummer_ChangePersonFall.getText();
+		
+		DefaultTableModel tableModel = new DefaultTableModel(new String[]{"E.-Nummer", "PatientenID", "Geburtsdatum", "Vorname", "Name"}, 0);
+		table_ChangePersonFall.setModel(tableModel);
+		
+		if (Gebdt.length() == 0 && vorname.length() == 0 && name.length() == 0 && eNR.length() == 0) {
+			JOptionPane.showMessageDialog(start.UIFenster1, "Bitte geben sie etwas ein.", "Fehler: Keine Eingabe", JOptionPane.PLAIN_MESSAGE);
+		} else {
+
+			try {
+
+				ResultSet rs = null;
+				Statement st = start.cn.createStatement();
+
+				if (Gebdt.length() != 0) {
+					//Gebdt eingegeben
+					if (vorname.length() != 0) {
+						//vorname eingegeben
+						if (name.length() != 0) {
+							//name eingegeben
+							if (eNR.length() != 0) {
+								//E-Nummer eingegeben
+								rs = st.executeQuery("select `E.-Nummer`, `PatientenID`, `Geburtsdatum`, `Vorname`, `Name` from mydb.vfallmitNamen "
+										+ "where Geburtsdatum = \"" + Gebdt + "\" and Vorname = \"" + vorname
+										+ "\" and Name = \"" + name + "\" and `E.-Nummer` = \"" + eNR + "\";");
+							} else if (eNR.length() == 0) {
+								//E-Nummer nicht eingegeben
+								rs = st.executeQuery("select `E.-Nummer`, `PatientenID`, `Geburtsdatum`, `Vorname`, `Name` from mydb.vfallmitNamen "
+										+ "where Geburtsdatum = \"" + Gebdt + "\" and Vorname = \"" + vorname
+										+ "\" and Name = \"" + name + "\";");
+							}
+						} else if (name.length() == 0) {
+							//name nicht eingegeben
+							if (eNR.length() != 0) {
+								//E-Nummer eingegeben
+								rs = st.executeQuery("select `E.-Nummer`, `PatientenID`, `Geburtsdatum`, `Vorname`, `Name` from mydb.vfallmitNamen "
+										+ "where Geburtsdatum = \"" + Gebdt + "\" and Vorname = \"" + vorname
+										+ "\" and `E.-Nummer` = \"" + eNR + "\";");
+							} else if (eNR.length() == 0) {
+								//E-Nummer nicht eingegeben
+								rs = st.executeQuery("select `E.-Nummer`, `PatientenID`, `Geburtsdatum`, `Vorname`, `Name` from mydb.vfallmitNamen "
+										+ "where Geburtsdatum = \"" + Gebdt + "\" and Vorname = \"" + vorname + "\";");
+							}
+						}
+					} else if (vorname.length() == 0) {
+						//vorname nicht eingegeben
+						if (name.length() != 0) {
+							//name eingegeben
+							if (eNR.length() != 0) {
+								//E-Nummer eingegeben
+								rs = st.executeQuery("select `E.-Nummer`, `PatientenID`, `Geburtsdatum`, `Vorname`, `Name` from mydb.vfallmitNamen "
+										+ "where Geburtsdatum = \"" + Gebdt + "\" and Name = \"" + name + "\" and `E.-Nummer` = \"" + eNR + "\";");
+							} else if (eNR.length() == 0) {
+								//E-Nummer nicht eingegeben
+								rs = st.executeQuery("select `E.-Nummer`, `PatientenID`, `Geburtsdatum`, `Vorname`, `Name` from mydb.vfallmitNamen "
+										+ "where Geburtsdatum = \"" + Gebdt + "\" and Name = \"" + name + "\";");
+							}
+						} else if (name.length() == 0) {
+							//name nicht eingegeben
+							if (eNR.length() != 0) {
+								//E-Nummer eingegeben
+								rs = st.executeQuery("select `E.-Nummer`, `PatientenID`, `Geburtsdatum`, `Vorname`, `Name` from mydb.vfallmitNamen "
+										+ "where Geburtsdatum = \"" + Gebdt + "\" and `E.-Nummer` = \"" + eNR + "\";");
+							} else if (eNR.length() == 0) {
+								//E-Nummer nicht eingegeben
+								rs = st.executeQuery("select `E.-Nummer`, `PatientenID`, `Geburtsdatum`, `Vorname`, `Name` from mydb.vfallmitNamen "
+										+ "where Geburtsdatum = \"" + Gebdt + "\";");
+							}
+						}
+					}
+				} else if (Gebdt.length() == 0) {
+					//Gebdt nicht eingegeben
+					if (vorname.length() != 0) {
+						//vorname eingegeben
+						if (name.length() != 0) {
+							//name eingegeben
+							if (eNR.length() != 0) {
+								//E-Nummer eingegeben
+								rs = st.executeQuery("select `E.-Nummer`, `PatientenID`, `Geburtsdatum`, `Vorname`, `Name` from mydb.vfallmitNamen "
+										+ "where Vorname = \"" + vorname + "\" and Name = \"" + name + "\" and `E.-Nummer` = \"" + eNR + "\";");
+							} else if (eNR.length() == 0) {
+								//E-Nummer nicht eingegeben
+								rs = st.executeQuery("select `E.-Nummer`, `PatientenID`, `Geburtsdatum`, `Vorname`, `Name` from mydb.vfallmitNamen "
+										+ "where Vorname = \"" + vorname + "\" and Name = \"" + name + "\";");
+							}
+						} else if (name.length() == 0) {
+							//name nicht eingegeben
+							if (eNR.length() != 0) {
+								//E-Nummer eingegeben
+								rs = st.executeQuery("select `E.-Nummer`, `PatientenID`, `Geburtsdatum`, `Vorname`, `Name` from mydb.vfallmitNamen "
+										+ "where Vorname = \"" + vorname + "\" and `E.-Nummer` = \"" + eNR + "\";");
+							} else if (eNR.length() == 0) {
+								//E-Nummer nicht eingegeben
+								rs = st.executeQuery("select `E.-Nummer`, `PatientenID`, `Geburtsdatum`, `Vorname`, `Name` from mydb.vfallmitNamen "
+										+ "where Vorname = \"" + vorname + "\";");
+							}
+						}
+					} else if (vorname.length() == 0) {
+						//vorname nicht eingegeben
+						if (name.length() != 0) {
+							//name eingegeben
+							if (eNR.length() != 0) {
+								//E-Nummer eingegeben
+								rs = st.executeQuery("select `E.-Nummer`, `PatientenID`, `Geburtsdatum`, `Vorname`, `Name` from mydb.vfallmitNamen "
+										+ "where Name = \"" + name + "\" and `E.-Nummer` = \"" + eNR + "\";");
+							} else if (eNR.length() == 0) {
+								//E-Nummer nicht eingegeben
+								rs = st.executeQuery("select `E.-Nummer`, `PatientenID`, `Geburtsdatum`, `Vorname`, `Name` from mydb.vfallmitNamen "
+										+ "where Name = \"" + name + "\";");
+							}
+						} else if (name.length() == 0) {
+							//name nicht eingegeben
+							if (eNR.length() != 0) {
+								//E-Nummer eingegeben
+								rs = st.executeQuery("select `E.-Nummer`, `PatientenID`, `Geburtsdatum`, `Vorname`, `Name` from mydb.vfallmitNamen "
+										+ "where `E.-Nummer` = \"" + eNR + "\";");
+							}
+						}
+					}
+				}
+
+				while (rs.next()) {
+					Object[] data = new Object[5];
+
+					for (int i = 0; i < data.length; i++) {
+						data[i] = rs.getObject(i+1);
+					}
+					tableModel.addRow(data);
+				}
+
+				st.close();
+				rs.close();
+
+			} catch (SQLException e) {
+				System.out.println(e);
+			}
+
+		}
 	}
 	
 	private void SQL_ManagerToTable() {
