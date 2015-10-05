@@ -81,6 +81,9 @@ public class correctParameters extends JFrame {
 	private JTextField textField_Name_ChangePersonFall;
 	private JTextField textField_ENummer_ChangePersonFall;
 	private JTable table_ChangePersonFall;
+	private JTextField textField_Geburtsdatum_ChangePersonFall_2;
+	private JTextField textField_Vorname_ChangePersonFall_2;
+	private JTextField textField_Name_ChangePersonFall_2;
 
 	/**
 	 * Launch the application.
@@ -354,6 +357,21 @@ public class correctParameters extends JFrame {
 				}
 			}
 		});
+		
+		JLabel lblGeburtsdatum_3 = new JLabel("Geburtsdatum:");
+		
+		textField_Geburtsdatum_ChangePersonFall_2 = new JTextField();
+		textField_Geburtsdatum_ChangePersonFall_2.setColumns(10);
+		
+		textField_Vorname_ChangePersonFall_2 = new JTextField();
+		textField_Vorname_ChangePersonFall_2.setColumns(10);
+		
+		textField_Name_ChangePersonFall_2 = new JTextField();
+		textField_Name_ChangePersonFall_2.setColumns(10);
+		
+		JLabel lblVorname_3 = new JLabel("Vorname:");
+		
+		JLabel lblName_1 = new JLabel("Name:");
 		GroupLayout gl_panel_ChangePersonFall = new GroupLayout(panel_ChangePersonFall);
 		gl_panel_ChangePersonFall.setHorizontalGroup(
 			gl_panel_ChangePersonFall.createParallelGroup(Alignment.LEADING)
@@ -374,9 +392,24 @@ public class correctParameters extends JFrame {
 					.addComponent(textField_Name_ChangePersonFall, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 					.addGap(18)
 					.addComponent(textField_ENummer_ChangePersonFall, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
 					.addComponent(btnSuchen))
 				.addComponent(scrollPane_ChangePersonFall, GroupLayout.DEFAULT_SIZE, 524, Short.MAX_VALUE)
+				.addGroup(gl_panel_ChangePersonFall.createSequentialGroup()
+					.addComponent(lblGeburtsdatum_3, GroupLayout.PREFERRED_SIZE, 72, GroupLayout.PREFERRED_SIZE)
+					.addGap(34)
+					.addComponent(lblVorname_3)
+					.addGap(57)
+					.addComponent(lblName_1)
+					.addGap(269))
+				.addGroup(gl_panel_ChangePersonFall.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(textField_Geburtsdatum_ChangePersonFall_2, GroupLayout.PREFERRED_SIZE, 86, GroupLayout.PREFERRED_SIZE)
+					.addGap(18)
+					.addComponent(textField_Vorname_ChangePersonFall_2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addGap(18)
+					.addComponent(textField_Name_ChangePersonFall_2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(300, Short.MAX_VALUE))
 		);
 		gl_panel_ChangePersonFall.setVerticalGroup(
 			gl_panel_ChangePersonFall.createParallelGroup(Alignment.LEADING)
@@ -396,11 +429,36 @@ public class correctParameters extends JFrame {
 						.addComponent(btnSuchen))
 					.addGap(29)
 					.addComponent(scrollPane_ChangePersonFall, GroupLayout.PREFERRED_SIZE, 88, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(177, Short.MAX_VALUE))
+					.addGap(18)
+					.addGroup(gl_panel_ChangePersonFall.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblGeburtsdatum_3)
+						.addComponent(lblVorname_3)
+						.addComponent(lblName_1))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_panel_ChangePersonFall.createParallelGroup(Alignment.BASELINE)
+						.addComponent(textField_Geburtsdatum_ChangePersonFall_2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(textField_Vorname_ChangePersonFall_2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(textField_Name_ChangePersonFall_2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addContainerGap(116, Short.MAX_VALUE))
 		);
 		
 		table_ChangePersonFall = new JTable();
-		DefaultTableModel tableModel = new DefaultTableModel(new String[]{"E.-Nummer", "PatientenID", "Geburtsdatum", "Vorname", "Name"}, 0);
+		table_ChangePersonFall.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 2) {
+					rowToTextField("ChangePersonFall");
+				}
+			}
+		});
+		DefaultTableModel tableModel = new DefaultTableModel(
+				new String[]{"E.-Nummer", "PatientenID", "Geburtsdatum", "Vorname", "Name"}, 0) {
+			
+			public boolean isCellEditable(int row, int column) {
+				//all cells false
+				return false;
+			}
+		};
 		table_ChangePersonFall.setModel(tableModel);
 		scrollPane_ChangePersonFall.setViewportView(table_ChangePersonFall);
 		panel_ChangePersonFall.setLayout(gl_panel_ChangePersonFall);
@@ -1028,7 +1086,14 @@ public class correctParameters extends JFrame {
 		String name = textField_Name_ChangePersonFall.getText();
 		String eNR = textField_ENummer_ChangePersonFall.getText();
 		
-		DefaultTableModel tableModel = new DefaultTableModel(new String[]{"E.-Nummer", "PatientenID", "Geburtsdatum", "Vorname", "Name"}, 0);
+		DefaultTableModel tableModel = new DefaultTableModel(
+				new String[]{"E.-Nummer", "PatientenID", "Geburtsdatum", "Vorname", "Name"}, 0) {
+			
+			public boolean isCellEditable(int row, int column) {
+				//all cells false
+				return false;
+			}
+		};
 		table_ChangePersonFall.setModel(tableModel);
 		
 		if (Gebdt.length() == 0 && vorname.length() == 0 && name.length() == 0 && eNR.length() == 0) {
@@ -1244,6 +1309,18 @@ public class correctParameters extends JFrame {
 			} catch (Exception e) {
 				textField_Eingangsdatum.setText(null);
 			}
+		} else if (tabelle.equals("ChangePersonFall")) {
+			//TODO
+			int row = table_ChangePersonFall.getSelectedRow();
+			
+			try {
+				textField_Geburtsdatum_ChangePersonFall_2.setText(table_ChangePersonFall.getValueAt(row, 2).toString());
+			} catch (Exception e) {
+				textField_Geburtsdatum_ChangePersonFall_2.setText(null);
+			}
+			textField_Vorname_ChangePersonFall_2.setText((String) table_ChangePersonFall.getValueAt(row, 3));
+			textField_Name_ChangePersonFall_2.setText((String) table_ChangePersonFall.getValueAt(row, 4));
+			
 		}
 		
 	}
@@ -1560,7 +1637,7 @@ public class correctParameters extends JFrame {
 					"  `Fehler` INT(1) NULL DEFAULT NULL COMMENT '',\r\n" + 
 					"  PRIMARY KEY (`PatientenID`)  COMMENT '')\r\n" + 
 					"ENGINE = InnoDB\r\n" + 
-					"AUTO_INCREMENT = 37741\r\n" + 
+					"AUTO_INCREMENT = 0\r\n" + 
 					"DEFAULT CHARACTER SET = utf8\r\n" + 
 					"PACK_KEYS = 0;");
 			st.execute("CREATE TABLE IF NOT EXISTS `mydb`.`fall` (\r\n" + 
@@ -1631,22 +1708,24 @@ public class correctParameters extends JFrame {
 					"  `Fall_Befundtyp` INT(1) NOT NULL COMMENT '',\r\n" + 
 					"  `Tumorklassifizierung` VARCHAR(15) NULL DEFAULT NULL COMMENT '',\r\n" + 
 					"  `Quadrant` VARCHAR(10) NULL DEFAULT NULL COMMENT '',\r\n" + 
-					"  `G` INT(11) UNSIGNED NULL DEFAULT NULL COMMENT '',\r\n" + 
+					"  `G` INT(2) UNSIGNED NULL DEFAULT NULL COMMENT '',\r\n" + 
 					"  `T` VARCHAR(3) NULL DEFAULT NULL COMMENT '',\r\n" + 
 					"  `N` VARCHAR(3) NULL DEFAULT NULL COMMENT '',\r\n" + 
 					"  `M` VARCHAR(3) NULL DEFAULT NULL COMMENT '',\r\n" + 
-					"  `L` INT(11) UNSIGNED NULL DEFAULT NULL COMMENT '',\r\n" + 
-					"  `V` INT(11) UNSIGNED NULL DEFAULT NULL COMMENT '',\r\n" + 
-					"  `R` INT(11) UNSIGNED NULL DEFAULT NULL COMMENT '',\r\n" + 
-					"  `N gesamt` INT(11) UNSIGNED NULL DEFAULT NULL COMMENT '',\r\n" + 
-					"  `N meta` INT(11) UNSIGNED NULL DEFAULT NULL COMMENT '',\r\n" + 
-					"  `ER` VARCHAR(5) NULL DEFAULT NULL COMMENT '',\r\n" + 
+					"  `L` INT(2) UNSIGNED NULL DEFAULT NULL COMMENT '',\r\n" + 
+					"  `V` INT(2) UNSIGNED NULL DEFAULT NULL COMMENT '',\r\n" + 
+					"  `R` INT(2) UNSIGNED NULL DEFAULT NULL COMMENT '',\r\n" + 
+					"  `N gesamt` INT(3) UNSIGNED NULL DEFAULT NULL COMMENT '',\r\n" + 
+					"  `N meta` INT(3) UNSIGNED NULL DEFAULT NULL COMMENT '',\r\n" + 
+					"  `ER` VARCHAR(2) NULL DEFAULT NULL COMMENT '',\r\n" + 
 					"  `ER IRS` VARCHAR(20) NULL DEFAULT NULL COMMENT '',\r\n" + 
-					"  `PR` VARCHAR(5) NULL DEFAULT NULL COMMENT '',\r\n" + 
+					"  `PR` VARCHAR(2) NULL DEFAULT NULL COMMENT '',\r\n" + 
 					"  `PR IRS` VARCHAR(20) NULL DEFAULT NULL COMMENT '',\r\n" + 
-					"  `Her2/neu` VARCHAR(10) NULL DEFAULT NULL COMMENT '',\r\n" + 
+					"  `Her2/neu` VARCHAR(2) NULL DEFAULT NULL COMMENT '',\r\n" + 
 					"  `Her2/neu-Score` INT(11) UNSIGNED NULL DEFAULT NULL COMMENT '',\r\n" + 
-					"  `Ki67` INT(11) UNSIGNED NULL DEFAULT NULL COMMENT '',\r\n" + 
+					"  `Ki67` VARCHAR(20) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `Lage` VARCHAR(10) NULL DEFAULT NULL COMMENT '',\r\n" + 
+					"  `Tumorart` VARCHAR(20) NULL DEFAULT NULL COMMENT '',\r\n" + 
 					"  PRIMARY KEY (`Fall_E.-Nummer`, `Fall_Befundtyp`)  COMMENT '',\r\n" + 
 					"  CONSTRAINT `fk_Klassifikation_Fall1`\r\n" + 
 					"    FOREIGN KEY (`Fall_E.-Nummer` , `Fall_Befundtyp`)\r\n" + 
