@@ -5,34 +5,34 @@ public class StringReader {
 	String source;
 	//Init with Failsafe
 	//--Klassifikation--
-	String Quadrant;
+	String Quadrant=null;
 	int G=9;							//Klassifikation =0,1,2,3,5=X,9 Not in Dataset 
 	//erkennbar (siehe Task 2)
-	String T="mis";						//Tumor [c,p,][1,2,3,4,X][a,b,c] or "mis" (see Task 2)
-	String N="mis";						//Metastasen [1,2,3,4,X][a,b,c] or "mis" (see Task 2) 
+	String T=null;						//Tumor [c,p,][1,2,3,4,X][a,b,c] or "mis" (see Task 2)
+	String N=null;						//Metastasen [1,2,3,4,X][a,b,c] or "mis" (see Task 2) 
 	//=> Task 5
-	String M="mis";						//Fernmetastasen [0,1]{later maybe localisation code} or 
+	String M=null;						//Fernmetastasen [0,1]{later maybe localisation code} or 
 	//"mis" (see Task 2)
 	int L=9;							//9 - Not in Dataset
 	int V=9;							//9 - Not in Dataset
 	int R=9;
-	String nSum;
-	String nMeta;
-	String ER="mis";
+	int nSum;
+	int nMeta;
+	String ER=null;
 	String erIrs;
-	String PR="mis";
+	String PR=null;
 	String prIrs;
-	String her2_Neu="mis";
+	String her2_Neu=null;
 	int her2_NeuScore;
-	String K67;
+	String ki67=null;
 	//--Tumor--
-	String Localisation;
-	String Side;
-	String Material;
+	String localisation=null;
+	String side=null;
+	String Material=null;
 	int size;
 	java.sql.Date progressDate;
-	String tumorart;
-	String lage;
+	String tumorart=null;
+	String lage=null;
 	
 
 	//TODO:	her2_Neu implementieren (X), SubString (V), R (V)
@@ -295,16 +295,14 @@ public class StringReader {
 		if (this.T.equals("mis")) this.T = null;
 		if (this.N.equals("mis")) this.N = null;
 		if (this.M.equals("mis")) this.M = null;
-		if (this.nSum != null && this.nSum.equals("")) {};
-		if (this.nMeta != null && this.nMeta.equals("")) {};
 		if (this.ER.equals("mis")) this.ER = null;
 		if (this.erIrs != null && this.erIrs.equals("")) {};
 		if (this.PR.equals("mis")) this.PR = null;
 		if (this.prIrs != null && this.prIrs.equals("")) {};
 		if (this.her2_Neu.equals("mis")) this.her2_Neu = null;
-		if (this.K67 != null && this.K67.equals("")) {};
-		if (this.Localisation != null && this.Localisation.equals("")) {};
-		if (this.Side != null && this.Side.equals("")) {};
+		if (this.ki67 != null && this.ki67.equals("")) {};
+		if (this.localisation != null && this.localisation.equals("")) {};
+		if (this.side != null && this.side.equals("")) {};
 		if (this.Material != null && this.Material.equals("")) {};
 		if (this.progressDate != null && this.progressDate.toString().equals("")) {};
 
