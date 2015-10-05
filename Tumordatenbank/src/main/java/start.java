@@ -172,7 +172,8 @@ public class start {
 					+ "((select PatientenID from mydb.patientendaten where Name = ? and Vorname = ? and Geburtsdatum = ? ),"
 					+ " ? , ? , ? , ? , ? );");
 			PreparedStatement Pst_Klassifikation = cn.prepareStatement("insert into mydb.klassifikation (`Fall_E.-Nummer`, `Fall_Befundtyp`, "
-					+ "G, T, N, M, L, V, R, ER, PR, `Her2/neu`) values ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? );");
+					+ "G, T, N, M, L, V, R, ER, PR, `Her2/neu`, Lage, Tumorart) "
+					+ "values ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? );");
 
 			Iterator<Row> itr = sheet.iterator();
 			if (itr.hasNext()) {
@@ -312,6 +313,7 @@ public class start {
 			srObject = new StringReader(befundtext);
 		} catch (Exception e) {
 			System.out.println("Objektfehler!");
+			return;
 			//e.printStackTrace();
 		}
 		
@@ -323,6 +325,8 @@ public class start {
 		Pst.setString(10, srObject.ER);
 		Pst.setString(11, srObject.PR);
 		Pst.setString(12, srObject.her2_Neu);
+		Pst.setString(13, srObject.lage);
+		Pst.setString(14, srObject.tumorart);
 		
 		if (srObject.G != 9) {
 			Pst.setInt(3, srObject.G);
@@ -430,7 +434,7 @@ public class start {
 			}
 			
 			//Alle Reihen lesen: sheet.getPhysicalNumberOfRows()
-			recordsToRead = 10;
+			recordsToRead = 30;
 			
 			if (readExcelToPatientendaten && readExcelToFall) {
 				UIFenster1.progressBar.setIndeterminate(false);
