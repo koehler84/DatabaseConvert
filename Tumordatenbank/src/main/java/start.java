@@ -323,6 +323,7 @@ public class start {
 		try {
 			srObject = new StringReader(befundtext);
 		} catch (Exception e) {
+			e.printStackTrace();
 			System.out.println("Objektfehler!");
 			return;
 			//e.printStackTrace();
@@ -470,6 +471,7 @@ public class start {
 			
 		} catch (Exception e) {
 			System.out.println(e);
+			e.printStackTrace();
 			System.out.println("Fehler: Irgendetwas stimmt mit der Datei nicht!");
 		}
 		

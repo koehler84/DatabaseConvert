@@ -97,8 +97,8 @@ public class StringReader {
 				if (lage==null || tumorart==null ) {
 					FindTumorart(textSub[a], i);
 				}
-				a--;
 			}
+			a--;
 		}
 	}
 
@@ -194,7 +194,7 @@ public class StringReader {
 
 	private void FindKlassifikation (String textSub,int i) {
 
-		if (Character.toUpperCase(textSub.charAt(i)) == 'G'){
+		if ((Character.toUpperCase(textSub.charAt(i)) == 'G') && (i < textSub.length()- 3)){
 			if (textSub.charAt(i+1) == '1' || textSub.charAt(i+1) == '2' || 
 					textSub.charAt(i+1) == '3' || textSub.charAt(i+1) == '0'){
 				G=textSub.charAt(i+1)-'0';
@@ -214,7 +214,7 @@ public class StringReader {
 			}
 		}
 
-		if (Character.toUpperCase(textSub.charAt(i)) == 'T') {
+		if ((Character.toUpperCase(textSub.charAt(i)) == 'T') && (i < textSub.length() - 2)) {
 			if ((textSub.charAt(i+1) == '1' || textSub.charAt(i+1) == '2' || 
 					textSub.charAt(i+1) == '3' || textSub.charAt(i+1) == '4'|| 
 					Character.toUpperCase(textSub.charAt(i+1)) == 'X')){
@@ -240,7 +240,7 @@ public class StringReader {
 			}
 		}
 
-		if (Character.toUpperCase(textSub.charAt(i)) == 'N') {
+		if (Character.toUpperCase(textSub.charAt(i)) == 'N' && (i < textSub.length() - 2)) {
 			if ((textSub.charAt(i+1) == '1' || textSub.charAt(i+1) == '2' || 
 					textSub.charAt(i+1) == '3' || Character.toUpperCase(textSub.charAt(i+1)) == 'X')){
 				N=""+ textSub.charAt(i+1);
@@ -261,7 +261,7 @@ public class StringReader {
 			}
 		}
 
-		if (Character.toUpperCase(textSub.charAt(i)) == 'M') {
+		if (Character.toUpperCase(textSub.charAt(i)) == 'M' && (i < textSub.length() - 2)) {
 			if (textSub.charAt(i+1) == '1' || textSub.charAt(i+1) == '0'){
 				M=""+ textSub.charAt(i+1);
 
@@ -269,7 +269,7 @@ public class StringReader {
 			}
 		}
 
-		if (Character.toUpperCase(textSub.charAt(i)) == 'L'){
+		if (Character.toUpperCase(textSub.charAt(i)) == 'L' && (i < textSub.length() - 2)){
 			if (textSub.charAt(i+1) == '/'){
 				if (textSub.charAt(i+3) == '0') {
 					L=V=0;
@@ -284,7 +284,7 @@ public class StringReader {
 			}
 		}
 
-		if (Character.toUpperCase(textSub.charAt(i)) == 'R') {
+		if (Character.toUpperCase(textSub.charAt(i)) == 'R' && (i < textSub.length() - 2)) {
 			if (textSub.charAt(i+1) == '0' || textSub.charAt(i+1) == '1' ||
 					textSub.charAt(i+1) == '2'){
 				R=textSub.charAt(i+1)-'0';
