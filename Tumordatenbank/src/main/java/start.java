@@ -142,7 +142,7 @@ public class start {
 			case "name": positions[0][2] = i; break;
 			case "eingangsdatum": positions[0][3] = i; break;
 			case "e.-nummer": positions[0][4] = i; break;
-			case "arzt": positions[0][5] = i; break;
+			case "einsender": positions[0][5] = i; break;
 			case "befundtyp": positions[0][6] = i; break;
 			case "befundtext": positions[0][7] = i; break;
 			}
@@ -152,7 +152,7 @@ public class start {
 		try {
 			
 			PreparedStatement Pst_Fall = cn.prepareStatement("insert into mydb.fall (`Patientendaten_PatientenID`, `Eingangsdatum`, "
-					+ "`E.-Nummer`, `Arzt`, `Befundtyp`, `Fehler`) values "
+					+ "`E.-Nummer`, `Einsender`, `Befundtyp`, `Fehler`) values "
 					+ "((select PatientenID from mydb.patientendaten where Geburtsdatum = ? and Vorname = ? and Name = ? ),"
 					+ " ? , ? , ? , ? , ? );");
 			PreparedStatement Pst_Klassifikation = cn.prepareStatement("insert into mydb.klassifikation (`Fall_E.-Nummer`, `Fall_Befundtyp`, "
@@ -182,7 +182,7 @@ public class start {
 					switch (cell.getCellType()) {
 					case Cell.CELL_TYPE_STRING:
 						if (positions[1][j] == 7) {
-							befundtyp = Befundtyp.getBefundtyp(positions[1][6]);
+							befundtyp = Befundtyp.getBefundtyp(cell.getStringCellValue());
 							if (befundtyp == null) {
 								Pst_Fall.setInt(8, 1);
 								befundtyp = Befundtyp.Fehler;
