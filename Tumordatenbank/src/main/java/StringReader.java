@@ -242,8 +242,7 @@ public class StringReader {
 			}
 
 			if (Character.toUpperCase(textSub[3].charAt(i)) == 'M') {
-				if (textSub[3].charAt(i+1) == '1' || textSub[3].charAt(i+1) == '0' ||
-						Character.toUpperCase(textSub[3].charAt(i+1)) == 'X'){
+				if (textSub[3].charAt(i+1) == '1' || textSub[3].charAt(i+1) == '0'){
 					M=""+ textSub[3].charAt(i+1);
 
 					//TODO: localisation code (extrem low priority)
@@ -267,7 +266,7 @@ public class StringReader {
 
 			if (Character.toUpperCase(textSub[3].charAt(i)) == 'R') {
 				if (textSub[3].charAt(i+1) == '0' || textSub[3].charAt(i+1) == '1' ||
-						textSub[3].charAt(i+1) == '2' || Character.toUpperCase(textSub[3].charAt(i+1)) == 'X'){
+						textSub[3].charAt(i+1) == '2'){
 					R=textSub[3].charAt(i+1)-'0';
 				}
 				if (Character.toUpperCase(textSub[3].charAt(i+1)) == 'X') {
