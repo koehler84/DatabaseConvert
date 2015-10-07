@@ -1632,7 +1632,7 @@ public class correctParameters extends JFrame {
 					"  `Strasse` VARCHAR(100) NULL DEFAULT NULL COMMENT '',\r\n" + 
 					"  `Hausnummer` VARCHAR(20) NULL DEFAULT NULL COMMENT '',\r\n" + 
 					"  `Land` VARCHAR(3) NULL DEFAULT NULL COMMENT '',\r\n" + 
-					"  `PLZ` INT(5) UNSIGNED ZEROFILL NULL DEFAULT NULL COMMENT '',\r\n" + 
+					"  `PLZ` VARCHAR(6) NULL DEFAULT NULL COMMENT '',\r\n" + 
 					"  `Ort` VARCHAR(45) NULL DEFAULT NULL COMMENT '',\r\n" + 
 					"  `Fehler` INT(1) NULL DEFAULT NULL COMMENT '',\r\n" + 
 					"  PRIMARY KEY (`PatientenID`)  COMMENT '')\r\n" + 

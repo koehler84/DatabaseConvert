@@ -66,29 +66,44 @@ public class start {
 		return s;
 	}
 
-	static void excelToPatient(String excelPath, XSSFSheet sheet) {
+	static void excelToPatient(XSSFSheet sheet) {
 		//TODO
+		Iterator<Row> itr = sheet.iterator();
+		Row row = itr.next();
+		int[][] positions = {{-1,-1,-1,-1,-1,-1,-1,-1},{1,2,3,4,5,6,7,8}};
+		//int[][] positions = {{3,4,5,6,7,8,9,10},{1,2,3,4,5,6,7,8}};
+		for (int i = row.getFirstCellNum(); i <= row.getLastCellNum(); i++) {
+			
+			Cell cell = row.getCell(i);
+			
+			switch (cell.getStringCellValue()) {
+			case "Geburtsdatum": positions[0][0] = i; break;
+			case "Vorname": positions[0][1] = i; break;
+			case "Name": positions[0][2] = i; break;
+			case "Strasse": positions[0][3] = i; break;
+			case "Hausnummer": positions[0][4] = i; break;
+			case "Land": positions[0][5] = i; break;
+			case "PLZ": positions[0][6] = i; break;
+			case "Ort": positions[0][7] = i;break;
+			}
+			
+		}
+		
 		try {
 
-			PreparedStatement Pst = cn.prepareStatement("insert into patientendaten (`Geburtsdatum`, `Vorname`, `Name`, `Strasse`, `Hausnummer`, `Land`, `PLZ`, `Ort`, `Fehler`)"
-					+ " values ( ? , ? , ? , ? , ? , ? , ? , ? , ? );");
-
-			Iterator<Row> itr = sheet.iterator();
-			if (itr.hasNext()) {
-				itr.next();		//skipping the header row			
-			}
-			// Iterating over Excel file in Java
+			PreparedStatement Pst = cn.prepareStatement("insert into patientendaten (`Geburtsdatum`, `Vorname`, `Name`,"
+					+ " `Strasse`, `Hausnummer`, `Land`, `PLZ`, `Ort`, `Fehler`) values ( ? , ? , ? , ? , ? , ? , ? , ? , ? );");
 
 			int i = 0;	//iterator
 			
-			int[][] positions = {{3,4,5,6,7,8,9,10},{1,2,3,4,5,6,7,8}};
+			//int[][] positions = {{3,4,5,6,7,8,9,10},{1,2,3,4,5,6,7,8}};
 
 			while (itr.hasNext() && i<recordsToRead) {
 
 				i++;
 				
 				UIFenster1.progressBar.setValue(UIFenster1.progressBar.getValue()+1);
-				Row row = itr.next();
+				row = itr.next();
 				// Iterating over each column of Excel file
 				
 				Pst.clearParameters();		//clear parameters in Pst for next insert
@@ -163,8 +178,8 @@ public class start {
 
 	}
 
-	static void excelToFall(String excelPath, XSSFSheet sheet) {
-				
+	static void excelToFall(XSSFSheet sheet) {
+		//TODO	
 		try {
 			
 			PreparedStatement Pst_Fall = cn.prepareStatement("insert into mydb.fall (`Patientendaten_PatientenID`, `Eingangsdatum`, "
@@ -260,7 +275,6 @@ public class start {
 						}
 						break;
 					case Cell.CELL_TYPE_BOOLEAN:
-						//TODO Ask for User input
 						break;
 					case Cell.CELL_TYPE_BLANK:
 												
@@ -439,20 +453,20 @@ public class start {
 			if (readExcelToPatientendaten && readExcelToFall) {
 				UIFenster1.progressBar.setIndeterminate(false);
 				UIFenster1.progressBar.setMaximum(recordsToRead*2);
-				excelToPatient(excelPath, sheet);
-				excelToFall(excelPath, sheet);
+				excelToPatient(sheet);
+				excelToFall(sheet);
 				book.close();
 				fis.close();
 			} else if (readExcelToPatientendaten && !readExcelToFall) {
 				UIFenster1.progressBar.setIndeterminate(false);
 				UIFenster1.progressBar.setMaximum(recordsToRead);
-				excelToPatient(excelPath, sheet);
+				excelToPatient(sheet);
 				book.close();
 				fis.close();
 			} else if (readExcelToFall && !readExcelToPatientendaten) {
 				UIFenster1.progressBar.setIndeterminate(false);
 				UIFenster1.progressBar.setMaximum(recordsToRead);
-				excelToFall(excelPath, sheet);
+				excelToFall(sheet);
 				book.close();
 				fis.close();
 			}
