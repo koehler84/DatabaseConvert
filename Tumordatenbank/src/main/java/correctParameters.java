@@ -135,16 +135,16 @@ public class correctParameters extends JFrame {
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		
-		JMenu mnTest = new JMenu("Men\u00FC");
-		mnTest.addActionListener(new ActionListener() {
+		JMenu mnMenu = new JMenu("Men\u00FC");
+		mnMenu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				doubleCheck = false;
 			}
 		});
-		menuBar.add(mnTest);
+		menuBar.add(mnMenu);
 		
 		JMenu mnNewMenu = new JMenu("Datenbankeinstellungen");
-		mnTest.add(mnNewMenu);
+		mnMenu.add(mnNewMenu);
 		
 		JMenuItem mntmSchemaErneuern = new JMenuItem("Schema erneuern");
 		mntmSchemaErneuern.addActionListener(new ActionListener() {
@@ -192,14 +192,7 @@ public class correctParameters extends JFrame {
 				pnCards_Layout.show(pnCards, "submitPatientendaten");
 			}
 		});
-		mnTest.add(menu_showSubmitPat);
-		
-		mntmOther = new JMenuItem("Fälle bearbeiten");
-		mntmOther.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				pnCards_Layout.show(pnCards, "submitFall");
-			}
-		});
+		mnMenu.add(menu_showSubmitPat);
 		
 		JMenuItem mntmPersonenVerknpfen = new JMenuItem("Personen verkn\u00FCpfen");
 		mntmPersonenVerknpfen.addActionListener(new ActionListener() {
@@ -207,8 +200,25 @@ public class correctParameters extends JFrame {
 				pnCards_Layout.show(pnCards, "Change Person Fall");
 			}
 		});
-		mnTest.add(mntmPersonenVerknpfen);
-		mnTest.add(mntmOther);
+		
+		mntmOther = new JMenuItem("Fälle bearbeiten");
+		mntmOther.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				pnCards_Layout.show(pnCards, "submitFall");
+			}
+		});
+		mnMenu.add(mntmOther);
+		mnMenu.add(mntmPersonenVerknpfen);
+		
+		JMenuItem mntmDatenErneutEinfgen = new JMenuItem("Daten erneut einf\u00FCgen");
+		mntmDatenErneutEinfgen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (start.methodsCompleted) {
+					start.restart();
+				}
+			}
+		});
+		mnMenu.add(mntmDatenErneutEinfgen);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);

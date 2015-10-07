@@ -15,76 +15,29 @@ public class start {
 	public static correctParameters UIFenster1;
 	public static boolean methodsCompleted;
 	public static int recordsToRead;
+	private static boolean readExcelToPatientendaten;
+	private static boolean readExcelToFall;
 	
-	static void showDbTable(String dbTbl) {
-		
-		if(dbTbl == null) {
-			System.out.println( "Fehler: Parameter fehlt." );
-			return;
-		}
-		
-		try {
-			Statement st = cn.createStatement();
-			ResultSet rs = st.executeQuery( "select * from " + dbTbl );
-			// Get meta data:
-			ResultSetMetaData rsmd = rs.getMetaData();
-			int i, n = rsmd.getColumnCount();
-			// Print table content:
-			for( i=0; i<n; i++ )
-				System.out.print( "+---------------" );
-			System.out.println( "+" );
-			for( i=1; i<=n; i++ )    // Attention: first column with 1 instead of 0
-				System.out.print( "| " + extendStringTo14( rsmd.getColumnName( i ) ) );
-			System.out.println( "|" );
-			for( i=0; i<n; i++ )
-				System.out.print( "+---------------" );
-			System.out.println( "+" );
-			while( rs.next() ) {
-				for( i=1; i<=n; i++ )  // Attention: first column with 1 instead of 0
-					System.out.print( "| " + extendStringTo14( rs.getString( i ) ) );
-				System.out.println( "|" );
-			}
-			for( i=0; i<n; i++ )
-				System.out.print( "+---------------" );
-			System.out.println( "+" );
-		} catch( Exception ex ) {
-			System.out.println( ex );
-		}
-		
-	}
-
-	static final String extendStringTo14( String s ) {
-		// Extend String to length of 14 characters
-		if( s == null ) { s = ""; }
-		final String sFillStrWithWantLen = "              ";
-		final int iWantLen = sFillStrWithWantLen.length();
-		final int iActLen  = s.length();
-		if( iActLen < iWantLen )
-			return (s + sFillStrWithWantLen).substring( 0, iWantLen );
-		if( iActLen > 2 * iWantLen )
-			return s.substring( 0, 2 * iWantLen );
-		return s;
-	}
-
 	static void excelToPatient(XSSFSheet sheet) {
 		//TODO
 		Iterator<Row> itr = sheet.iterator();
 		Row row = itr.next();
 		int[][] positions = {{-1,-1,-1,-1,-1,-1,-1,-1},{1,2,3,4,5,6,7,8}};
 		//int[][] positions = {{3,4,5,6,7,8,9,10},{1,2,3,4,5,6,7,8}};
+		
 		for (int i = row.getFirstCellNum(); i <= row.getLastCellNum() && positions[0][7] == -1; i++) {
 			
 			Cell cell = row.getCell(i);
 			
-			switch (cell.getStringCellValue()) {
-			case "Geburtsdatum": positions[0][0] = i; break;
-			case "Vorname": positions[0][1] = i; break;
-			case "Name": positions[0][2] = i; break;
-			case "Strasse": positions[0][3] = i; break;
-			case "Hausnummer": positions[0][4] = i; break;
-			case "Land": positions[0][5] = i; break;
-			case "PLZ": positions[0][6] = i; break;
-			case "Ort": positions[0][7] = i;break;
+			switch (cell.getStringCellValue().toLowerCase()) {
+			case "geburtsdatum": positions[0][0] = i; break;
+			case "vorname": positions[0][1] = i; break;
+			case "name": positions[0][2] = i; break;
+			case "strasse": positions[0][3] = i; break;
+			case "hausnummer": positions[0][4] = i; break;
+			case "land": positions[0][5] = i; break;
+			case "plz": positions[0][6] = i; break;
+			case "ort": positions[0][7] = i;break;
 			}
 			
 		}
@@ -98,7 +51,7 @@ public class start {
 			
 			//int[][] positions = {{3,4,5,6,7,8,9,10},{1,2,3,4,5,6,7,8}};
 
-			while (itr.hasNext() && i<recordsToRead) {
+			while (itr.hasNext() && i < recordsToRead) {
 
 				i++;
 				
@@ -110,7 +63,7 @@ public class start {
 				Cell cell = null;
 				Pst.setInt(9, 0);
 				
-				for (int j=0; j<positions[0].length;j++) {
+				for (int j=0; j < positions[1].length;j++) {
 					cell = row.getCell(positions[0][j]);
 
 					switch (cell.getCellType()) {
@@ -125,13 +78,6 @@ public class start {
 							Pst.setString(7, ((int)cell.getNumericCellValue()) + "");
 						} else {
 							Pst.setInt(positions[1][j], (int)cell.getNumericCellValue());
-						}
-						break;
-					case Cell.CELL_TYPE_BOOLEAN:
-						if (cell.getBooleanCellValue()) {
-							Pst.setString(positions[1][j], "True");
-						} else {
-							Pst.setString(positions[1][j], "False");
 						}
 						break;
 					case Cell.CELL_TYPE_BLANK:
@@ -176,36 +122,51 @@ public class start {
 	}
 
 	static void excelToFall(XSSFSheet sheet) {
-		//TODO	
+		//TODO
+		
+		Iterator<Row> itr = sheet.iterator();
+		Row row = itr.next();
+		int[][] positions = {{-1,-1,-1,-1,-1,-1,-1,-1},{1,2,3,4,5,6,7}};
+		//int[][] positions = {{0,1,2,3,4,5,26},{1,2,3,4,5,6,7}};
+		
+		//i:	0,1,2,3,4,5,26		oben: Spalte in excel datei
+		//		4,5,6,3,2,1,7		unten: Position in Pst
+		
+		for (int i = row.getFirstCellNum(); i <= row.getLastCellNum() && positions[0][7] == -1; i++) {
+			
+			Cell cell = row.getCell(i);
+			
+			switch (cell.getStringCellValue().toLowerCase()) {
+			case "geburtsdatum": positions[0][0] = i; break;
+			case "vorname": positions[0][1] = i; break;
+			case "name": positions[0][2] = i; break;
+			case "eingangsdatum": positions[0][3] = i; break;
+			case "e.-nummer": positions[0][4] = i; break;
+			case "arzt": positions[0][5] = i; break;
+			case "befundtyp": positions[0][6] = i; break;
+			case "befundtext": positions[0][7] = i; break;
+			}
+			
+		}
+		
 		try {
 			
 			PreparedStatement Pst_Fall = cn.prepareStatement("insert into mydb.fall (`Patientendaten_PatientenID`, `Eingangsdatum`, "
 					+ "`E.-Nummer`, `Arzt`, `Befundtyp`, `Fehler`) values "
-					+ "((select PatientenID from mydb.patientendaten where Name = ? and Vorname = ? and Geburtsdatum = ? ),"
+					+ "((select PatientenID from mydb.patientendaten where Geburtsdatum = ? and Vorname = ? and Name = ? ),"
 					+ " ? , ? , ? , ? , ? );");
 			PreparedStatement Pst_Klassifikation = cn.prepareStatement("insert into mydb.klassifikation (`Fall_E.-Nummer`, `Fall_Befundtyp`, "
 					+ "G, T, N, M, L, V, R, ER, PR, `Her2/neu`, Lage, Tumorart) "
 					+ "values ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? );");
-
-			Iterator<Row> itr = sheet.iterator();
-			if (itr.hasNext()) {
-				itr.next();
-			}
-			// Iterating over Excel file in Java
-			
-			int[][] positions = {{0,1,2,3,4,5,26},{4,5,6,3,2,1,7}};
-			
-			//i:	0,1,2,3,4,5,26		oben: Spalte in excel datei
-			//		4,5,6,3,2,1,7		unten: Position in Pst
 			
 			int k = 0;	//iterator
 			
-			while (itr.hasNext() && k<recordsToRead) {
+			while (itr.hasNext() && k < recordsToRead) {
 
 				k++;
 
 				UIFenster1.progressBar.setValue(UIFenster1.progressBar.getValue()+1);
-				Row row = itr.next();
+				row = itr.next();
 				// Iterating over each column of Excel file
 				Pst_Fall.clearParameters();
 				Pst_Klassifikation.clearParameters();
@@ -215,55 +176,25 @@ public class start {
 				String E_NR = null;
 				Befundtyp befundtyp = null;
 				
-				for (int j=0; j<positions[0].length;j++) {
-					
+				for (int j=0; j < positions[1].length;j++) {
 					cell = row.getCell(positions[0][j]);
 					
 					switch (cell.getCellType()) {
 					case Cell.CELL_TYPE_STRING:
-						if (positions[0][j] == 26) {
-							switch (cell.getStringCellValue())	{
-								case "Hauptbefund":
-									Pst_Fall.setInt(7, Befundtyp.Hauptbefund.getValue());
-									befundtyp = Befundtyp.Hauptbefund;
-									break;
-								case "Nachbericht 1":
-									Pst_Fall.setInt(7, Befundtyp.Nachbericht_1.getValue());
-									befundtyp = Befundtyp.Nachbericht_1;
-									break;
-								case "Nachbericht 2":
-									Pst_Fall.setInt(7, Befundtyp.Nachbericht_2.getValue());
-									befundtyp = Befundtyp.Nachbericht_2;
-									break;
-								case "Korrekturbefund 1":
-									Pst_Fall.setInt(7, Befundtyp.Korrekturbefund_1.getValue());
-									befundtyp = Befundtyp.Korrekturbefund_1;
-									break;
-								case "Korrekturbefund 2":
-									Pst_Fall.setInt(7, Befundtyp.Korrekturbefund_2.getValue());
-									befundtyp = Befundtyp.Korrekturbefund_2;
-									break;
-								case "Korrekturbefund 3":
-									Pst_Fall.setInt(7, Befundtyp.Korrekturbefund_3.getValue());
-									befundtyp = Befundtyp.Korrekturbefund_3;
-									break;
-								case "Konsiliarbericht 1":
-									Pst_Fall.setInt(7, Befundtyp.Konsiliarbericht_1.getValue());
-									befundtyp = Befundtyp.Konsiliarbericht_1;
-									break;
-								default:
-									Pst_Fall.setInt(8, 1);
-									Pst_Fall.setInt(7, Befundtyp.Fehler.getValue());
-									befundtyp = Befundtyp.Fehler;
-									break;
+						if (positions[1][j] == 7) {
+							befundtyp = Befundtyp.getBefundtyp(positions[1][6]);
+							if (befundtyp == null) {
+								Pst_Fall.setInt(8, 1);
+								befundtyp = Befundtyp.Fehler;
 							}
+							Pst_Fall.setInt(7, befundtyp.getValue());
 						} else {
-							if (positions[0][j] == 1) E_NR = cell.getStringCellValue();
+							if (positions[1][j] == 5) E_NR = cell.getStringCellValue();
 							Pst_Fall.setString(positions[1][j], cell.getStringCellValue());
 						}
 						break;
 					case Cell.CELL_TYPE_NUMERIC:
-						if (positions[0][j] == 0 || positions[0][j] == 3){
+						if (positions[1][j] == 1 || positions[1][j] == 4){
 							//Eingangsdatum bzw Geburtsdatum
 							Pst_Fall.setString(positions[1][j], new java.sql.Date(cell.getDateCellValue().getTime())+"");
 						} else {
@@ -271,15 +202,12 @@ public class start {
 							Pst_Fall.setInt(positions[1][j], (int)cell.getNumericCellValue());
 						}
 						break;
-					case Cell.CELL_TYPE_BOOLEAN:
-						break;
 					case Cell.CELL_TYPE_BLANK:
-												
-						if (positions[0][j] == 1) {		//E.-Nummer fehlt
+						if (positions[1][j] == 5) {		//E.-Nummer fehlt
 							Pst_Fall.setString(positions[1][j], "INVALID");
 							Pst_Fall.setInt(8, 1);
 							break;
-						} else if (positions[0][j] == 26) {	//Befundtyp fehlt
+						} else if (positions[1][j] == 7) {	//Befundtyp fehlt
 							Pst_Fall.setInt(positions[1][j], Befundtyp.Fehler.getValue());
 							befundtyp = Befundtyp.Fehler;
 							Pst_Fall.setInt(8, 1);
@@ -300,7 +228,7 @@ public class start {
 					System.out.print("Fehler beim Ausführen von \"insert into fall\": Fall ggf. doppelt!" + " ");
 				}
 				
-				cell = row.getCell(28);
+				cell = row.getCell(positions[0][7]);
 				String befundtext = cell.getStringCellValue();
 				
 				excelToKlassifikation(Pst_Klassifikation, befundtext, E_NR, befundtyp);
@@ -371,6 +299,78 @@ public class start {
 		
 	}
 	
+	static void restart() {
+		
+		String excelPath="";
+		excelPath = "C://Project Pathologie/test.xlsx";
+		
+		UIFenster1.progressBar.setValue(0);
+		methodsCompleted = false;
+		
+		try {
+			
+			File excel = null;
+			FileInputStream fis = null;
+			XSSFSheet sheet = null;
+			XSSFWorkbook book = null;
+			
+			if (readExcelToPatientendaten || readExcelToFall) {
+				excel = new File(excelPath);
+				fis = new FileInputStream(excel);
+				book = new XSSFWorkbook(fis);
+				sheet = book.getSheetAt(0);
+				book.setMissingCellPolicy(Row.CREATE_NULL_AS_BLANK);
+			}
+			
+			//Alle Reihen lesen: sheet.getPhysicalNumberOfRows()
+			recordsToRead = 15;
+			
+			if (readExcelToPatientendaten && readExcelToFall) {
+				UIFenster1.progressBar.setIndeterminate(false);
+				UIFenster1.progressBar.setMaximum(recordsToRead*2);
+				excelToPatient(sheet);
+				excelToFall(sheet);
+				book.close();
+				fis.close();
+			} else if (readExcelToPatientendaten && !readExcelToFall) {
+				UIFenster1.progressBar.setIndeterminate(false);
+				UIFenster1.progressBar.setMaximum(recordsToRead);
+				excelToPatient(sheet);
+				book.close();
+				fis.close();
+			} else if (readExcelToFall && !readExcelToPatientendaten) {
+				UIFenster1.progressBar.setIndeterminate(false);
+				UIFenster1.progressBar.setMaximum(recordsToRead);
+				excelToFall(sheet);
+				book.close();
+				fis.close();
+			}
+			
+		} catch (Exception e) {
+			System.out.println(e);
+			System.out.println("Fehler: Irgendetwas stimmt mit der Datei nicht!");
+		}
+		
+		methodsCompleted = true;
+		UIFenster1.DBtoTable_Patientendaten();
+		UIFenster1.DBtoTable_Fall();
+		
+		try {
+			if (cn != null && !cn.isClosed() && !UIFenster1.isShowing()) {
+				cn.close();
+				System.out.println("Datenbankverbindung beednet! STARTCLASS");
+			}
+		} catch (SQLException e) {
+			System.out.println("Fehler beim Beenden der Datenbankverbindung!");
+		}
+		
+		if (!readExcelToPatientendaten && !readExcelToFall) {
+			UIFenster1.progressBar.setIndeterminate(false);
+			UIFenster1.progressBar.setValue(UIFenster1.progressBar.getMaximum());
+		}
+		
+	}
+	
 	public static void main(String[] args) {
 		
 		String dbPatTbl=null, dbFallTbl=null, dbDrv=null, dbUrl=null, dbUsr="", dbPwd="", excelPath="";
@@ -426,8 +426,8 @@ public class start {
 
 		//----------------------------------------------------
 		
-		boolean readExcelToPatientendaten = true;
-		boolean readExcelToFall = true;
+		readExcelToPatientendaten = true;
+		readExcelToFall = true;
 		
 		try {
 			
@@ -473,26 +473,6 @@ public class start {
 			System.out.println("Fehler: Irgendetwas stimmt mit der Datei nicht!");
 		}
 		
-		
-//		showDbTable( dbPatTbl );
-//		showDbTable( dbFallTbl );
-		//----------------------------------------------------
-
-//		new StringReader("Makroskopie: 7 x 7 x 4 cm großes Mammaexzidat (links oben außen) mit zwei Fadenmarkierungen. 1,5 cm oberhalb der langen "
-//						+ "Fadenmarkierung ein 2,2 x 2 x 1,8 cm großer lobulierter unscharf begrenzter 0,1 cm vom ventralen Resektionsrand entfernter Tumor. "
-//						+ "Das übrige Gewebe fettreich mit diskreten streifenförmigen Fibrosierungen. Zusätzlich ein Telepathologieschnellschnittpräparat. "
-//						+ "Mikroskopie: (HE, Schnellschnitt, Paraffineinbettung, HE, PAS, Östrogen- und Progesteronrzeptor, übriges Mammagewebe HE) Im "
-//						+ "Bereich des makroskopisch beschriebenen Tumors eine vollständige Destruktion des ortsständigen Brustdrüsengewebes durch nahezu "
-//						+ "ausschließlich solide, nur ganz diskret primitiv-tubuläre atypische Epithelverbände mit erheblicher Kernpleomorphie, Hyperchromasie "
-//						+ "und deutlich erhöhter Mitoserate (mehr als 10 Mitosen auf 10 Gesichtsfelder bei 40facher Objektivvergrößerung). Tumorzellverbände "
-//						+ "teilweise von einem dichten vorwiegend lymphozytären Entzündungszellinfiltrat umgeben. Im Randbereich einzelne Gangformationen mit "
-//						+ "intraduktal gelegenen atypischen Epithelverbänden. Keine überzeugende Angioinvasion. Tumorkerne negativ für das Östrogen- und das "
-//						+ "Progesteronrezeptor-Protein. Das übrige Mammagewebe parenchymarm mit geringen interstitiellen Fibrosierungen. Diagnose: Niedrig "
-//						+ "differenziertes invasives duktales Karzinom (Tumordurchmesser 2,2 cm). Vorläufige Tumorklassifikation: C 57, M 8441/3, G 3, pT3c pN1(15/34) "
-//						+ "L/V1. Der Tumor ist Östrogen- und Progesteronrezeptor ER -");
-
-		//Tumorklassifikation: C 57, M 8441/3, G 3, pT3c pN1(15/34) L/V1. Der Tumor ist Östrogen- und Progesteronrezeptor-negativ. Sonstiges: ip
-
 		methodsCompleted = true;
 		UIFenster1.DBtoTable_Patientendaten();
 		UIFenster1.DBtoTable_Fall();
