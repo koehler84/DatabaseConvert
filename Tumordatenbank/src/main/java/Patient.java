@@ -1,13 +1,13 @@
 
 public class Patient {
 	
-	String Geburtsdatum;
-	String Vorname;
-	String Name;
-	String Strasse;
-	String Hausnummer;
-	String Land;
-	String PLZ;
-	String Ort;
+	String Geburtsdatum = null;
+	String Vorname = null;
+	String Name = null;
+	String Strasse = null;
+	String Hausnummer = null;
+	String Land = null;
+	String PLZ = null;
+	String Ort = null;
 	
 }

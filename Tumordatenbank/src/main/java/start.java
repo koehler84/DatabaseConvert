@@ -72,7 +72,7 @@ public class start {
 		Row row = itr.next();
 		int[][] positions = {{-1,-1,-1,-1,-1,-1,-1,-1},{1,2,3,4,5,6,7,8}};
 		//int[][] positions = {{3,4,5,6,7,8,9,10},{1,2,3,4,5,6,7,8}};
-		for (int i = row.getFirstCellNum(); i <= row.getLastCellNum(); i++) {
+		for (int i = row.getFirstCellNum(); i <= row.getLastCellNum() && positions[0][7] == -1; i++) {
 			
 			Cell cell = row.getCell(i);
 			
@@ -115,17 +115,14 @@ public class start {
 
 					switch (cell.getCellType()) {
 					case Cell.CELL_TYPE_STRING:
-						if (positions[0][j] != 9) {
-							Pst.setString(positions[1][j], cell.getStringCellValue());
-						} else {
-							//PLZ is no int
-							Pst.setInt(9, 1);
-							Pst.setNull(7, java.sql.Types.NULL);
-						}
+						Pst.setString(positions[1][j], cell.getStringCellValue());						
 						break;
 					case Cell.CELL_TYPE_NUMERIC:
-						if (positions[0][j]==3){
+						if (positions[1][j] == 1){
 							Pst.setString(1, new java.sql.Date(cell.getDateCellValue().getTime()) + "");
+						} else if (positions[1][j] == 7) {
+							//PLZ als String speichern
+							Pst.setString(7, ((int)cell.getNumericCellValue()) + "");
 						} else {
 							Pst.setInt(positions[1][j], (int)cell.getNumericCellValue());
 						}
@@ -139,12 +136,12 @@ public class start {
 						break;
 					case Cell.CELL_TYPE_BLANK:
 						
-						if (positions[0][j] == 3) {
+						if (positions[1][j] == 1) {
 							Pst.setString(positions[1][j], "0001-01-01");
 							System.out.println("Fehler: Geburtsdatum fehlt!");
 							Pst.setInt(9, 1);
 							break;
-						} else if (positions[0][j] == 4 || positions[0][j] == 5) {
+						} else if (positions[1][j] == 2 || positions[1][j] == 3) {
 							Pst.setString(positions[1][j], "INVALID_NAME");
 							System.out.println("Fehler: Vorname oder Nachmame fehlt!");
 							Pst.setInt(9, 1);
@@ -448,7 +445,7 @@ public class start {
 			}
 			
 			//Alle Reihen lesen: sheet.getPhysicalNumberOfRows()
-			recordsToRead = sheet.getPhysicalNumberOfRows();
+			recordsToRead = 15;
 			
 			if (readExcelToPatientendaten && readExcelToFall) {
 				UIFenster1.progressBar.setIndeterminate(false);
