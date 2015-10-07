@@ -22,7 +22,7 @@ public class start {
 		//TODO
 		Iterator<Row> itr = sheet.iterator();
 		Row row = itr.next();
-		int[][] positions = {{-1,-1,-1,-1,-1,-1,-1,-1},{1,2,3,4,5,6,7,8}};
+		int[][] positions = {{-1,-1,-1,-1,-1,-1,-1,-1,-1},{1,2,3,4,5,6,7,8}};
 		//int[][] positions = {{3,4,5,6,7,8,9,10},{1,2,3,4,5,6,7,8}};
 		
 		for (int i = row.getFirstCellNum(); i <= row.getLastCellNum() && positions[0][7] == -1; i++) {
@@ -38,6 +38,7 @@ public class start {
 			case "land": positions[0][5] = i; break;
 			case "plz": positions[0][6] = i; break;
 			case "ort": positions[0][7] = i;break;
+			case "eingangsdatum": positions[0][8] = i;break;
 			}
 			
 		}
@@ -72,7 +73,22 @@ public class start {
 						break;
 					case Cell.CELL_TYPE_NUMERIC:
 						if (positions[1][j] == 1){
-							Pst.setString(1, new java.sql.Date(cell.getDateCellValue().getTime()) + "");
+							Date geburtsdatum = new java.sql.Date(cell.getDateCellValue().getTime());
+							cell = row.getCell(positions[0][8]);
+							Date eingangsdatum = new java.sql.Date(cell.getDateCellValue().getTime());
+							@SuppressWarnings("deprecation")
+							Date datum1 = new Date(0, 0, 1);
+							@SuppressWarnings("deprecation")
+							Date datum2 = new Date(100, 0, 1);
+							
+							if (!(geburtsdatum.equals(eingangsdatum) || geburtsdatum.equals(datum1) || geburtsdatum.equals(datum2))) {
+								Pst.setString(1, geburtsdatum + "");
+							} else {
+								Pst.setString(positions[1][j], "0001-01-01");
+								System.out.println("Fehler: Geburtsdatum ist fehlerhaft!");
+								Pst.setInt(9, 1);
+							}
+							cell = row.getCell(positions[0][j]);
 						} else if (positions[1][j] == 7) {
 							//PLZ als String speichern
 							Pst.setString(7, ((int)cell.getNumericCellValue()) + "");
@@ -81,7 +97,6 @@ public class start {
 						}
 						break;
 					case Cell.CELL_TYPE_BLANK:
-						
 						if (positions[1][j] == 1) {
 							Pst.setString(positions[1][j], "0001-01-01");
 							System.out.println("Fehler: Geburtsdatum fehlt!");
