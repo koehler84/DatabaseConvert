@@ -4,6 +4,8 @@ import java.net.Socket;
 import java.sql.*;
 import java.util.Iterator;
 
+import javax.swing.JOptionPane;
+
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -17,9 +19,12 @@ public class start {
 	public static int recordsToRead;
 	private static boolean readExcelToPatientendaten;
 	private static boolean readExcelToFall;
+	private static boolean spaltenFehler;
 	
 	static void excelToPatient(XSSFSheet sheet) {
 		//TODO
+		if (spaltenFehler) return;
+		
 		Iterator<Row> itr = sheet.iterator();
 		Row row = itr.next();
 		int[][] positions = {{-1,-1,-1,-1,-1,-1,-1,-1,-1},{1,2,3,4,5,6,7,8}};
@@ -37,10 +42,20 @@ public class start {
 			case "hausnummer": positions[0][4] = i; break;
 			case "land": positions[0][5] = i; break;
 			case "plz": positions[0][6] = i; break;
-			case "ort": positions[0][7] = i;break;
+			case "ort": positions[0][7] = i; break;
 			case "eingangsdatum": positions[0][8] = i;break;
 			}
 			
+		}
+		
+		for (int is : positions[0]) {
+			if (is == -1) {
+				System.out.println("Spaltennamen wurden nicht gefunden!");
+				JOptionPane.showMessageDialog(start.UIFenster1, "Einige Datenfelder konnten nicht gefunden werden.\n"
+						+ "Bitte überprüfen sie die Spaltennamen der Excel-Datei!", "Fehler in Excel Datei", JOptionPane.ERROR_MESSAGE);
+				spaltenFehler = true;
+				return;
+			}
 		}
 		
 		try {
@@ -138,6 +153,7 @@ public class start {
 
 	static void excelToFall(XSSFSheet sheet) {
 		//TODO
+		if (spaltenFehler) return;
 		
 		Iterator<Row> itr = sheet.iterator();
 		Row row = itr.next();
@@ -162,6 +178,16 @@ public class start {
 			case "befundtext": positions[0][7] = i; break;
 			}
 			
+		}
+		
+		for (int is : positions[0]) {
+			if (is == -1) {
+				System.out.println("Spaltennamen wurden nicht gefunden!");
+				JOptionPane.showMessageDialog(start.UIFenster1, "Einige Datenfelder konnten nicht gefunden werden.\n"
+						+ "Bitte überprüfen sie die Spaltennamen der Excel-Datei!", "Fehler in Excel Datei", JOptionPane.ERROR_MESSAGE);
+				spaltenFehler = true;
+				return;
+			}
 		}
 		
 		try {
