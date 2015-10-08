@@ -360,7 +360,7 @@ public class correctParameters extends JFrame {
 		btnSuchen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (start.cn != null) {
-					ChangePersonFall();
+					ChangePersonFallSelect();
 				} else if (start.cn == null) {
 					JOptionPane.showMessageDialog(start.UIFenster1, "Sie sind nicht mit der Datenbank verbunden!",
 							"Keine Verbindung", JOptionPane.WARNING_MESSAGE);
@@ -382,29 +382,38 @@ public class correctParameters extends JFrame {
 		JLabel lblVorname_3 = new JLabel("Vorname:");
 		
 		JLabel lblName_1 = new JLabel("Name:");
+		
+		JButton btnUpdate = new JButton("Update");
+		btnUpdate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//TODO
+				ChangePersonFall();
+			}
+		});
 		GroupLayout gl_panel_ChangePersonFall = new GroupLayout(panel_ChangePersonFall);
 		gl_panel_ChangePersonFall.setHorizontalGroup(
 			gl_panel_ChangePersonFall.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel_ChangePersonFall.createSequentialGroup()
+					.addComponent(lblEnummer_1)
+					.addGap(48)
 					.addComponent(lblGeburtsdatum_2)
-					.addGap(32)
+					.addGap(33)
 					.addComponent(lblVorname_2)
 					.addGap(59)
 					.addComponent(lblName)
-					.addGap(73)
-					.addComponent(lblEnummer_1))
+					.addGap(178))
 				.addGroup(gl_panel_ChangePersonFall.createSequentialGroup()
 					.addContainerGap()
+					.addComponent(textField_ENummer_ChangePersonFall, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addGap(18)
 					.addComponent(textField_Geburtsdatum_ChangePersonFall, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 					.addGap(18)
 					.addComponent(textField_Vorname_ChangePersonFall, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 					.addGap(18)
 					.addComponent(textField_Name_ChangePersonFall, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addGap(18)
-					.addComponent(textField_ENummer_ChangePersonFall, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
 					.addComponent(btnSuchen))
-				.addComponent(scrollPane_ChangePersonFall, GroupLayout.DEFAULT_SIZE, 524, Short.MAX_VALUE)
+				.addComponent(scrollPane_ChangePersonFall, GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
 				.addGroup(gl_panel_ChangePersonFall.createSequentialGroup()
 					.addComponent(lblGeburtsdatum_3, GroupLayout.PREFERRED_SIZE, 72, GroupLayout.PREFERRED_SIZE)
 					.addGap(34)
@@ -419,24 +428,25 @@ public class correctParameters extends JFrame {
 					.addComponent(textField_Vorname_ChangePersonFall_2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 					.addGap(18)
 					.addComponent(textField_Name_ChangePersonFall_2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(300, Short.MAX_VALUE))
+					.addPreferredGap(ComponentPlacement.RELATED, 168, Short.MAX_VALUE)
+					.addComponent(btnUpdate))
 		);
 		gl_panel_ChangePersonFall.setVerticalGroup(
 			gl_panel_ChangePersonFall.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel_ChangePersonFall.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(gl_panel_ChangePersonFall.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblGeburtsdatum_2)
+						.addComponent(lblEnummer_1)
 						.addComponent(lblVorname_2)
 						.addComponent(lblName)
-						.addComponent(lblEnummer_1))
+						.addComponent(lblGeburtsdatum_2))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(gl_panel_ChangePersonFall.createParallelGroup(Alignment.BASELINE)
+						.addComponent(btnSuchen)
+						.addComponent(textField_ENummer_ChangePersonFall, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(textField_Geburtsdatum_ChangePersonFall, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(textField_Vorname_ChangePersonFall, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(textField_Name_ChangePersonFall, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(textField_ENummer_ChangePersonFall, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(btnSuchen))
+						.addComponent(textField_Name_ChangePersonFall, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addGap(29)
 					.addComponent(scrollPane_ChangePersonFall, GroupLayout.PREFERRED_SIZE, 88, GroupLayout.PREFERRED_SIZE)
 					.addGap(18)
@@ -448,8 +458,9 @@ public class correctParameters extends JFrame {
 					.addGroup(gl_panel_ChangePersonFall.createParallelGroup(Alignment.BASELINE)
 						.addComponent(textField_Geburtsdatum_ChangePersonFall_2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(textField_Vorname_ChangePersonFall_2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(textField_Name_ChangePersonFall_2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addContainerGap(116, Short.MAX_VALUE))
+						.addComponent(textField_Name_ChangePersonFall_2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(btnUpdate))
+					.addContainerGap(113, Short.MAX_VALUE))
 		);
 		
 		table_ChangePersonFall = new JTable();
@@ -490,7 +501,13 @@ public class correctParameters extends JFrame {
 		JButton btnExecute = new JButton("Execute");
 		btnExecute.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				SQL_ManagerToTable();
+				
+				if (start.cn == null) {
+					JOptionPane.showMessageDialog(start.UIFenster1, "Sie sind nicht mit der Datenbank verbunden!",
+							"Keine Verbindung", JOptionPane.WARNING_MESSAGE);
+				} else {
+					SQL_ManagerToTable();
+				}
 			}
 		});
 		
@@ -524,7 +541,13 @@ public class correctParameters extends JFrame {
 		JButton btnTabelleAktualisieren_Fall = new JButton("Tabelle aktualisieren");
 		btnTabelleAktualisieren_Fall.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				DBtoTable_Fall();
+				
+				if (start.cn == null) {
+					JOptionPane.showMessageDialog(start.UIFenster1, "Sie sind nicht mit der Datenbank verbunden!",
+							"Keine Verbindung", JOptionPane.WARNING_MESSAGE);
+				} else {
+					DBtoTable_Fall();					
+				}
 			}
 		});
 		
@@ -649,7 +672,7 @@ public class correctParameters extends JFrame {
 		JLabel lblDatensatzIstVollstndig_1 = new JLabel("Datensatz ist vollst\u00E4ndig:");
 		
 		checkBox_Fehler_1 = new JCheckBox("");
-		//TODO
+		
 		GroupLayout gl_panel_submitFall = new GroupLayout(panel_submitFall);
 		gl_panel_submitFall.setHorizontalGroup(
 			gl_panel_submitFall.createParallelGroup(Alignment.LEADING)
@@ -968,10 +991,16 @@ public class correctParameters extends JFrame {
 		JButton btnTabelleAktualisieren = new JButton("Tabelle aktualisieren");
 		btnTabelleAktualisieren.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				DBtoTable_Patientendaten();
+				
+				if (start.cn == null) {
+					JOptionPane.showMessageDialog(start.UIFenster1, "Sie sind nicht mit der Datenbank verbunden!",
+							"Keine Verbindung", JOptionPane.WARNING_MESSAGE);
+				} else {
+					DBtoTable_Patientendaten();
+				}
 			}
 		});
-		//TODO
+		
 		GroupLayout gl_panel_submitPatientendaten = new GroupLayout(panel_submitPatientendaten);
 		gl_panel_submitPatientendaten.setHorizontalGroup(
 			gl_panel_submitPatientendaten.createParallelGroup(Alignment.LEADING)
@@ -1090,6 +1119,94 @@ public class correctParameters extends JFrame {
 	}
 	
 	private void ChangePersonFall() {
+		
+		int selectedRow = table_ChangePersonFall.getSelectedRow();
+		String geb = textField_Geburtsdatum_ChangePersonFall_2.getText();
+		String vorname = textField_Vorname_ChangePersonFall_2.getText();
+		String name = textField_Name_ChangePersonFall_2.getText();
+		String gebOld = table_ChangePersonFall.getValueAt(selectedRow, 2).toString();
+		String vornameOld = (String)table_ChangePersonFall.getValueAt(selectedRow, 3);
+		String nameOld = (String)table_ChangePersonFall.getValueAt(selectedRow, 4);
+		long patIDOld = (long) table_ChangePersonFall.getValueAt(selectedRow, 1);;
+		int deleteOld = -1;
+		
+		if (geb.length() == 0 || vorname.length() == 0 || name.length() == 0) {
+			JOptionPane.showMessageDialog(start.UIFenster1, "Bitte geben sie etwas ein!", "Fehler: Keine Eingabe", JOptionPane.PLAIN_MESSAGE);
+			return;
+		} else if (geb.equals(gebOld) && vorname.equals(vornameOld) && name.equals(nameOld)) {
+			//Personen sind gleich
+			JOptionPane.showMessageDialog(start.UIFenster1, "Die eingegebene Person stimmt mit der bereits eingetragenen Person überein.", 
+					"Gleiche Person", JOptionPane.INFORMATION_MESSAGE);
+			return;
+		}
+		
+		try {
+			PreparedStatement Pst_in = start.cn.prepareStatement("insert into mydb.patientendaten (Geburtsdatum, Vorname, Name) "
+					+ "values ( ? , ? , ? );");
+			
+			Pst_in.setString(1, geb);
+			Pst_in.setString(2, vorname);
+			Pst_in.setString(3, name);			
+			
+			Pst_in.executeUpdate();
+			Pst_in.close();
+		} catch (SQLException e) {
+			//Wenn die Person bereits existiert kommt es zur Exeption
+			//System.out.println(e);
+		}
+		
+		try {
+			PreparedStatement Pst_up = start.cn.prepareStatement("update mydb.fall set Patientendaten_PatientenID = "
+					+ "(select PatientenID from mydb.patientendaten where Geburtsdatum = ? and Vorname = ? and Name = ? ) where "
+					+ "Patientendaten_PatientenID = ? ;");
+			
+			Pst_up.setString(1, geb);
+			Pst_up.setString(2, vorname);
+			Pst_up.setString(3, name);
+			Pst_up.setLong(4, patIDOld);
+			
+			Pst_up.executeUpdate();
+			Pst_up.close();
+			
+			deleteOld = JOptionPane.showConfirmDialog(start.UIFenster1, "Alle Fälle von " + vornameOld + " " + nameOld
+					+ " wurden erfolgreich " + vorname + " " + name + " zugewiesen.\n"
+					+ "Weitere Daten wurden ggf. noch nicht übertragen.\n\nSoll Person A gelöscht werden?",
+					"Zuweisen erfolgreich", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+			//0 - Ja, 1 - Nein, -1 - Fenster gesclossen
+			
+			textField_Geburtsdatum_ChangePersonFall_2.setText("");
+			textField_Vorname_ChangePersonFall_2.setText("");
+			textField_Name_ChangePersonFall_2.setText("");
+			
+		} catch (SQLException e) {
+			System.out.println(e);
+		}
+		
+		ChangePersonFallSelect();
+		
+		if (deleteOld != 0) {
+			return;
+		} else if (deleteOld == 1) {
+			
+			try {
+				PreparedStatement Pst_del = start.cn.prepareStatement("delete from mydb.patientendaten where PatientenID = ? and "
+						+ "Geburtsdatum = ? and Vorname = ? and Name = ? ;");
+				
+				Pst_del.setLong(1, patIDOld);
+				Pst_del.setString(2, gebOld);
+				Pst_del.setString(2, vornameOld);
+				Pst_del.setString(2, nameOld);
+				
+				Pst_del.executeUpdate();
+				Pst_del.close();
+			} catch (SQLException e) {
+				System.out.println(e);
+			}
+			
+		}
+	}
+	
+	private void ChangePersonFallSelect() {
 		
 		String Gebdt = textField_Geburtsdatum_ChangePersonFall.getText();
 		String vorname = textField_Vorname_ChangePersonFall.getText();
@@ -1807,7 +1924,7 @@ public class correctParameters extends JFrame {
 					"BEFORE DELETE ON `mydb`.`patientendaten`\r\n" + 
 					"FOR EACH ROW\r\n" + 
 					"BEGIN\r\n" + 
-					"	delete from mydb.fall where Patientendaten_PatientenID = OLD.PatientenID;\r\n" + 
+					"	update mydb.fall set Patientendaten_PatientenID = null, Fehler = 1 where Patientendaten_PatientenID = OLD.PatientenID;\r\n" + 
 					"END;");
 			st.execute("USE `mydb`;");
 			st.execute("CREATE\r\n" + 
