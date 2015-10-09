@@ -14,7 +14,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 public class start {
 	
 	public static Connection cn;
-	public static correctParameters UIFenster1;
+	public static MainWindow UIFenster1;
 	public static boolean methodsCompleted;
 	public static int recordsToRead;
 	private static boolean readExcelToPatientendaten;
@@ -430,7 +430,7 @@ public class start {
 		dbUsr = "java";
 		dbPwd = "geheim";
 		
-		UIFenster1 = new correctParameters();
+		UIFenster1 = new MainWindow();
 		UIFenster1.progressBar.setIndeterminate(true);
 		
 		//-----------------------------------

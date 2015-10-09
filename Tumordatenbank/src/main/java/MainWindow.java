@@ -41,7 +41,7 @@ import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 
 @SuppressWarnings("serial")
-public class correctParameters extends JFrame {
+public class MainWindow extends JFrame {
 
 	private final CardLayout pnCards_Layout;
 	private JPanel contentPane;
@@ -92,7 +92,7 @@ public class correctParameters extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					correctParameters frame = new correctParameters();
+					MainWindow frame = new MainWindow();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -104,7 +104,7 @@ public class correctParameters extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public correctParameters(/*Row row*/) {
+	public MainWindow(/*Row row*/) {
 		
 		addWindowListener(new WindowAdapter() {
 			@Override
