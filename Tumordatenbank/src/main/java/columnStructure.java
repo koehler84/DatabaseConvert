@@ -1,13 +1,13 @@
 
-public class columnStructure {
+public class columnStructure<Type extends columnIndex> {
 	
-	columnIndex first;
+	Type first;
 	
 	public columnStructure() {
 		first = null;
 	}
 	
-	public void add(columnIndex object) {
+	public void add(Type object) {
 		if (first == null) {
 			first = object;
 		} else {
@@ -28,6 +28,23 @@ public class columnStructure {
 			}
 			return length;
 		}
+	}
+	
+	public columnStructure<Type> copy() {
+		
+		columnStructure<Type> newStructure = new columnStructure<Type>();
+		Type columnObject = this.first;
+		
+		while (columnObject.hasNext()) {
+			
+			Type a = columnObject;
+			
+			newStructure.add(a);
+			columnObject = (Type) columnObject.next;
+			
+		}
+		
+		return newStructure;
 	}
 	
 }

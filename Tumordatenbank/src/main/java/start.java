@@ -21,6 +21,29 @@ public class start {
 	private static boolean readExcelToFall;
 	private static boolean spaltenFehler;
 	
+	static columnStructure<columnIndex> getColumnIndizes(XSSFSheet sheet) {
+		
+		if (spaltenFehler) return null;
+		
+		Iterator<Row> itr = sheet.iterator();
+		Row row = itr.next();
+		columnStructure<columnIndex> structure = new columnStructure<>();
+		
+		for (int i = row.getFirstCellNum(); i <= row.getLastCellNum(); i++) {
+			
+			Cell cell = row.getCell(i);
+			String name = cell.getStringCellValue().toLowerCase();
+			
+			if (name.equals("geburtsdatum") || name.equals("vorname") || name.equals("name") || name.equals("strasse") || 
+					name.equals("hausnummer") || name.equals("land") || name.equals("plz") || name.equals("ort") || name.equals("eingangsdatum")) {
+				columnIndex index = new columnIndex(name, i);
+				structure.add(index);
+			}
+		}		
+		
+		return structure;
+	}
+	
 	static void excelToPatient(XSSFSheet sheet) {
 		//TODO
 		if (spaltenFehler) return;
@@ -485,6 +508,8 @@ public class start {
 				sheet = book.getSheetAt(0);
 				book.setMissingCellPolicy(Row.CREATE_NULL_AS_BLANK);
 			}
+			
+			getColumnIndizes(sheet);
 			
 			//Alle Reihen lesen: sheet.getPhysicalNumberOfRows()
 			recordsToRead = 15;
