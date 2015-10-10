@@ -1,27 +1,27 @@
 
 public class columnStructure<Type extends columnIndex> {
 	
-	Type first;
+	Type head;
 	
 	public columnStructure() {
-		first = null;
+		head = null;
 	}
 	
 	public void add(Type object) {
-		if (first == null) {
-			first = object;
+		if (head == null) {
+			head = object;
 		} else {
-			object.next = first;
-			first = object;
+			object.next = head;
+			head = object;
 		}
 	}
 	
 	public int length() {
-		if (first == null) {
+		if (head == null) {
 			return 0;
 		} else {
 			int length = 1;
-			columnIndex object = first;
+			columnIndex object = head;
 			while (object.hasNext()) {
 				length++;
 				object = object.next;
@@ -30,21 +30,43 @@ public class columnStructure<Type extends columnIndex> {
 		}
 	}
 	
-	public columnStructure<Type> copy() {
+	public boolean check(String tabelle) {
 		
-		columnStructure<Type> newStructure = new columnStructure<Type>();
-		Type columnObject = this.first;
-		
-		while (columnObject.hasNext()) {
+		if (tabelle.equals("Patientendaten")) {
 			
-			Type a = columnObject;
+			int requiredColumns = 0;
+			columnIndex object = this.head;
 			
-			newStructure.add(a);
-			columnObject = (Type) columnObject.next;
+			while (object.hasNext()) {
+				if (object.columnName.equals("geburtsdatum") || object.columnName.equals("vorname") || object.columnName.equals("name")) {
+					requiredColumns++;
+				}
+				object = object.next;
+			}
+			
+			if (requiredColumns == 3) return true;
+			return false;
 			
 		}
 		
-		return newStructure;
+		return false;
 	}
+	
+//	public columnStructure<Type> copy() {
+//		
+//		columnStructure<Type> newStructure = new columnStructure<Type>();
+//		Type columnObject = this.first;
+//		
+//		while (columnObject.hasNext()) {
+//			
+//			Type a = columnObject;
+//			
+//			newStructure.add(a);
+//			columnObject = (Type) columnObject.next;
+//			
+//		}
+//		
+//		return newStructure;
+//	}
 	
 }

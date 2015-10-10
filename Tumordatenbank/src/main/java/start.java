@@ -21,7 +21,7 @@ public class start {
 	private static boolean readExcelToFall;
 	private static boolean spaltenFehler;
 	
-	static columnStructure<columnIndex> getColumnIndizes(XSSFSheet sheet) {
+	static columnStructure<columnIndex> getColumnIndizes(XSSFSheet sheet, String method) {
 		
 		if (spaltenFehler) return null;
 		
@@ -29,19 +29,177 @@ public class start {
 		Row row = itr.next();
 		columnStructure<columnIndex> structure = new columnStructure<>();
 		
-		for (int i = row.getFirstCellNum(); i <= row.getLastCellNum(); i++) {
+		if (method.equals("Patientendaten")) {
 			
-			Cell cell = row.getCell(i);
-			String name = cell.getStringCellValue().toLowerCase();
-			
-			if (name.equals("geburtsdatum") || name.equals("vorname") || name.equals("name") || name.equals("strasse") || 
-					name.equals("hausnummer") || name.equals("land") || name.equals("plz") || name.equals("ort") || name.equals("eingangsdatum")) {
-				columnIndex index = new columnIndex(name, i);
-				structure.add(index);
+			for (int i = row.getFirstCellNum(); i < row.getLastCellNum() && structure.length() < 9; i++) {
+				
+				Cell cell = row.getCell(i);
+				String columnName = cell.getStringCellValue().toLowerCase();
+				columnIndex index = null;
+				
+				switch (columnName) {
+				case "geburtsdatum": index = new columnIndex(columnName, i, 1); break;
+				case "vorname": index = new columnIndex(columnName, i, 2); break;
+				case "name": index = new columnIndex(columnName, i, 3); break;
+				case "strasse": index = new columnIndex(columnName, i, 4); break;
+				case "hausnummer": index = new columnIndex(columnName, i, 5); break;
+				case "land": index = new columnIndex(columnName, i, 6); break;
+				case "plz": index = new columnIndex(columnName, i, 7); break;
+				case "ort": index = new columnIndex(columnName, i, 8); break;
+				case "eingangsdatum": index = new columnIndex(columnName, i); break;
+				}
+				if (index != null) structure.add(index);
 			}
-		}		
+						
+			if (structure.check("Patientendaten")) {
+				return structure;
+			}
+		} else {
+
+		}
 		
-		return structure;
+		System.out.println("Spaltennamen wurden nicht gefunden!");
+		JOptionPane.showMessageDialog(start.UIFenster1, "Einige Datenfelder konnten nicht gefunden werden.\n"
+				+ "Bitte überprüfen sie die Spaltennamen der Excel-Datei!", "Fehler in Excel Datei", JOptionPane.ERROR_MESSAGE);
+		spaltenFehler = true;
+		return null;
+	}
+	
+	static void excelToPatientTry(XSSFSheet sheet) {
+		//TODO
+		if (spaltenFehler) return;
+		
+		Iterator<Row> itr = sheet.iterator();
+		Row row = itr.next();
+		
+		columnStructure<columnIndex> structure = getColumnIndizes(sheet, "Patientendaten");
+		
+		try {
+
+			PreparedStatement Pst = cn.prepareStatement("insert into patientendaten (`Geburtsdatum`, `Vorname`, `Name`,"
+					+ " `Strasse`, `Hausnummer`, `Land`, `PLZ`, `Ort`, `Fehler`) values ( ? , ? , ? , ? , ? , ? , ? , ? , ? );");
+
+			int i = 0;	//iterator
+			
+			while (itr.hasNext() && i < recordsToRead) {
+
+				i++;
+				
+				UIFenster1.progressBar.setValue(UIFenster1.progressBar.getValue()+1);
+				row = itr.next();
+				// Iterating over each column of Excel file
+				
+				Pst.clearParameters();		//clear parameters in Pst for next insert
+				Cell cell = null;
+				Pst.setNull(4, java.sql.Types.NULL);	//setNull so not every values has to be set in do-while loop
+				Pst.setNull(5, java.sql.Types.NULL);
+				Pst.setNull(6, java.sql.Types.NULL);
+				Pst.setNull(7, java.sql.Types.NULL);
+				Pst.setNull(8, java.sql.Types.NULL);
+				Pst.setInt(9, 0);
+				columnIndex columnObject = structure.head;
+				
+				do {
+					cell = row.getCell(columnObject.columnIndex);
+
+					switch (cell.getCellType()) {
+					case Cell.CELL_TYPE_STRING:
+						Pst.setString(columnObject.PstIndex, cell.getStringCellValue());						
+						break;
+					case Cell.CELL_TYPE_NUMERIC:
+						if (columnObject.PstIndex == 1){
+							
+							columnIndex object2 = structure.head;
+							int eingangsdatumColumnIndex = -1;
+							boolean first2 = true;
+							
+							do {
+								if (first2) {
+									first2 = false;
+								} else {
+									object2 = object2.next;									
+								}
+								
+								if (object2.columnName.equals("eingangsdatum")) {
+									eingangsdatumColumnIndex = object2.columnIndex;
+									break;
+								}
+							} while (object2.hasNext());
+							
+							Date geburtsdatum = new java.sql.Date(cell.getDateCellValue().getTime());
+							@SuppressWarnings("deprecation")
+							Date datum1 = new Date(0, 0, 1);
+							@SuppressWarnings("deprecation")
+							Date datum2 = new Date(100, 0, 1);
+							
+							if (eingangsdatumColumnIndex != -1) {
+								cell = row.getCell(eingangsdatumColumnIndex);
+								Date eingangsdatum = new java.sql.Date(cell.getDateCellValue().getTime());
+								
+								if (!geburtsdatum.equals(eingangsdatum) && !geburtsdatum.equals(datum1) && !geburtsdatum.equals(datum2)) {
+									Pst.setString(1, geburtsdatum + "");
+								} else {
+									Pst.setString(columnObject.PstIndex, "0001-01-01");
+									System.out.println("Fehler: Geburtsdatum ist fehlerhaft!");
+									Pst.setInt(9, 1);
+								}
+							} else {
+								if (!geburtsdatum.equals(datum1) && !geburtsdatum.equals(datum2)) {
+									Pst.setString(1, geburtsdatum + "");
+								} else {
+									Pst.setString(columnObject.PstIndex, "0001-01-01");
+									System.out.println("Fehler: Geburtsdatum ist fehlerhaft!");
+									Pst.setInt(9, 1);
+								}
+							}
+							
+							cell = row.getCell(columnObject.columnIndex);
+						} else if (columnObject.PstIndex == 7) {
+							//PLZ als String speichern
+							Pst.setString(7, ((int)cell.getNumericCellValue()) + "");
+						} else {
+							Pst.setInt(columnObject.PstIndex, (int)cell.getNumericCellValue());
+						}
+						break;
+					case Cell.CELL_TYPE_BLANK:
+						if (columnObject.PstIndex == 1) {
+							Pst.setString(columnObject.PstIndex, "0001-01-01");
+							System.out.println("Fehler: Geburtsdatum fehlt!");
+							Pst.setInt(9, 1);
+							break;
+						} else if (columnObject.PstIndex == 2 || columnObject.PstIndex == 3) {
+							Pst.setString(columnObject.PstIndex, "INVALID_NAME");
+							System.out.println("Fehler: Vorname oder Nachmame fehlt!");
+							Pst.setInt(9, 1);
+							break;
+						} else {
+							Pst.setInt(9, 1);
+						}
+						
+						//Abfrage in der Datenbank: "select * from mydb.patientendaten where PLZ is null;"
+						Pst.setNull(columnObject.PstIndex, java.sql.Types.NULL);
+						break;
+					}
+					
+					columnObject = columnObject.next;
+				} while (columnObject.hasNext());
+				
+				try {
+					//Execution of PreparedStatement, SQL Exeption if person is already in database
+					System.out.println("Updated rows in mydb.patientendaten: " + Pst.executeUpdate());
+				} catch (SQLException se){
+					System.out.println("Fehler beim Ausführen von \"insert into patientendaten\": Person ggf. schon erfasst!");
+				}
+				
+			}
+			
+			Pst.close();
+			System.out.println("Write patientendaten success");
+			System.out.println();
+		} catch (SQLException e) {
+			System.out.println("Fehler beim Erstellen des PreparedStatement \"insert into patientendaten\"!");
+		}
+
 	}
 	
 	static void excelToPatient(XSSFSheet sheet) {
@@ -66,7 +224,7 @@ public class start {
 			case "land": positions[0][5] = i; break;
 			case "plz": positions[0][6] = i; break;
 			case "ort": positions[0][7] = i; break;
-			case "eingangsdatum": positions[0][8] = i;break;
+			case "eingangsdatum": positions[0][8] = i; break;
 			}
 			
 		}
@@ -88,8 +246,6 @@ public class start {
 
 			int i = 0;	//iterator
 			
-			//int[][] positions = {{3,4,5,6,7,8,9,10},{1,2,3,4,5,6,7,8}};
-
 			while (itr.hasNext() && i < recordsToRead) {
 
 				i++;
@@ -393,14 +549,16 @@ public class start {
 			if (readExcelToPatientendaten && readExcelToFall) {
 				UIFenster1.progressBar.setIndeterminate(false);
 				UIFenster1.progressBar.setMaximum(recordsToRead*2);
-				excelToPatient(sheet);
+				//excelToPatient(sheet);
+				excelToPatientTry(sheet);
 				excelToFall(sheet);
 				book.close();
 				fis.close();
 			} else if (readExcelToPatientendaten && !readExcelToFall) {
 				UIFenster1.progressBar.setIndeterminate(false);
 				UIFenster1.progressBar.setMaximum(recordsToRead);
-				excelToPatient(sheet);
+				//excelToPatient(sheet);
+				excelToPatientTry(sheet);
 				book.close();
 				fis.close();
 			} else if (readExcelToFall && !readExcelToPatientendaten) {
@@ -509,22 +667,22 @@ public class start {
 				book.setMissingCellPolicy(Row.CREATE_NULL_AS_BLANK);
 			}
 			
-			getColumnIndizes(sheet);
-			
 			//Alle Reihen lesen: sheet.getPhysicalNumberOfRows()
 			recordsToRead = 15;
 			
 			if (readExcelToPatientendaten && readExcelToFall) {
 				UIFenster1.progressBar.setIndeterminate(false);
 				UIFenster1.progressBar.setMaximum(recordsToRead*2);
-				excelToPatient(sheet);
+				//excelToPatient(sheet);
+				excelToPatientTry(sheet);
 				excelToFall(sheet);
 				book.close();
 				fis.close();
 			} else if (readExcelToPatientendaten && !readExcelToFall) {
 				UIFenster1.progressBar.setIndeterminate(false);
 				UIFenster1.progressBar.setMaximum(recordsToRead);
-				excelToPatient(sheet);
+				//excelToPatient(sheet);
+				excelToPatientTry(sheet);
 				book.close();
 				fis.close();
 			} else if (readExcelToFall && !readExcelToPatientendaten) {
