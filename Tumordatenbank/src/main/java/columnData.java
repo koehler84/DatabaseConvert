@@ -13,7 +13,7 @@ public class columnData extends columnIndex {
 	public columnData(String name, int index) {
 		this.columnName = name;
 		this.columnIndex = index;
-		this.PstIndex = 0;
+		this.PstIndex = -1;
 		this.next = null;
 		this.data = null;
 	}
@@ -21,7 +21,7 @@ public class columnData extends columnIndex {
 	public columnData(String name, int index, Object data) {
 		this.columnName = name;
 		this.columnIndex = index;
-		this.PstIndex = 0;
+		this.PstIndex = -1;
 		this.next = null;
 		this.data = data;
 	}
@@ -29,7 +29,7 @@ public class columnData extends columnIndex {
 	public columnData(columnIndex colIndex) {
 		this.columnName = colIndex.columnName;
 		this.columnIndex = colIndex.columnIndex;
-		this.PstIndex = 0;
+		this.PstIndex = -1;
 		this.next = null;
 		this.data = null;
 	}

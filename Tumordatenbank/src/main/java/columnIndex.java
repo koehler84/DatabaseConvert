@@ -9,14 +9,14 @@ public class columnIndex {
 	public columnIndex() {
 		this.columnName = null;
 		this.columnIndex = -1;
-		this.PstIndex = 0;
+		this.PstIndex = -1;
 		this.next = null;
 	}
 	
 	public columnIndex(String name, int index) {
 		this.columnName = name;
 		this.columnIndex = index;
-		this.PstIndex = 0;
+		this.PstIndex = -1;
 		this.next = null;
 	}
 	

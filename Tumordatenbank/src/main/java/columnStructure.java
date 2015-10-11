@@ -32,12 +32,11 @@ public class columnStructure<Type extends columnIndex> {
 	
 	public boolean check(String tabelle) {
 		
-		if (tabelle.equals("Patientendaten")) {
-			
+		if (tabelle.equals("patientendaten")) {			
 			int requiredColumns = 0;
 			columnIndex object = this.head;
 			
-			while (object.hasNext()) {
+			while (object.hasNext() && requiredColumns < 3) {
 				if (object.columnName.equals("geburtsdatum") || object.columnName.equals("vorname") || object.columnName.equals("name")) {
 					requiredColumns++;
 				}
@@ -45,8 +44,19 @@ public class columnStructure<Type extends columnIndex> {
 			}
 			
 			if (requiredColumns == 3) return true;
-			return false;
+		} else if (tabelle.equals("fall")) {
+			int requiredColumns = 0;
+			columnIndex object = this.head;
 			
+			while (object.hasNext() && requiredColumns < 5) {
+				if (object.columnName.equals("geburtsdatum") || object.columnName.equals("vorname") || object.columnName.equals("name") || 
+						object.columnName.equals("e.-nummer") || object.columnName.equals("befundtyp")) {
+					requiredColumns++;
+				}
+				object = object.next;
+			}
+			
+			if (requiredColumns == 5) return true;
 		}
 		
 		return false;
