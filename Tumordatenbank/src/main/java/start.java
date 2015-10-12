@@ -209,6 +209,8 @@ public class start {
 							} else if (columnObject.PstIndex == 7) {
 								//PLZ als String speichern
 								Pst.setString(7, ((int)cell.getNumericCellValue()) + "");
+							} else if (columnObject.PstIndex == 11 || columnObject.PstIndex == 13) {
+								Pst.setString(columnObject.PstIndex, new java.sql.Date(cell.getDateCellValue().getTime()) + "");
 							} else {
 								Pst.setInt(columnObject.PstIndex, (int)cell.getNumericCellValue());
 							}
@@ -328,8 +330,8 @@ public class start {
 							}
 							break;
 						case Cell.CELL_TYPE_NUMERIC:
-							if (columnObject.PstIndex == 1 || columnObject.PstIndex == 5){
-								//Eingangsdatum bzw Geburtsdatum
+							if (columnObject.PstIndex == 1 || columnObject.PstIndex == 5 || columnObject.PstIndex == 11){
+								//Eingangsdatum, Geburtsdatum oder OP-Datum
 								Pst_Fall.setString(columnObject.PstIndex, new java.sql.Date(cell.getDateCellValue().getTime())+"");
 							} else {
 								//Befundtyp - nope der steht als Text in excel
@@ -459,10 +461,9 @@ public class start {
 		
 	}
 	
-	static void restart() {
+	static void restart(String path) {
 		
-		String excelPath="";
-		excelPath = "C://Project Pathologie/test.xlsx";
+		String excelPath = path;
 		
 		UIFenster1.progressBar.setValue(0);
 		methodsCompleted = false;

@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -37,6 +38,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.CardLayout;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 
@@ -214,7 +216,20 @@ public class MainWindow extends JFrame {
 		mntmDatenErneutEinfgen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (start.methodsCompleted) {
-					start.restart();
+					
+					JFileChooser fileChooser = new JFileChooser();
+					FileNameExtensionFilter filter = new FileNameExtensionFilter("Excel Dokumente", "xlsx", "xls");					
+					fileChooser.setFileFilter(filter);
+					int result = fileChooser.showOpenDialog(start.UIFenster1);
+					
+					if (result == JFileChooser.APPROVE_OPTION) {
+						String path = fileChooser.getSelectedFile().getAbsolutePath();
+						start.restart(path);
+					}
+					
+				} else {
+					JOptionPane.showMessageDialog(start.UIFenster1, "Bitte warten sie bis das Lesen der Daten beendet wurde.",
+							"Fehler", JOptionPane.PLAIN_MESSAGE);
 				}
 			}
 		});
