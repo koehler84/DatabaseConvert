@@ -15,7 +15,6 @@ public class columnStructure<Type extends columnIndex> {
 			tail = object;
 		} else {
 			object.next = head;
-			head.prev = object;
 			head = object;
 		}
 	}

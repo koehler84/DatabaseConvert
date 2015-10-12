@@ -7,7 +7,6 @@ public class columnData extends columnIndex {
 		this.columnName = null;
 		this.columnIndex = -1;
 		this.next = null;
-		this.prev = null;
 		this.data = null;
 	}
 	
@@ -16,7 +15,6 @@ public class columnData extends columnIndex {
 		this.columnIndex = index;
 		this.PstIndex = -1;
 		this.next = null;
-		this.prev = null;
 		this.data = null;
 	}
 	
@@ -26,7 +24,6 @@ public class columnData extends columnIndex {
 		this.PstIndex = Pst_index;
 		this.Pst_updateIndex = -1;
 		this.next = null;
-		this.prev = null;
 		this.data = null;
 	}
 	
@@ -36,7 +33,6 @@ public class columnData extends columnIndex {
 		this.PstIndex = Pst_index;
 		this.Pst_updateIndex = Pst_updateIndex;
 		this.next = null;
-		this.prev = null;
 		this.data = null;
 	}
 	
@@ -50,7 +46,6 @@ public class columnData extends columnIndex {
 		} else {
 			this.next = null;
 		}
-		this.prev = colIndex.prev;
 		this.data = null;
 	}
 	

@@ -140,22 +140,25 @@ public class start {
 				row = itr.next();
 				// Iterating over each column of Excel file
 				
+				Cell cell = null;
 				Pst.clearParameters();		//clear parameters in Pst for next insert
 				Pst_update.clearParameters();
-				Cell cell = null;
-				Pst.setNull(4, java.sql.Types.NULL);	//setNull so not every values has to be set in do-while loop
-				Pst.setNull(5, java.sql.Types.NULL);
-				Pst.setNull(6, java.sql.Types.NULL);
-				Pst.setNull(7, java.sql.Types.NULL);
-				Pst.setNull(8, java.sql.Types.NULL);
-				Pst.setInt(9, 0);
-				Pst.setNull(10, java.sql.Types.NULL);
-				Pst.setNull(11, java.sql.Types.NULL);
-				Pst.setNull(12, java.sql.Types.NULL);
-				Pst.setNull(13, java.sql.Types.NULL);
-				Pst.setNull(14, java.sql.Types.NULL);
-				Pst.setNull(15, java.sql.Types.NULL);
-				columnData columnObject = new columnData(structure.head);
+				Pst.setInt(9, 0);		//Fehler column
+				
+				//setNull so not every values has to be set in do-while loop
+				//Pst.setNull
+				for (int j = 4; j < 16; j++) {
+					if (j == 9) j++;
+					Pst.setNull(j, java.sql.Types.NULL);
+				}
+				
+				//Pst_update.setNull
+				for (int j = 1; j < 12; j++) {
+					Pst_update.setNull(j, java.sql.Types.NULL);					
+				}
+				
+				columnData firstObject = new columnData(structure.head);
+				columnData columnObject = firstObject;
 				boolean first = true;
 				
 				do {
@@ -206,16 +209,20 @@ public class start {
 									
 									if (!geburtsdatum.equals(eingangsdatum) && !geburtsdatum.equals(datum1) && !geburtsdatum.equals(datum2)) {
 										Pst.setString(1, geburtsdatum + "");
+										columnObject.data = geburtsdatum + "";
 									} else {
 										Pst.setString(columnObject.PstIndex, "0001-01-01");
+										columnObject.data = "0001-01-01";
 										System.out.println("Fehler: Geburtsdatum ist fehlerhaft!");
 										Pst.setInt(9, 1);
 									}
 								} else {
 									if (!geburtsdatum.equals(datum1) && !geburtsdatum.equals(datum2)) {
 										Pst.setString(1, geburtsdatum + "");
+										columnObject.data = geburtsdatum + "";
 									} else {
 										Pst.setString(columnObject.PstIndex, "0001-01-01");
+										columnObject.data = "0001-01-01";
 										System.out.println("Fehler: Geburtsdatum ist fehlerhaft!");
 										Pst.setInt(9, 1);
 									}
@@ -227,6 +234,7 @@ public class start {
 								Pst.setString(columnObject.PstIndex, ((int)cell.getNumericCellValue()) + "");
 								columnObject.data = ((int)cell.getNumericCellValue()) + "";
 							} else if (columnObject.PstIndex == 11 || columnObject.PstIndex == 13) {
+								//Versorben (Datum) oder Follow-up
 								Pst.setString(columnObject.PstIndex, new java.sql.Date(cell.getDateCellValue().getTime()) + "");
 								columnObject.data = new java.sql.Date(cell.getDateCellValue().getTime()) + "";
 							} else {
@@ -237,11 +245,13 @@ public class start {
 						case Cell.CELL_TYPE_BLANK:
 							if (columnObject.PstIndex == 1) {
 								Pst.setString(columnObject.PstIndex, "0001-01-01");
+								columnObject.data = "0001-01-01";
 								System.out.println("Fehler: Geburtsdatum fehlt!");
 								Pst.setInt(9, 1);
 								break;
 							} else if (columnObject.PstIndex == 2 || columnObject.PstIndex == 3) {
 								Pst.setString(columnObject.PstIndex, "INVALID_NAME");
+								columnObject.data = "INVALID_NAME";
 								System.out.println("Fehler: Vorname oder Nachmame fehlt!");
 								Pst.setInt(9, 1);
 								break;
@@ -264,28 +274,33 @@ public class start {
 				} catch (SQLException se){					
 					System.out.print("Fehler beim Ausführen von \"insert into patientendaten\": Person ggf. schon erfasst!");
 					
-//					try {
-//						
-//						System.out.println(columnObject.hasNext());
-//						first = true;
-//						
-//						do {
-//							if (first) {
-//								first = false;
-//							} else {
-//								columnObject = (columnData) columnObject.prev;
-//							}
-//							
-//							
-//						} while (columnObject.hasPrev());
-//						
-//						
-//						Pst_update.executeUpdate();
-//						System.out.print(" - Datensatz vervollständigt.");
-//					} catch (SQLException e) {
-//						//System.out.print(e);
-//						System.out.print(" - Fehler beim Vervollständigen.");
-//					}
+					try {
+						first = true;
+						
+						do {
+							if (first) {
+								first = false;
+							} else {
+								firstObject = (columnData) firstObject.next;
+							}
+							
+							switch (firstObject.Pst_updateIndex) {
+							case 1: case 2: case 3: case 4: case 5: case 6: case 7: case 8: case 9: case 12: case 13: case 14:
+								Pst_update.setString(firstObject.Pst_updateIndex, (String) firstObject.data);
+								break;
+							case 10: case 11:
+								Pst_update.setInt(firstObject.Pst_updateIndex, (int) firstObject.data);
+								break;
+							}
+							
+						} while (firstObject.hasNext());
+						
+						Pst_update.executeUpdate();
+						System.out.print(" - Datensatz vervollständigt.");
+					} catch (SQLException e) {
+						//System.out.print(e);
+						System.out.print(" - Fehler beim Vervollständigen.");
+					}
 					
 				} finally {
 					System.out.println();
@@ -295,6 +310,7 @@ public class start {
 			//end of while
 			
 			Pst.close();
+			Pst_update.close();
 			System.out.println("Write patientendaten success");
 			System.out.println();
 		} catch (SQLException e) {
