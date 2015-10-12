@@ -47,12 +47,12 @@ public class start {
 				case "plz": index = new columnIndex(columnName, i, 7); break;
 				case "ort": index = new columnIndex(columnName, i, 8); break;
 				case "eingangsdatum": index = new columnIndex(columnName, i); break;
-//				case "verstorben (quelle)": index = new columnIndex(columnName, i, -1); break;
-//				case "verstorben (datum)": index = new columnIndex(columnName, i, -1); break;
-//				case "bemerkung tod": index = new columnIndex(columnName, i, -1); break;
-//				case "follow-up": index = new columnIndex(columnName, i, -1); break;
-//				case "follow-up status": index = new columnIndex(columnName, i, -1); break;
-//				case "ee-status": index = new columnIndex(columnName, i, -1); break;
+				case "verstorben (quelle)": index = new columnIndex(columnName, i, 10); break;
+				case "verstorben (datum)": index = new columnIndex(columnName, i, 11); break;
+				case "bemerkung tod": index = new columnIndex(columnName, i, 12); break;
+				case "follow-up": index = new columnIndex(columnName, i, 13); break;
+				case "follow-up status": index = new columnIndex(columnName, i, 14); break;
+				case "ee-status": index = new columnIndex(columnName, i, 15); break;
 				}
 				if (index != null) structure.add(index);
 			}
@@ -72,15 +72,15 @@ public class start {
 				case "geburtsdatum": index = new columnIndex(columnName, i, 1); break;
 				case "vorname": index = new columnIndex(columnName, i, 2); break;
 				case "name": index = new columnIndex(columnName, i, 3); break;
-				case "eingangsdatum": index = new columnIndex(columnName, i, 4); break;
-				case "e.-nummer": index = new columnIndex(columnName, i, 5); break;
+				case "e.-nummer": index = new columnIndex(columnName, i, 4); break;
+				case "eingangsdatum": index = new columnIndex(columnName, i, 5); break;
 				case "einsender": index = new columnIndex(columnName, i, 6); break;
 				case "befundtyp": index = new columnIndex(columnName, i, 7); break;
+				case "arzt": index = new columnIndex(columnName, i, 9); break;
+				case "kryo": index = new columnIndex(columnName, i, 10); break;
+				case "op-datum": index = new columnIndex(columnName, i, 11); break;
+				case "mikroskopie": index = new columnIndex(columnName, i, 12); break;
 				case "befundtext": index = new columnIndex(columnName, i); break;
-//				case "arzt": index = new columnIndex(columnName, i, 8); break;
-//				case "kryo": index = new columnIndex(columnName, i); break;
-//				case "op-datum": index = new columnIndex(columnName, i); break;
-//				case "mikroskopie": index = new columnIndex(columnName, i); break;
 				}
 				if (index != null) structure.add(index);
 			}
@@ -110,9 +110,11 @@ public class start {
 		if (spaltenFehler) return;
 		
 		try {
-
+			
 			PreparedStatement Pst = cn.prepareStatement("insert into patientendaten (`Geburtsdatum`, `Vorname`, `Name`,"
-					+ " `Strasse`, `Hausnummer`, `Land`, `PLZ`, `Ort`, `Fehler`) values ( ? , ? , ? , ? , ? , ? , ? , ? , ? );");
+					+ " `Strasse`, `Hausnummer`, `Land`, `PLZ`, `Ort`, `Fehler`, `Verstorben (Quelle)`, `Verstorben (Datum)`, `Bemerkung Tod`,"
+					+ " `Follow-up`, `Follow-up Status`, `EE-Status`) "
+					+ "values ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? );");
 
 			int i = 0;	//iterator
 			
@@ -132,6 +134,12 @@ public class start {
 				Pst.setNull(7, java.sql.Types.NULL);
 				Pst.setNull(8, java.sql.Types.NULL);
 				Pst.setInt(9, 0);
+				Pst.setNull(10, java.sql.Types.NULL);
+				Pst.setNull(11, java.sql.Types.NULL);
+				Pst.setNull(12, java.sql.Types.NULL);
+				Pst.setNull(13, java.sql.Types.NULL);
+				Pst.setNull(14, java.sql.Types.NULL);
+				Pst.setNull(15, java.sql.Types.NULL);
 				columnIndex columnObject = structure.head;
 				boolean first = true;
 				
@@ -260,10 +268,10 @@ public class start {
 		
 		try {
 			
-			PreparedStatement Pst_Fall = cn.prepareStatement("insert into mydb.fall (`Patientendaten_PatientenID`, `Eingangsdatum`, "
-					+ "`E.-Nummer`, `Einsender`, `Befundtyp`, `Fehler`) values "
+			PreparedStatement Pst_Fall = cn.prepareStatement("insert into mydb.fall (`Patientendaten_PatientenID`, `E.-Nummer`, "
+					+ "`Eingangsdatum`, `Einsender`, `Befundtyp`, `Fehler`, `Arzt`, `Kryo`, `OP-Datum`, `Mikroskopie`) values "
 					+ "((select PatientenID from mydb.patientendaten where Geburtsdatum = ? and Vorname = ? and Name = ? ),"
-					+ " ? , ? , ? , ? , ? );");
+					+ " ? , ? , ? , ? , ? , ? , ? , ? , ? );");
 			PreparedStatement Pst_Klassifikation = cn.prepareStatement("insert into mydb.klassifikation (`Fall_E.-Nummer`, `Fall_Befundtyp`, "
 					+ "G, T, N, M, L, V, R, ER, PR, `Her2/neu`, Lage, Tumorart) "
 					+ "values ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? );");
@@ -279,9 +287,13 @@ public class start {
 				// Iterating over each column of Excel file
 				
 				Pst_Fall.clearParameters();
-				Pst_Fall.setNull(4, java.sql.Types.NULL);
+				Pst_Fall.setNull(5, java.sql.Types.NULL);
 				Pst_Fall.setNull(6, java.sql.Types.NULL);
 				Pst_Fall.setInt(8, 0);
+				Pst_Fall.setNull(9, java.sql.Types.NULL);
+				Pst_Fall.setNull(10, java.sql.Types.NULL);
+				Pst_Fall.setNull(11, java.sql.Types.NULL);
+				Pst_Fall.setNull(12, java.sql.Types.NULL);
 				Cell cell = null;
 				Pst_Klassifikation.clearParameters();
 				
@@ -311,12 +323,12 @@ public class start {
 								}
 								Pst_Fall.setInt(7, befundtyp.getValue());
 							} else {
-								if (columnObject.PstIndex == 5) E_NR = cell.getStringCellValue();
+								if (columnObject.PstIndex == 4) E_NR = cell.getStringCellValue();
 								Pst_Fall.setString(columnObject.PstIndex, cell.getStringCellValue());
 							}
 							break;
 						case Cell.CELL_TYPE_NUMERIC:
-							if (columnObject.PstIndex == 1 || columnObject.PstIndex == 4){
+							if (columnObject.PstIndex == 1 || columnObject.PstIndex == 5){
 								//Eingangsdatum bzw Geburtsdatum
 								Pst_Fall.setString(columnObject.PstIndex, new java.sql.Date(cell.getDateCellValue().getTime())+"");
 							} else {
