@@ -38,21 +38,21 @@ public class start {
 				columnIndex index = null;
 				
 				switch (columnName) {
-				case "geburtsdatum": index = new columnIndex(columnName, i, 1); break;
-				case "vorname": index = new columnIndex(columnName, i, 2); break;
-				case "name": index = new columnIndex(columnName, i, 3); break;
-				case "strasse": index = new columnIndex(columnName, i, 4); break;
-				case "hausnummer": index = new columnIndex(columnName, i, 5); break;
-				case "land": index = new columnIndex(columnName, i, 6); break;
-				case "plz": index = new columnIndex(columnName, i, 7); break;
-				case "ort": index = new columnIndex(columnName, i, 8); break;
-				case "eingangsdatum": index = new columnIndex(columnName, i); break;
-				case "verstorben (quelle)": index = new columnIndex(columnName, i, 10); break;
-				case "verstorben (datum)": index = new columnIndex(columnName, i, 11); break;
-				case "bemerkung tod": index = new columnIndex(columnName, i, 12); break;
-				case "follow-up": index = new columnIndex(columnName, i, 13); break;
-				case "follow-up status": index = new columnIndex(columnName, i, 14); break;
-				case "ee-status": index = new columnIndex(columnName, i, 15); break;
+				case "geburtsdatum": index = new columnData(columnName, i, 1, 12); break;
+				case "vorname": index = new columnData(columnName, i, 2, 13); break;
+				case "name": index = new columnData(columnName, i, 3, 14); break;
+				case "strasse": index = new columnData(columnName, i, 4, 1); break;
+				case "hausnummer": index = new columnData(columnName, i, 5, 2); break;
+				case "land": index = new columnData(columnName, i, 6, 3); break;
+				case "plz": index = new columnData(columnName, i, 7, 4); break;
+				case "ort": index = new columnData(columnName, i, 8, 5); break;
+				case "verstorben (quelle)": index = new columnData(columnName, i, 10, 6); break;
+				case "verstorben (datum)": index = new columnData(columnName, i, 11, 7); break;
+				case "bemerkung tod": index = new columnData(columnName, i, 12, 8); break;
+				case "follow-up": index = new columnData(columnName, i, 13, 9); break;
+				case "follow-up status": index = new columnData(columnName, i, 14, 10); break;
+				case "ee-status": index = new columnData(columnName, i, 15, 11); break;
+				case "eingangsdatum": index = new columnData(columnName, i); break;
 				}
 				if (index != null) structure.add(index);
 			}
@@ -115,6 +115,20 @@ public class start {
 					+ " `Strasse`, `Hausnummer`, `Land`, `PLZ`, `Ort`, `Fehler`, `Verstorben (Quelle)`, `Verstorben (Datum)`, `Bemerkung Tod`,"
 					+ " `Follow-up`, `Follow-up Status`, `EE-Status`) "
 					+ "values ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? );");
+			PreparedStatement Pst_update = cn.prepareStatement("UPDATE mydb.patientendaten\r\n" + 
+					"SET\r\n" + 
+					"`Strasse` = IFNULL(`Strasse`, ? ),\r\n" + 
+					"`Hausnummer` = IFNULL(`Hausnummer`, ? ),\r\n" + 
+					"`Land` = IFNULL(`Land`, ? ),\r\n" + 
+					"`PLZ` = IFNULL(`PLZ`, ? ),\r\n" + 
+					"`Ort` = IFNULL(`Ort`, ? ),\r\n" + 
+					"`Verstorben (Quelle)` = IFNULL(`Verstorben (Quelle)`, ? ),\r\n" + 
+					"`Verstorben (Datum)` = IFNULL(`Verstorben (Datum)`, ? ),\r\n" + 
+					"`Bemerkung Tod` = IFNULL(`Bemerkung Tod`, ? ),\r\n" + 
+					"`Follow-up` = IFNULL(`Follow-up`, ? ),\r\n" + 
+					"`Follow-up Status` = IFNULL(`Follow-up Status`, ? ),\r\n" + 
+					"`EE-Status` = IFNULL(`EE-Status`, ? )\r\n" + 
+					"where `Geburtsdatum` = ? and `Vorname` = ? and `Name` = ? ;");
 
 			int i = 0;	//iterator
 			
@@ -127,6 +141,7 @@ public class start {
 				// Iterating over each column of Excel file
 				
 				Pst.clearParameters();		//clear parameters in Pst for next insert
+				Pst_update.clearParameters();
 				Cell cell = null;
 				Pst.setNull(4, java.sql.Types.NULL);	//setNull so not every values has to be set in do-while loop
 				Pst.setNull(5, java.sql.Types.NULL);
@@ -140,14 +155,14 @@ public class start {
 				Pst.setNull(13, java.sql.Types.NULL);
 				Pst.setNull(14, java.sql.Types.NULL);
 				Pst.setNull(15, java.sql.Types.NULL);
-				columnIndex columnObject = structure.head;
+				columnData columnObject = new columnData(structure.head);
 				boolean first = true;
 				
 				do {
 					if (first) {
 						first = false;
 					} else {
-						columnObject = columnObject.next;
+						columnObject = (columnData) columnObject.next;
 					}
 					
 					if (columnObject.PstIndex != -1) {
@@ -156,7 +171,8 @@ public class start {
 						
 						switch (cell.getCellType()) {
 						case Cell.CELL_TYPE_STRING:
-							Pst.setString(columnObject.PstIndex, cell.getStringCellValue());						
+							Pst.setString(columnObject.PstIndex, cell.getStringCellValue());
+							columnObject.data = cell.getStringCellValue();
 							break;
 						case Cell.CELL_TYPE_NUMERIC:
 							if (columnObject.PstIndex == 1){
@@ -208,11 +224,14 @@ public class start {
 								cell = row.getCell(columnObject.columnIndex);
 							} else if (columnObject.PstIndex == 7) {
 								//PLZ als String speichern
-								Pst.setString(7, ((int)cell.getNumericCellValue()) + "");
+								Pst.setString(columnObject.PstIndex, ((int)cell.getNumericCellValue()) + "");
+								columnObject.data = ((int)cell.getNumericCellValue()) + "";
 							} else if (columnObject.PstIndex == 11 || columnObject.PstIndex == 13) {
 								Pst.setString(columnObject.PstIndex, new java.sql.Date(cell.getDateCellValue().getTime()) + "");
+								columnObject.data = new java.sql.Date(cell.getDateCellValue().getTime()) + "";
 							} else {
 								Pst.setInt(columnObject.PstIndex, (int)cell.getNumericCellValue());
+								columnObject.data = ((int)cell.getNumericCellValue()) + "";
 							}
 							break;
 						case Cell.CELL_TYPE_BLANK:
@@ -241,9 +260,35 @@ public class start {
 				
 				try {
 					//Execution of PreparedStatement, SQL Exeption if person is already in database
-					System.out.println("Updated rows in mydb.patientendaten: " + Pst.executeUpdate());
-				} catch (SQLException se){
-					System.out.println("Fehler beim Ausführen von \"insert into patientendaten\": Person ggf. schon erfasst!");
+					System.out.print("Updated rows in mydb.patientendaten: " + Pst.executeUpdate());
+				} catch (SQLException se){					
+					System.out.print("Fehler beim Ausführen von \"insert into patientendaten\": Person ggf. schon erfasst!");
+					
+//					try {
+//						
+//						System.out.println(columnObject.hasNext());
+//						first = true;
+//						
+//						do {
+//							if (first) {
+//								first = false;
+//							} else {
+//								columnObject = (columnData) columnObject.prev;
+//							}
+//							
+//							
+//						} while (columnObject.hasPrev());
+//						
+//						
+//						Pst_update.executeUpdate();
+//						System.out.print(" - Datensatz vervollständigt.");
+//					} catch (SQLException e) {
+//						//System.out.print(e);
+//						System.out.print(" - Fehler beim Vervollständigen.");
+//					}
+					
+				} finally {
+					System.out.println();
 				}
 				
 			}

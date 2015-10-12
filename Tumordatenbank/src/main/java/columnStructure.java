@@ -2,16 +2,20 @@
 public class columnStructure<Type extends columnIndex> {
 	
 	Type head;
+	Type tail;
 	
 	public columnStructure() {
 		head = null;
+		tail = null;
 	}
 	
 	public void add(Type object) {
 		if (head == null) {
 			head = object;
+			tail = object;
 		} else {
 			object.next = head;
+			head.prev = object;
 			head = object;
 		}
 	}

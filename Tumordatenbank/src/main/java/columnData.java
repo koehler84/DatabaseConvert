@@ -7,6 +7,7 @@ public class columnData extends columnIndex {
 		this.columnName = null;
 		this.columnIndex = -1;
 		this.next = null;
+		this.prev = null;
 		this.data = null;
 	}
 	
@@ -15,31 +16,42 @@ public class columnData extends columnIndex {
 		this.columnIndex = index;
 		this.PstIndex = -1;
 		this.next = null;
+		this.prev = null;
 		this.data = null;
 	}
 	
-	public columnData(String name, int index, Object data) {
+	public columnData(String name, int index, int Pst_index) {
 		this.columnName = name;
 		this.columnIndex = index;
-		this.PstIndex = -1;
+		this.PstIndex = Pst_index;
+		this.Pst_updateIndex = -1;
 		this.next = null;
-		this.data = data;
+		this.prev = null;
+		this.data = null;
+	}
+	
+	public columnData(String name, int index, int Pst_index, int Pst_updateIndex) {
+		this.columnName = name;
+		this.columnIndex = index;
+		this.PstIndex = Pst_index;
+		this.Pst_updateIndex = Pst_updateIndex;
+		this.next = null;
+		this.prev = null;
+		this.data = null;
 	}
 	
 	public columnData(columnIndex colIndex) {
 		this.columnName = colIndex.columnName;
 		this.columnIndex = colIndex.columnIndex;
-		this.PstIndex = -1;
-		this.next = null;
+		this.PstIndex = colIndex.PstIndex;
+		this.Pst_updateIndex = colIndex.Pst_updateIndex;
+		if (colIndex.hasNext()) {			
+			this.next = new columnData(colIndex.next);
+		} else {
+			this.next = null;
+		}
+		this.prev = colIndex.prev;
 		this.data = null;
-	}
-	
-	public columnData(columnIndex colIndex, Object data) {
-		this.columnName = colIndex.columnName;
-		this.columnIndex = colIndex.columnIndex;
-		this.PstIndex = 0;
-		this.next = null;
-		this.data = data;
 	}
 	
 }
