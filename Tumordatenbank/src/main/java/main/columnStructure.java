@@ -1,3 +1,4 @@
+package main;
 
 public class columnStructure<Type extends columnIndex> {
 	
