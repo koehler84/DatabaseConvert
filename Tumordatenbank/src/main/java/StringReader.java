@@ -103,13 +103,15 @@ public class StringReader {
 	}
 
 	private void FindTumorart (String textSub, int i) {
-		if (Pattern.matches(".*M[ ]?8[\\d]{3}/3.*", textSub)){
+		if (Pattern.matches(".*M[ ]?8[\\d]{3}/3.*", textSub) || Pattern.matches(".*NST*", textSub) 
+				|| Pattern.matches(".*NOS.*", textSub)){
 			lage="invasiv";
 		}
 		if (Pattern.matches(".*M[ ]?8[\\d]{3}/2.*", textSub)){
 			lage="in situ";
 		}
-		if (Pattern.matches(".*M[ ]?8500.*", textSub)) {
+		if (Pattern.matches(".*M[ ]?8500.*", textSub) || Pattern.matches(".*NST*", textSub) 
+				|| Pattern.matches(".*NOS.*", textSub)) {
 			tumorart="duktal";
 		}
 		if (Pattern.matches(".*M[ ]?8520.*", textSub)) {
