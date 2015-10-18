@@ -11,7 +11,15 @@ public class testMain {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
-		FX_Window.launch(FX_Window.class, args);
+		//FX_Window.launch(FX_Window.class, args);
+		
+		Thread t1 = new Thread(new thread());
+		
+		t1.start();
+		
+		System.out.println("bla");
+		
+		FX_Window.window.toBack();
 		
 	}
 	
