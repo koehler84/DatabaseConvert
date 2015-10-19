@@ -38,9 +38,9 @@ public class start {
 				columnIndex index = null;
 				
 				switch (columnName) {
-				case "geburtsdatum": index = new columnData(columnName, i, 1, 12); break;
-				case "vorname": index = new columnData(columnName, i, 2, 13); break;
-				case "name": index = new columnData(columnName, i, 3, 14); break;
+				case "geburtsdatum": index = new columnData(columnName, i, 1, 12); break;	//
+				case "vorname": index = new columnData(columnName, i, 2, 13); break;		//
+				case "name": index = new columnData(columnName, i, 3, 14); break;			//
 				case "strasse": index = new columnData(columnName, i, 4, 1); break;
 				case "hausnummer": index = new columnData(columnName, i, 5, 2); break;
 				case "land": index = new columnData(columnName, i, 6, 3); break;
@@ -72,10 +72,10 @@ public class start {
 				case "geburtsdatum": index = new columnIndex(columnName, i, 1); break;
 				case "vorname": index = new columnIndex(columnName, i, 2); break;
 				case "name": index = new columnIndex(columnName, i, 3); break;
-				case "e.-nummer": index = new columnIndex(columnName, i, 4); break;
+				case "e.-nummer": index = new columnIndex(columnName, i, 4); break;			//
 				case "eingangsdatum": index = new columnIndex(columnName, i, 5); break;
 				case "einsender": index = new columnIndex(columnName, i, 6); break;
-				case "befundtyp": index = new columnIndex(columnName, i, 7); break;
+				case "befundtyp": index = new columnIndex(columnName, i, 7); break;			//
 				case "arzt": index = new columnIndex(columnName, i, 9); break;
 				case "kryo": index = new columnIndex(columnName, i, 10); break;
 				case "op-datum": index = new columnIndex(columnName, i, 11); break;
@@ -652,6 +652,7 @@ public class start {
 			}
 			
 		} catch (Exception e) {
+			e.printStackTrace();
 			System.out.println(e);
 			System.out.println("Fehler: Irgendetwas stimmt mit der Datei nicht!");
 		}
