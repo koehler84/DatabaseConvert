@@ -1,20 +1,17 @@
 package fx;
 
+import java.io.File;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
-
-import javafx.beans.property.Property;
-import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.AnchorPane;
-import main.start;
+import javafx.stage.FileChooser;
 
 public class controller implements Initializable {
 	
@@ -22,37 +19,55 @@ public class controller implements Initializable {
 	private AnchorPane centerPanel;
 	@FXML
 	public ProgressBar progressBar;
+	@FXML
+	public Label lblConnected;
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
 		
+		lblConnected.setVisible(false);
+		System.out.println("init");
+		
+		new Thread(FX_Main.connect(lblConnected)).start();
+		
+		Task<Void> task = new Task<Void>() {
+
+			@Override
+			protected Void call() throws Exception {
+				//start methods
+				return null;
+			}
+		};
+		
+		Thread thread = new Thread(task);
+		thread.start();
 	}
 	
 	public void abbrechen_Button(ActionEvent e) {
-//		try {
-//			if (start.cn != null && !start.cn.isClosed() && start.methodsCompleted) {
-//				start.cn.close();
-//				System.out.println("Datenbankverbindung beednet! WINDOW");
-//			}
-//		} catch (SQLException e1) {
-//			System.out.println("Fehler beim Beenden der Datenbankverbindung!");
-//		}
+		try {
+			if (FX_Main.cn != null && !FX_Main.cn.isClosed() && FX_Main.methodsCompleted) {
+				FX_Main.cn.close();
+				System.out.println("Datenbankverbindung beednet! WINDOW");
+			}
+		} catch (SQLException e1) {
+			System.out.println("Fehler beim Beenden der Datenbankverbindung!");
+		}
 		
 		System.exit(0);
 	}
 	
-	public void ok_Button(ActionEvent e) {
+	public void ok_Button(ActionEvent e) {				
+		try {
+			if (FX_Main.cn != null && !FX_Main.cn.isClosed() && FX_Main.methodsCompleted) {
+				FX_Main.cn.close();
+				System.out.println("Datenbankverbindung beednet! WINDOW");
+			}
+		} catch (SQLException e1) {
+			System.out.println("Fehler beim Beenden der Datenbankverbindung!");
+		}
+		
 		FX_Window.window.close();
-				
-//		try {
-//			if (start.cn != null && !start.cn.isClosed() && start.methodsCompleted) {
-//				start.cn.close();
-//				System.out.println("Datenbankverbindung beednet! WINDOW");
-//			}
-//		} catch (SQLException e1) {
-//			System.out.println("Fehler beim Beenden der Datenbankverbindung!");
-//		}
 	}
 	
 	public void setProgress() {
@@ -82,6 +97,14 @@ public class controller implements Initializable {
 		Thread thread = new Thread(task);
 		thread.start();
 				
+	}
+	
+	public void datenAnalyse() {
+		
+		FileChooser fc = new FileChooser();
+		File file = fc.showOpenDialog(FX_Window.window);
+		
+		new Thread(FX_Main.start(file.getPath())).start();
 	}
 
 }

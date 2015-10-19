@@ -1,7 +1,6 @@
 package fx;
 
 import javafx.application.Application;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
@@ -11,8 +10,6 @@ public class FX_Window extends Application {
 
 	public static Stage window;
 	private AnchorPane rootScene;
-	@FXML
-	private AnchorPane centerPanel;
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -31,7 +28,6 @@ public class FX_Window extends Application {
 		
 		window.setMinWidth(565);
 		window.setMinHeight(550);
-		
 		
 	}
 	
