@@ -104,7 +104,11 @@ public class controller implements Initializable {
 		FileChooser fc = new FileChooser();
 		File file = fc.showOpenDialog(FX_Window.window);
 		
-		new Thread(FX_Main.start(file.getPath())).start();
+		if (file != null && file.exists()) {
+			new Thread(FX_Main.start(file.getPath())).start();
+			
+		}
+		
 	}
 
 }

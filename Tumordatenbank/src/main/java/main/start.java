@@ -91,6 +91,13 @@ public class start {
 			}			
 		} else if (method.equals("klassifikation")) {
 			
+			for (int i = row.getFirstCellNum(); i < row.getLastCellNum(); i++) {
+				
+			}
+			
+			if (structure.check("klassifikation")) {
+				return structure;
+			}
 		}
 		
 		System.out.println("Spaltennamen wurden nicht gefunden!");
