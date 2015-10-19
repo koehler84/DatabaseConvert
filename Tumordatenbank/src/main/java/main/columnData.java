@@ -2,7 +2,7 @@ package main;
 
 public class columnData extends columnIndex {
 
-	Object data;
+	public Object data;
 	
 	public columnData() {
 		this.columnName = null;

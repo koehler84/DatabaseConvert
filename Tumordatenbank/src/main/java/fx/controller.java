@@ -71,8 +71,6 @@ public class controller implements Initializable {
 	}
 	
 	public void setProgress() {
-		//progressBar.setProgress(-1);
-		
 		progressBar.progressProperty().unbind();
 		
 		final Task<Void> task = new Task<Void>() {
@@ -82,9 +80,9 @@ public class controller implements Initializable {
 				// TODO Auto-generated method stub
 //				testMain.otherTask();
 				
-				for (long i = 0; i < 1000000; i++) {
+				for (long i = 0; i < 300000; i++) {
 					System.out.println("Erg: " + i);
-					updateProgress(i, 1000000);
+					updateProgress(i, 300000);
 				}
 				
 				return null;
@@ -104,9 +102,11 @@ public class controller implements Initializable {
 		FileChooser fc = new FileChooser();
 		File file = fc.showOpenDialog(FX_Window.window);
 		
-		if (file != null && file.exists()) {
-			new Thread(FX_Main.start(file.getPath())).start();
-			
+		if (file != null && file.exists()) {			
+			new Thread(FX_Main.loadExcel(file)).start();
+			Task<Void> startTask = FX_Main.start(file.getPath());
+			progressBar.progressProperty().bind(startTask.progressProperty());
+			new Thread(startTask).start();
 		}
 		
 	}

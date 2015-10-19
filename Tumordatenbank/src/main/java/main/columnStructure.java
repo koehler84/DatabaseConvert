@@ -2,8 +2,8 @@ package main;
 
 public class columnStructure<Type extends columnIndex> {
 	
-	Type head;
-	Type tail;
+	public Type head;
+	public Type tail;
 	
 	public columnStructure() {
 		head = null;
@@ -61,6 +61,18 @@ public class columnStructure<Type extends columnIndex> {
 			}
 			
 			if (requiredColumns == 5) return true;
+		} else if (tabelle.equals("klassifikation")) {
+			int requiredColumns = 0;
+			columnIndex object = this.head;
+			
+			while (object.hasNext() && requiredColumns < 3) {
+				if (object.columnName.equals("e.-nummer") || object.columnName.equals("befundtyp")) {
+					requiredColumns++;
+				}
+				object = object.next;
+			}
+			
+			if (requiredColumns == 2) return true;
 		}
 		
 		return false;

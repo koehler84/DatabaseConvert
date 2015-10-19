@@ -2,11 +2,11 @@ package main;
 
 public class columnIndex {
 	
-	String columnName;
-	int columnIndex;
-	int PstIndex;
-	int Pst_updateIndex;
-	columnIndex next;
+	public String columnName;
+	public int columnIndex;
+	public int PstIndex;
+	public int Pst_updateIndex;
+	public columnIndex next;
 	
 	public columnIndex() {
 		this.columnName = null;

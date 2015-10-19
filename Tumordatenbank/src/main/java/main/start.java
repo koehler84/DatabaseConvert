@@ -22,7 +22,7 @@ public class start {
 	private static boolean readExcelToFall;
 	private static boolean spaltenFehler;
 	
-	static columnStructure<columnIndex> getColumnIndizes(XSSFSheet sheet, String method) {
+	public static columnStructure<columnIndex> getColumnIndizes(XSSFSheet sheet, String method) {
 		//TODO
 		if (spaltenFehler) return null;
 		
@@ -93,11 +93,35 @@ public class start {
 			
 			for (int i = row.getFirstCellNum(); i < row.getLastCellNum(); i++) {
 				
+				Cell cell = row.getCell(i);
+				String columnName = cell.getStringCellValue().toLowerCase();
+				columnIndex index = null;
+				
+				switch (columnName) {
+				case "e.-nummer":  index = new columnIndex(columnName, i, 1); break;
+				case "befundtyp": index = new columnIndex(columnName, i, 2); break;
+				case "g":  index = new columnIndex(columnName, i, 3); break;
+				case "t":  index = new columnIndex(columnName, i, 4); break;
+				case "n":  index = new columnIndex(columnName, i, 5); break;
+				case "m":  index = new columnIndex(columnName, i, 6); break;
+				case "l":  index = new columnIndex(columnName, i, 7); break;
+				case "v":  index = new columnIndex(columnName, i, 8); break;
+				case "r":  index = new columnIndex(columnName, i, 9); break;
+				case "er":  index = new columnIndex(columnName, i, 10); break;
+				case "pr":  index = new columnIndex(columnName, i, 11); break;
+				case "her2/neu":  index = new columnIndex(columnName, i, 12); break;
+				case "lage":  index = new columnIndex(columnName, i, 13); break;
+				case "turmorart":  index = new columnIndex(columnName, i, 14); break;
+				case "befundtext":  index = new columnIndex(columnName, i); break;
+				}
+				
+				if (index != null) structure.add(index);
 			}
 			
 			if (structure.check("klassifikation")) {
 				return structure;
 			}
+			
 		}
 		
 		System.out.println("Spaltennamen wurden nicht gefunden!");
@@ -336,6 +360,29 @@ public class start {
 		
 		columnStructure<columnIndex> structure = getColumnIndizes(sheet, "fall");
 		if (spaltenFehler) return;
+				
+		int befundtextColumnIndex = -1;
+		boolean first = true;
+		columnIndex columnObject2 = structure.head;
+		
+		do {
+			if (first) {
+				first = false;
+			} else {
+				columnObject2 = columnObject2.next;									
+			}
+			
+			if (columnObject2.columnName.equals("befundtext")) {
+				befundtextColumnIndex = columnObject2.columnIndex;
+				break;
+			}
+		} while (columnObject2.hasNext());
+		columnObject2 = null;
+		
+		columnStructure<columnIndex> structureKlassifikation = null;
+		if (befundtextColumnIndex == -1) {
+			structureKlassifikation = getColumnIndizes(sheet, "klassifikation");
+		}
 		
 		try {
 			
@@ -368,14 +415,18 @@ public class start {
 				Cell cell = null;
 				Pst_Klassifikation.clearParameters();
 				
+				for (int i = 2; i <= 14; i++) {
+					Pst_Klassifikation.setNull(i, java.sql.Types.NULL);
+				}
+				
 				String E_NR = null;
 				Befundtyp befundtyp = null;				
 				columnIndex columnObject = structure.head;
-				boolean first = true;
+				boolean first2 = true;
 				
 				do {
-					if (first) {
-						first = false;
+					if (first2) {
+						first2 = false;
 					} else {
 						columnObject = columnObject.next;
 					}
@@ -437,29 +488,15 @@ public class start {
 				}
 				
 				columnObject = structure.head;
-				int befundtextColumnIndex = -1;
-				first = true;
-				
-				do {
-					if (first) {
-						first = false;
-					} else {
-						columnObject = columnObject.next;									
-					}
-					
-					if (columnObject.columnName.equals("befundtext")) {
-						befundtextColumnIndex = columnObject.columnIndex;
-						break;
-					}
-				} while (columnObject.hasNext());
 				
 				if (befundtextColumnIndex != -1) {
 					cell = row.getCell(befundtextColumnIndex);
 					String befundtext = cell.getStringCellValue();
 					
-					excelToKlassifikation(Pst_Klassifikation, befundtext, E_NR, befundtyp);					
+					excelToKlassifikation_text(Pst_Klassifikation, befundtext, E_NR, befundtyp);					
 				} else {
-					System.out.println();
+					excelToKlassifikation_spalten(Pst_Klassifikation, E_NR, befundtyp, structureKlassifikation, cell);										
+					//System.out.println();
 				}
 				
 			}
@@ -475,7 +512,7 @@ public class start {
 
 	}
 
-	private static void excelToKlassifikation(PreparedStatement Pst, String befundtext, String E_Nr, Befundtyp befundtyp) throws SQLException {
+	private static void excelToKlassifikation_text(PreparedStatement Pst, String befundtext, String E_Nr, Befundtyp befundtyp) throws SQLException {
 		
 		StringReader srObject = new StringReader();
 		try {
@@ -484,7 +521,6 @@ public class start {
 			e.printStackTrace();
 			System.out.println("Objektfehler!");
 			return;
-			//e.printStackTrace();
 		}
 		
 		Pst.setString(1, E_Nr);
@@ -521,6 +557,47 @@ public class start {
 		} else {
 			Pst.setNull(9, java.sql.Types.NULL);
 		}
+		
+		try {
+			System.out.println("Einfügen in Klassifikation, geänderte Zeilen: " + Pst.executeUpdate());
+		} catch (Exception e) {
+			System.out.println("Fehler beim Einfügen der Falldaten.");
+		}
+		
+	}
+	
+	public static void excelToKlassifikation_spalten(PreparedStatement Pst, String E_Nr, Befundtyp befundtyp, columnStructure<columnIndex> structure, Cell cell) {
+		
+		boolean first = true;
+		columnIndex columnObject = structure.head;
+		
+		do {
+			if (first) {
+				first = false;
+			} else {
+				columnObject = columnObject.next;
+			}
+			
+			try {
+				if (columnObject.PstIndex != -1) {
+					
+					switch (cell.getCellType()) {
+					case Cell.CELL_TYPE_STRING: 
+						Pst.setString(columnObject.PstIndex, cell.getStringCellValue());
+						break;
+					case Cell.CELL_TYPE_NUMERIC: 
+						Pst.setInt(columnObject.PstIndex, (int) cell.getNumericCellValue());
+						break;
+					case Cell.CELL_TYPE_BLANK: 
+						Pst.setNull(columnObject.PstIndex, java.sql.Types.NULL);
+						break;
+					}
+				}				
+			} catch (SQLException e) {
+				//System.out.println(e);
+			}
+		} while (columnObject.hasNext());
+		
 		
 		try {
 			System.out.println("Einfügen in Klassifikation, geänderte Zeilen: " + Pst.executeUpdate());
