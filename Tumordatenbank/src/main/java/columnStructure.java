@@ -38,38 +38,78 @@ public class columnStructure<Type extends columnIndex> {
 		if (tabelle.equals("patientendaten")) {			
 			int requiredColumns = 0;
 			columnIndex object = this.head;
+			boolean first = true;			
 			
-			while (object.hasNext() && requiredColumns < 3) {
+			do {
+				if (first) {
+					first = false;
+				} else {
+					object = object.next;
+				}
+				
 				if (object.columnName.equals("geburtsdatum") || object.columnName.equals("vorname") || object.columnName.equals("name")) {
 					requiredColumns++;
 				}
-				object = object.next;
-			}
+			} while (object.hasNext() && requiredColumns < 3);
+			
+//			while (object.hasNext() && requiredColumns < 3) {
+//				if (object.columnName.equals("geburtsdatum") || object.columnName.equals("vorname") || object.columnName.equals("name")) {
+//					requiredColumns++;
+//				}
+//				object = object.next;
+//			}
 			
 			if (requiredColumns == 3) return true;
 		} else if (tabelle.equals("fall")) {
 			int requiredColumns = 0;
 			columnIndex object = this.head;
+			boolean first = true;			
 			
-			while (object.hasNext() && requiredColumns < 5) {
+			do {
+				if (first) {
+					first = false;
+				} else {
+					object = object.next;
+				}
+				
 				if (object.columnName.equals("geburtsdatum") || object.columnName.equals("vorname") || object.columnName.equals("name") || 
 						object.columnName.equals("e.-nummer") || object.columnName.equals("befundtyp")) {
 					requiredColumns++;
 				}
-				object = object.next;
-			}
+			} while (object.hasNext() && requiredColumns < 5);
+			
+//			while (object.hasNext() && requiredColumns < 5) {
+//				if (object.columnName.equals("geburtsdatum") || object.columnName.equals("vorname") || object.columnName.equals("name") || 
+//						object.columnName.equals("e.-nummer") || object.columnName.equals("befundtyp")) {
+//					requiredColumns++;
+//				}
+//				object = object.next;
+//			}
 			
 			if (requiredColumns == 5) return true;
 		} else if (tabelle.equals("klassifikation")) {
 			int requiredColumns = 0;
 			columnIndex object = this.head;
+			boolean first = true;			
 			
-			while (object.hasNext() && requiredColumns < 3) {
+			do {
+				if (first) {
+					first = false;
+				} else {
+					object = object.next;
+				}
+				
 				if (object.columnName.equals("e.-nummer") || object.columnName.equals("befundtyp")) {
 					requiredColumns++;
 				}
-				object = object.next;
-			}
+			} while (object.hasNext() && requiredColumns < 2);
+			
+//			while (object.hasNext() && requiredColumns < 2) {
+//				if (object.columnName.equals("e.-nummer") || object.columnName.equals("befundtyp")) {
+//					requiredColumns++;
+//				}
+//				object = object.next;
+//			}
 			
 			if (requiredColumns == 2) return true;
 		}

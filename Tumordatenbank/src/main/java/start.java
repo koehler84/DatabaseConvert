@@ -321,7 +321,8 @@ public class start {
 								Pst_update.setString(firstObject.Pst_updateIndex, (String) firstObject.data);
 								break;
 							case 10: case 11:
-								Pst_update.setInt(firstObject.Pst_updateIndex, (int) firstObject.data);
+								Pst_update.setString(firstObject.Pst_updateIndex, (String) firstObject.data);
+//								Pst_update.setInt(firstObject.Pst_updateIndex, (int) firstObject.data);
 								break;
 							}
 
@@ -737,7 +738,8 @@ public class start {
 		//TODO
 		String dbDrv="", dbUrl="", dbUsr="", dbPwd="", excelPath="";
 
-		excelPath = "C://Project Pathologie/test.xlsx";
+		//excelPath = "C://Project Pathologie/test.xlsx";
+		excelPath = "H://Windows - Downloads/eike/MammaDaten.xlsx";
 		//-----------------------------------
 		//DB connection data
 		//-----------------------------------
