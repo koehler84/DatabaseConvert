@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane prefHeight="517.0" prefWidth="555.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.40">
+   <children>
+      <Button layoutX="257.0" layoutY="357.0" mnemonicParsing="false" text="Button" />
+      <ScrollPane layoutX="6.0" layoutY="71.0" prefHeight="200.0" prefWidth="542.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="65.0">
+         <content>
+            <TableView prefHeight="200.0" prefWidth="504.0">
+              <columns>
+                <TableColumn prefWidth="123.0" text="C1" />
+                <TableColumn prefWidth="181.0" text="C2" />
+              </columns>
+            </TableView>
+         </content>
+      </ScrollPane>
+   </children>
+</AnchorPane>
