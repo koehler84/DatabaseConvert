@@ -86,10 +86,9 @@ public class FX_Main {
 				
 				try {
 					// Select fitting database driver and connect:
-					/*???	*/Class.forName( dbDrv );
+					Class.forName( dbDrv );
 					cn = DriverManager.getConnection( dbUrl, dbUsr, dbPwd );
 					label.setVisible(true);
-					//UIFenster1.DBtoTable_Patientendaten();
 					return true;
 				} catch ( Exception ex ) {
 					System.out.println( ex );

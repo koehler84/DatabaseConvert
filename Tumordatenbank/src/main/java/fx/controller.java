@@ -2,7 +2,9 @@ package fx;
 
 import java.io.File;
 import java.net.URL;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
@@ -14,38 +16,56 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
+import tableMasks.Patientendaten;
 
 public class controller implements Initializable {
 	
 	@FXML private AnchorPane centerPanel;
 	@FXML public ProgressBar progressBar;
 	@FXML public Label lblConnected;
-	@FXML private TableView<Object[]> tabelle_Patientendaten;
+	@FXML public TableView<Patientendaten> tabelle_Patientendaten;
+	@FXML public AnchorPane tablePane;
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		// TODO Auto-generated method stub
 		
 		lblConnected.setVisible(false);
 		System.out.println("init");
 		
 		Task<Boolean> task_connect = FX_Main.connect(lblConnected);
 		new Thread(task_connect).start();
+		buildTable_Patientendaten();
 		try {
 			System.out.println(task_connect.get());
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 	}
 	
+	@SuppressWarnings("unchecked")
+	private void buildTable_Patientendaten() {
+		
+		TableColumn<Patientendaten, String> column_Gebdatum = new TableColumn<>("Geburtsdatum");
+		column_Gebdatum.setCellValueFactory(new PropertyValueFactory<Patientendaten, String>("geburtsdatum"));
+		
+		TableColumn<Patientendaten, String> column_Vorname = new TableColumn<>("Vorname");
+		column_Vorname.setCellValueFactory(new PropertyValueFactory<Patientendaten, String>("vorname"));
+		
+		TableColumn<Patientendaten, String> column_Name = new TableColumn<>("Nachname");
+		column_Name.setCellValueFactory(new PropertyValueFactory<Patientendaten, String>("name"));
+				
+		tabelle_Patientendaten.getColumns().addAll(column_Gebdatum, column_Vorname, column_Name);
+		
+	}
+
 	public void abbrechen_Button(ActionEvent e) {
 		try {
 			if (FX_Main.cn != null && !FX_Main.cn.isClosed() && FX_Main.methodsCompleted) {
@@ -79,8 +99,6 @@ public class controller implements Initializable {
 
 			@Override
 			protected Void call() throws Exception {
-				// TODO Auto-generated method stub
-//				testMain.otherTask();
 				
 				for (long i = 0; i < 300000; i++) {
 					System.out.println("Erg: " + i);
@@ -115,14 +133,30 @@ public class controller implements Initializable {
 	
 	public void DBtoTable_Patientendaten() {
 		
-		System.out.println("Button press");
+		ObservableList<Patientendaten> old_data = tabelle_Patientendaten.getItems();
+		ObservableList<Patientendaten> new_data = FXCollections.observableArrayList();
+		boolean success = false;
 		
-		Object[] ob = new Object[]{"test", "test"};
-		ObservableList<Object[]> data = FXCollections.observableArrayList();
-		data.add(ob);
+		try {
+			Statement st = FX_Main.cn.createStatement();
+			ResultSet res = st.executeQuery("select * from mydb.vPatientendaten_Hauptparameter where `Fehler` != 0");
+			
+			while (res.next()) {				
+				Patientendaten pat = new Patientendaten(res.getDate("Geburtsdatum").toString(), 
+						res.getString("Vorname"), res.getString("Name"));
+				new_data.add(pat);
+			}
+			success = true;			
+		} catch (SQLException e) {
+			System.out.println(e + " - fx.controller / DBtoTable_Patientendaten");
+		}
 		
-		tabelle_Patientendaten.getItems().add(ob);
+		if (success) {
+			tabelle_Patientendaten.setItems(new_data);
+		} else {
+			tabelle_Patientendaten.setItems(old_data);
+		}
 		
 	}
-
+	
 }

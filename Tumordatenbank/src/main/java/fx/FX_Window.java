@@ -26,7 +26,7 @@ public class FX_Window extends Application {
 		window.setTitle("Tumordatenbank");
 		window.show();
 		
-		window.setMinWidth(565);
+		window.setMinWidth(600);
 		window.setMinHeight(550);
 		
 	}
