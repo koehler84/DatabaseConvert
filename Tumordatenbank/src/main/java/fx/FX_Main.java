@@ -36,7 +36,7 @@ public class FX_Main {
 		// TODO Auto-generated method stub
 		
 		methodsCompleted = true;
-		recordsToRead = 150;
+		recordsToRead = 30;
 		
 		FX_Window.launch(FX_Window.class, args);
 		

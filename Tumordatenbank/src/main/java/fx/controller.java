@@ -16,9 +16,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import tableMasks.Patientendaten;
@@ -39,7 +37,10 @@ public class controller implements Initializable {
 		
 		Task<Boolean> task_connect = FX_Main.connect(lblConnected);
 		new Thread(task_connect).start();
-		buildTable_Patientendaten();
+		
+		//buildTable_Patientendaten();
+		tabelle_Patientendaten.getColumns().addAll(Patientendaten.getColumns());
+		
 		try {
 			System.out.println(task_connect.get());
 		} catch (InterruptedException e) {
@@ -50,22 +51,6 @@ public class controller implements Initializable {
 		
 	}
 	
-	@SuppressWarnings("unchecked")
-	private void buildTable_Patientendaten() {
-		
-		TableColumn<Patientendaten, String> column_Gebdatum = new TableColumn<>("Geburtsdatum");
-		column_Gebdatum.setCellValueFactory(new PropertyValueFactory<Patientendaten, String>("geburtsdatum"));
-		
-		TableColumn<Patientendaten, String> column_Vorname = new TableColumn<>("Vorname");
-		column_Vorname.setCellValueFactory(new PropertyValueFactory<Patientendaten, String>("vorname"));
-		
-		TableColumn<Patientendaten, String> column_Name = new TableColumn<>("Nachname");
-		column_Name.setCellValueFactory(new PropertyValueFactory<Patientendaten, String>("name"));
-				
-		tabelle_Patientendaten.getColumns().addAll(column_Gebdatum, column_Vorname, column_Name);
-		
-	}
-
 	public void abbrechen_Button(ActionEvent e) {
 		try {
 			if (FX_Main.cn != null && !FX_Main.cn.isClosed() && FX_Main.methodsCompleted) {
@@ -142,8 +127,9 @@ public class controller implements Initializable {
 			ResultSet res = st.executeQuery("select * from mydb.vPatientendaten_Hauptparameter where `Fehler` != 0");
 			
 			while (res.next()) {				
-				Patientendaten pat = new Patientendaten(res.getDate("Geburtsdatum").toString(), 
-						res.getString("Vorname"), res.getString("Name"));
+				Patientendaten pat = new Patientendaten(res.getDate("Geburtsdatum").toString(), res.getString("Vorname"),
+						res.getString("Name"), res.getString("Strasse"), res.getString("Hausnummer"), res.getString("Land"),
+						res.getString("PLZ"), res.getString("Ort"));
 				new_data.add(pat);
 			}
 			success = true;			
