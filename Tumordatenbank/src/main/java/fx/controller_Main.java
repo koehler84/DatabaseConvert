@@ -1,33 +1,39 @@
 package fx;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TableView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import tableMasks.Patientendaten;
 
-public class controller implements Initializable {
+public class controller_Main implements Initializable {
 	
-	@FXML private AnchorPane centerPanel;
+	@FXML public AnchorPane centerPanel;
 	@FXML public ProgressBar progressBar;
 	@FXML public Label lblConnected;
 	@FXML public TableView<Patientendaten> tabelle_Patientendaten;
 	@FXML public AnchorPane tablePane;
+	@FXML public AnchorPane insertPane;
+	@FXML public AnchorPane random;
+	
+	//textFields Patientendaten
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -35,19 +41,25 @@ public class controller implements Initializable {
 		lblConnected.setVisible(false);
 		System.out.println("init");
 		
+		AnchorPane panel = null;
+		try {
+			panel = FXMLLoader.load(getClass().getResource("/fx/layouts/panelPatientendaten.fxml"));
+		} catch (IOException e) {
+			e.printStackTrace();
+			//System.out.println(e);
+		}
+		
+		System.out.println(random.getParent() == centerPanel);
+		
+		//centerPanel.getChildren().addAll(panel);
+		centerPanel.getChildren().setAll(panel);
+		panel.prefWidthProperty().bind(centerPanel.widthProperty());
+		panel.prefHeightProperty().bind(centerPanel.heightProperty());
+		
 		Task<Boolean> task_connect = FX_Main.connect(lblConnected);
 		new Thread(task_connect).start();
 		
-		//buildTable_Patientendaten();
-		tabelle_Patientendaten.getColumns().addAll(Patientendaten.getColumns());
-		
-		try {
-			System.out.println(task_connect.get());
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			e.printStackTrace();
-		}
+		//tabelle_Patientendaten.getColumns().addAll(Patientendaten.getColumns());
 		
 	}
 	
@@ -141,6 +153,18 @@ public class controller implements Initializable {
 			tabelle_Patientendaten.setItems(new_data);
 		} else {
 			tabelle_Patientendaten.setItems(old_data);
+		}
+		
+	}
+	
+	public void rowToTextField_Patientendaten(MouseEvent e) {
+		
+		if (e.getClickCount() == 2) {
+			
+			//int selectedRow = tabelle_Patientendaten.getSelectionModel().getSelectedIndex();
+			
+			
+			
 		}
 		
 	}
