@@ -16,10 +16,6 @@ public class FX_Window extends Application {
 		
 		window = primaryStage;
 		
-//		FXMLLoader loader2 = new FXMLLoader();
-//		loader2.setLocation(FX_Window.class.getResource("/fx/layouts/panelPatientendaten.fxml"));
-//		loader2.load();
-		
 		FXMLLoader loader = new FXMLLoader();
 		loader.setLocation(FX_Window.class.getResource("/fx/layouts/rootScene.fxml"));
 		rootScene = loader.load();

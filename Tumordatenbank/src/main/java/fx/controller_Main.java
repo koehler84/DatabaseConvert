@@ -3,13 +3,12 @@ package fx;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutionException;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -18,7 +17,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TableView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import tableMasks.Patientendaten;
@@ -41,25 +39,20 @@ public class controller_Main implements Initializable {
 		lblConnected.setVisible(false);
 		System.out.println("init");
 		
-		AnchorPane panel = null;
+		AnchorPane panelPatientendaten = null;
 		try {
-			panel = FXMLLoader.load(getClass().getResource("/fx/layouts/panelPatientendaten.fxml"));
+			panelPatientendaten = FXMLLoader.load(getClass().getResource("/fx/layouts/panelPatientendaten.fxml"));
 		} catch (IOException e) {
-			e.printStackTrace();
-			//System.out.println(e);
+			//e.printStackTrace();
+			System.out.println(e + " - loading panelPatientendaten in " + getClass().getName());
 		}
 		
-		System.out.println(random.getParent() == centerPanel);
-		
-		//centerPanel.getChildren().addAll(panel);
-		centerPanel.getChildren().setAll(panel);
-		panel.prefWidthProperty().bind(centerPanel.widthProperty());
-		panel.prefHeightProperty().bind(centerPanel.heightProperty());
+		centerPanel.getChildren().setAll(panelPatientendaten);
+		panelPatientendaten.prefWidthProperty().bind(centerPanel.widthProperty());
+		panelPatientendaten.prefHeightProperty().bind(centerPanel.heightProperty());
 		
 		Task<Boolean> task_connect = FX_Main.connect(lblConnected);
 		new Thread(task_connect).start();
-		
-		//tabelle_Patientendaten.getColumns().addAll(Patientendaten.getColumns());
 		
 	}
 	
@@ -106,8 +99,6 @@ public class controller_Main implements Initializable {
 			}
 		};
 		
-//		service.restart();
-		
 		progressBar.progressProperty().bind(task.progressProperty());
 		Thread thread = new Thread(task);
 		thread.start();
@@ -116,55 +107,30 @@ public class controller_Main implements Initializable {
 	
 	public void datenAnalyse() {
 		
-		FileChooser fc = new FileChooser();
-		File file = fc.showOpenDialog(FX_Window.window);
+		final File file = new FileChooser().showOpenDialog(FX_Window.window);
 		
-		if (file != null && file.exists()) {			
-			new Thread(FX_Main.loadExcel(file)).start();
-			Task<Void> startTask = FX_Main.start(file.getPath());
+		if (file != null && file.exists()) {
+			
+			Task<XSSFSheet> loadSheet = FX_Main.loadExcel(file);
+			progressBar.setProgress(-1);
+			new Thread(loadSheet).start();
+			XSSFSheet sheet = null;
+			try {
+				sheet = loadSheet.get();
+			} catch (InterruptedException e) {
+				System.out.println(e + " - Fehler in datenAnalyse() in " + getClass().getName());
+				//e.printStackTrace();
+			} catch (ExecutionException e) {
+				System.out.println(e + " - Fehler in datenAnalyse() in " + getClass().getName());
+				//e.printStackTrace();
+			}
+			
+			Task<Void> startTask = FX_Main.excelToPatient(sheet);
 			progressBar.progressProperty().bind(startTask.progressProperty());
 			new Thread(startTask).start();
-		}
-		
-	}
-	
-	public void DBtoTable_Patientendaten() {
-		
-		ObservableList<Patientendaten> old_data = tabelle_Patientendaten.getItems();
-		ObservableList<Patientendaten> new_data = FXCollections.observableArrayList();
-		boolean success = false;
-		
-		try {
-			Statement st = FX_Main.cn.createStatement();
-			ResultSet res = st.executeQuery("select * from mydb.vPatientendaten_Hauptparameter where `Fehler` != 0");
 			
-			while (res.next()) {				
-				Patientendaten pat = new Patientendaten(res.getDate("Geburtsdatum").toString(), res.getString("Vorname"),
-						res.getString("Name"), res.getString("Strasse"), res.getString("Hausnummer"), res.getString("Land"),
-						res.getString("PLZ"), res.getString("Ort"));
-				new_data.add(pat);
-			}
-			success = true;			
-		} catch (SQLException e) {
-			System.out.println(e + " - fx.controller / DBtoTable_Patientendaten");
-		}
-		
-		if (success) {
-			tabelle_Patientendaten.setItems(new_data);
 		} else {
-			tabelle_Patientendaten.setItems(old_data);
-		}
-		
-	}
-	
-	public void rowToTextField_Patientendaten(MouseEvent e) {
-		
-		if (e.getClickCount() == 2) {
-			
-			//int selectedRow = tabelle_Patientendaten.getSelectionModel().getSelectedIndex();
-			
-			
-			
+			//user voll nerven
 		}
 		
 	}

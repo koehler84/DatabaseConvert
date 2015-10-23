@@ -65,7 +65,7 @@
                           <content>
                             <AnchorPane fx:id="tablePane" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
                                  <children>
-                                    <TableView fx:id="tabelle_Patientendaten" onMouseClicked="#rowToTextField_Patientendaten" prefHeight="200.0" prefWidth="598.0" tableMenuButtonVisible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <TableView fx:id="tabelle_Patientendaten" prefHeight="200.0" prefWidth="598.0" tableMenuButtonVisible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <columnResizePolicy>
                                           <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                        </columnResizePolicy></TableView>
@@ -99,7 +99,7 @@
                   </SplitPane>
                   <AnchorPane layoutX="101.0" layoutY="403.0" prefHeight="40.0" prefWidth="555.0" style="-fx-background-color: grey;" stylesheets="@style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                      <children>
-                        <Button layoutX="426.0" layoutY="8.0" mnemonicParsing="false" onAction="#DBtoTable_Patientendaten" text="Tabelle aktualisieren" AnchorPane.bottomAnchor="7.0" AnchorPane.rightAnchor="62.0" />
+                        <Button layoutX="426.0" layoutY="8.0" mnemonicParsing="false" text="Tabelle aktualisieren" AnchorPane.bottomAnchor="7.0" AnchorPane.rightAnchor="62.0" />
                         <Button layoutX="489.0" layoutY="8.0" mnemonicParsing="false" text="Fertig" AnchorPane.bottomAnchor="7.0" AnchorPane.rightAnchor="7.0" />
                      </children>
                   </AnchorPane>

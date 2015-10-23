@@ -101,27 +101,23 @@ public class FX_Main {
 		return task;		
 	}
 	
-	public static Task<Void> loadExcel(final File excel) {
-		
-		Task<Void> task = new Task<Void>() {
+	public static Task<XSSFSheet> loadExcel(final File excel) {
+		//load excel is there to load the file for all of the reading methods, the sheet will be returned
+		Task<XSSFSheet> task = new Task<XSSFSheet>() {
 
 			@SuppressWarnings("resource")
 			@Override
-			protected Void call() throws Exception {
+			protected XSSFSheet call() throws Exception {
 				// TODO Auto-generated method stub
+				updateProgress(-1, 5);
 				
-				//String excelPath = "C://Project Pathologie/test.xlsx";
+				FileInputStream fis = new FileInputStream(excel);
+				XSSFWorkbook book = new XSSFWorkbook(fis);;
+				XSSFSheet sheet = book.getSheetAt(0);
 				
-				FileInputStream fis = null;
-				sheet = null;
-				XSSFWorkbook book = null;
-				
-				fis = new FileInputStream(excel);
-				book = new XSSFWorkbook(fis);
-				sheet = book.getSheetAt(0);
 				book.setMissingCellPolicy(Row.CREATE_NULL_AS_BLANK);
 				
-				return null;
+				return sheet;
 			}
 			
 		};
@@ -129,7 +125,7 @@ public class FX_Main {
 		return task;
 	}
 	
-	public static Task<Void> start(final String path) {
+	public static Task<Void> excelToPatient(final XSSFSheet sheet) {
 		
 		Task<Void> task = new Task<Void>() {
 
@@ -138,23 +134,11 @@ public class FX_Main {
 				// TODO Auto-generated method stub
 				
 				//excelToPatient
-				System.out.println("excelToPatient - Path: " + path);
+				System.out.println("excelToPatient");
 				updateProgress(-1, recordsToRead);
 				
 				//if (spaltenFehler) return;
 				
-				File excel = null;
-				FileInputStream fis = null;
-				XSSFSheet sheet = null;
-				XSSFWorkbook book = null;
-				
-				excel = new File(path);
-				fis = new FileInputStream(excel);
-				book = new XSSFWorkbook(fis);
-				sheet = book.getSheetAt(0);
-				book.setMissingCellPolicy(Row.CREATE_NULL_AS_BLANK);
-				
-								
 				Iterator<Row> itr = sheet.iterator();
 				Row row = itr.next();
 				
@@ -188,7 +172,7 @@ public class FX_Main {
 
 						i++;
 						
-						updateProgress(i, recordsToRead);
+						updateProgress(i, recordsToRead*2);
 						row = itr.next();
 						// Iterating over each column of Excel file
 						
@@ -369,6 +353,7 @@ public class FX_Main {
 					System.out.println("Fehler beim Erstellen des PreparedStatement \"insert into patientendaten\"!");
 				}
 				
+				updateProgress(recordsToRead, recordsToRead);
 				FX_Main.methodsCompleted = true;
 				
 				return null;
