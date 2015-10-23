@@ -125,13 +125,15 @@ public class FX_Main {
 		return task;
 	}
 	
-	public static Task<Void> excelToPatient(final XSSFSheet sheet) {
+	public static Task<Void> excelToPatient(final Task<XSSFSheet> loadSheetTask) {
 		
 		Task<Void> task = new Task<Void>() {
 
 			@Override
 			protected Void call() throws Exception {
 				// TODO Auto-generated method stub
+				
+				XSSFSheet sheet = loadSheetTask.get();
 				
 				//excelToPatient
 				System.out.println("excelToPatient");

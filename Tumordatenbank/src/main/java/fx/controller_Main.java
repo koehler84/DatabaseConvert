@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
 
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 
@@ -114,18 +113,8 @@ public class controller_Main implements Initializable {
 			Task<XSSFSheet> loadSheet = FX_Main.loadExcel(file);
 			progressBar.setProgress(-1);
 			new Thread(loadSheet).start();
-			XSSFSheet sheet = null;
-			try {
-				sheet = loadSheet.get();
-			} catch (InterruptedException e) {
-				System.out.println(e + " - Fehler in datenAnalyse() in " + getClass().getName());
-				//e.printStackTrace();
-			} catch (ExecutionException e) {
-				System.out.println(e + " - Fehler in datenAnalyse() in " + getClass().getName());
-				//e.printStackTrace();
-			}
 			
-			Task<Void> startTask = FX_Main.excelToPatient(sheet);
+			Task<Void> startTask = FX_Main.excelToPatient(loadSheet);
 			progressBar.progressProperty().bind(startTask.progressProperty());
 			new Thread(startTask).start();
 			
