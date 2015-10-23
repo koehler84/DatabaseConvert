@@ -26,10 +26,7 @@ public class controller_Main implements Initializable {
 	@FXML public ProgressBar progressBar;
 	@FXML public Label lblConnected;
 	@FXML public TableView<Patientendaten> tabelle_Patientendaten;
-	@FXML public AnchorPane tablePane;
-	@FXML public AnchorPane insertPane;
-	@FXML public AnchorPane random;
-	
+		
 	//textFields Patientendaten
 	
 	@Override
@@ -119,7 +116,7 @@ public class controller_Main implements Initializable {
 			new Thread(startTask).start();
 			
 		} else {
-			//user voll nerven
+			//user nerven
 		}
 		
 	}
