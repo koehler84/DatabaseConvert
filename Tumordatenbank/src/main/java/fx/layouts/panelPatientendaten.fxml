@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fx.controller_Patientendaten">
+<AnchorPane fx:id="mainPanel" prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fx.controller_Patientendaten">
    <children>
       <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="527.0" prefWidth="555.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
@@ -23,7 +23,7 @@
                   </AnchorPane>
               </content>
             </ScrollPane>
-          <AnchorPane minHeight="150.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+          <AnchorPane minHeight="130.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
                   <Label layoutY="6.0" text="Geburtsdatum:" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="10.0" />
                   <Label layoutX="130.0" layoutY="10.0" text="Vorname:" AnchorPane.leftAnchor="130.0" AnchorPane.topAnchor="10.0" />

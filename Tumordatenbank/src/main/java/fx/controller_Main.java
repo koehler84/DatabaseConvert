@@ -1,7 +1,6 @@
 package fx;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
@@ -11,23 +10,17 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
-import tableMasks.Patientendaten;
 
 public class controller_Main implements Initializable {
 	
 	@FXML public AnchorPane centerPanel;
 	@FXML public ProgressBar progressBar;
 	@FXML public Label lblConnected;
-	@FXML public TableView<Patientendaten> tabelle_Patientendaten;
-		
-	//textFields Patientendaten
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -35,17 +28,9 @@ public class controller_Main implements Initializable {
 		lblConnected.setVisible(false);
 		System.out.println("init");
 		
-		AnchorPane panelPatientendaten = null;
-		try {
-			panelPatientendaten = FXMLLoader.load(getClass().getResource("/fx/layouts/panelPatientendaten.fxml"));
-		} catch (IOException e) {
-			//e.printStackTrace();
-			System.out.println(e + " - loading panelPatientendaten in " + getClass().getName());
-		}
-		
-		centerPanel.getChildren().setAll(panelPatientendaten);
-		panelPatientendaten.prefWidthProperty().bind(centerPanel.widthProperty());
-		panelPatientendaten.prefHeightProperty().bind(centerPanel.heightProperty());
+		centerPanel.getChildren().setAll(controller_Patientendaten.mainPanel);
+		controller_Patientendaten.mainPanel.prefWidthProperty().bind(centerPanel.widthProperty());
+		controller_Patientendaten.mainPanel.prefHeightProperty().bind(centerPanel.heightProperty());
 		
 		Task<Boolean> task_connect = FX_Main.connect(lblConnected);
 		new Thread(task_connect).start();
@@ -76,6 +61,18 @@ public class controller_Main implements Initializable {
 		}
 		
 		FX_Window.window.close();
+	}
+	
+	public void setCenterPanel_Patientendaten() {
+		centerPanel.getChildren().setAll(controller_Patientendaten.mainPanel);
+		controller_Patientendaten.mainPanel.prefWidthProperty().bind(centerPanel.widthProperty());
+		controller_Patientendaten.mainPanel.prefHeightProperty().bind(centerPanel.heightProperty());
+	}
+	
+	public void setCenterPanel_Faelle() {
+		centerPanel.getChildren().setAll(controller_Fall.mainPanel);
+		controller_Fall.mainPanel.prefWidthProperty().bind(centerPanel.widthProperty());
+		controller_Fall.mainPanel.prefHeightProperty().bind(centerPanel.heightProperty());
 	}
 	
 	public void setProgress() {

@@ -20,7 +20,7 @@ import tableMasks.Patientendaten;
 public class controller_Patientendaten implements Initializable {
 
 	@FXML public TableView<Patientendaten> table;
-	@FXML public static AnchorPane tablePane;
+	@FXML public static AnchorPane mainPanel;
 	@FXML private TextField txtField_Geburtsdatum;
 	@FXML private TextField txtField_Vorname;
 	@FXML private TextField txtField_Name;
