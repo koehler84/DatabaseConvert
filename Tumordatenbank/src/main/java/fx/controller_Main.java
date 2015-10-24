@@ -75,6 +75,12 @@ public class controller_Main implements Initializable {
 		controller_Fall.mainPanel.prefHeightProperty().bind(centerPanel.heightProperty());
 	}
 	
+	public void setCenterPanel_SQLManager() {
+		centerPanel.getChildren().setAll(controller_SQLManager.mainPanel);
+		controller_SQLManager.mainPanel.prefWidthProperty().bind(centerPanel.widthProperty());
+		controller_SQLManager.mainPanel.prefHeightProperty().bind(centerPanel.heightProperty());
+	}
+	
 	public void setProgress() {
 		progressBar.progressProperty().unbind();
 		

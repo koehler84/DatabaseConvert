@@ -4,6 +4,7 @@ import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
@@ -11,6 +12,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
@@ -21,7 +23,7 @@ public class controller_Patientendaten implements Initializable {
 
 	@FXML public TableView<Patientendaten> table;
 	@FXML public static AnchorPane mainPanel;
-	@FXML private TextField txtField_Geburtsdatum;
+	@FXML private DatePicker datePicker_Geburtsdatum;
 	@FXML private TextField txtField_Vorname;
 	@FXML private TextField txtField_Name;
 	@FXML private TextField txtField_Strasse;
@@ -50,8 +52,11 @@ public class controller_Patientendaten implements Initializable {
 			Statement st = FX_Main.cn.createStatement();
 			ResultSet res = st.executeQuery("select * from mydb.vPatientendaten_Hauptparameter where `Fehler` != 0");
 			
-			while (res.next()) {				
-				Patientendaten pat = new Patientendaten(res.getDate("Geburtsdatum").toString(), res.getString("Vorname"),
+			while (res.next()) {
+				LocalDate geburtsdatum = null;
+				if (res.getDate("Geburtsdatum") != null) geburtsdatum = res.getDate("Geburtsdatum").toLocalDate();
+				
+				Patientendaten pat = new Patientendaten(geburtsdatum, res.getString("Vorname"),
 						res.getString("Name"), res.getString("Strasse"), res.getString("Hausnummer"), res.getString("Land"),
 						res.getString("PLZ"), res.getString("Ort"));
 				new_data.add(pat);
@@ -76,7 +81,7 @@ public class controller_Patientendaten implements Initializable {
 			Patientendaten selectedPat = table.getSelectionModel().getSelectedItem();
 			
 			if (selectedPat != null) {
-				txtField_Geburtsdatum.setText(selectedPat.getGeburtsdatum());
+				datePicker_Geburtsdatum.setValue(selectedPat.getGeburtsdatum());
 				txtField_Vorname.setText(selectedPat.getVorname());
 				txtField_Name.setText(selectedPat.getName());
 				txtField_Strasse.setText(selectedPat.getStrasse());

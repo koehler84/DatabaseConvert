@@ -21,6 +21,7 @@ public class FX_Window extends Application {
 		//TODO load subscenes, maybe put into thread/task
 		controller_Patientendaten.mainPanel = FXMLLoader.load(getClass().getResource("/fx/layouts/panelPatientendaten.fxml"));
 		controller_Fall.mainPanel = FXMLLoader.load(getClass().getResource("/fx/layouts/panelFall.fxml"));
+		controller_SQLManager.mainPanel = FXMLLoader.load(getClass().getResource("/fx/layouts/panelSQLManager.fxml"));
 		
 		//load child scenes before root
 		FXMLLoader loader = new FXMLLoader();

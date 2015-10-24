@@ -1,5 +1,6 @@
 package tableMasks;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import javafx.scene.control.TableColumn;
@@ -7,7 +8,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 public class Patientendaten {
 
-	String geburtsdatum;
+	LocalDate geburtsdatum;
 	String vorname;
 	String name;
 	String strasse;
@@ -16,13 +17,13 @@ public class Patientendaten {
 	String plz;
 	String ort;
 	
-	public Patientendaten(String geburtsdatum, String vorname, String name) {
+	public Patientendaten(LocalDate geburtsdatum, String vorname, String name) {
 		this.geburtsdatum = geburtsdatum;
 		this.vorname = vorname;
 		this.name = name;
 	}
 	
-	public Patientendaten(String geburtsdatum, String vorname, String name, String strasse, String hausnummer,
+	public Patientendaten(LocalDate geburtsdatum, String vorname, String name, String strasse, String hausnummer,
 			String land, String plz, String ort) {
 		super();
 		this.geburtsdatum = geburtsdatum;
@@ -39,8 +40,8 @@ public class Patientendaten {
 		
 		ArrayList<TableColumn<Patientendaten, ?>> columns = new ArrayList<TableColumn<Patientendaten, ?>>();
 		
-		TableColumn<Patientendaten, String> col_gebDatum = new TableColumn<Patientendaten, String>("Geburtsdatum");
-		col_gebDatum.setCellValueFactory(new PropertyValueFactory<Patientendaten, String>("geburtsdatum"));
+		TableColumn<Patientendaten, LocalDate> col_gebDatum = new TableColumn<Patientendaten, LocalDate>("Geburtsdatum");
+		col_gebDatum.setCellValueFactory(new PropertyValueFactory<Patientendaten, LocalDate>("geburtsdatum"));
 		TableColumn<Patientendaten, String> col_vorname = new TableColumn<Patientendaten, String>("Vorname");
 		col_vorname.setCellValueFactory(new PropertyValueFactory<Patientendaten, String>("vorname"));
 		TableColumn<Patientendaten, String> col_name = new TableColumn<Patientendaten, String>("Nachname");
@@ -68,11 +69,11 @@ public class Patientendaten {
 		return columns;
 	}
 
-	public String getGeburtsdatum() {
+	public LocalDate getGeburtsdatum() {
 		return geburtsdatum;
 	}
 
-	public void setGeburtsdatum(String geburtsdatum) {
+	public void setGeburtsdatum(LocalDate geburtsdatum) {
 		this.geburtsdatum = geburtsdatum;
 	}
 

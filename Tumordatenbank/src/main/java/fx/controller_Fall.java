@@ -4,6 +4,7 @@ import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
@@ -24,7 +25,7 @@ public class controller_Fall implements Initializable {
 
 	@FXML public TableView<Fall> table;
 	@FXML public static AnchorPane mainPanel;
-	@FXML private TextField txtField_Geburtsdatum;
+	@FXML private DatePicker datePicker_Geburtsdatum;
 	@FXML private TextField txtField_Vorname;
 	@FXML private TextField txtField_Name;
 	@FXML private TextField txtField_eNummer;
@@ -44,7 +45,7 @@ public class controller_Fall implements Initializable {
 		
 	}
 	
-	public void fertig_Button() {
+	public void submitToDB() {
 		
 	}
 	
@@ -59,9 +60,13 @@ public class controller_Fall implements Initializable {
 			ResultSet res = st.executeQuery("select * from vFehlerFall;");
 			
 			while (res.next()) {
+				LocalDate geburtsdatum = null;
+				LocalDate eingangsdatum = null;
+				if (res.getDate("Geburtsdatum") != null) geburtsdatum = res.getDate("Geburtsdatum").toLocalDate();
+				if (res.getDate("Eingangsdatum") != null) eingangsdatum = res.getDate("Eingangsdatum").toLocalDate();
+				
 				Fall fall = new Fall(res.getString("E.-Nummer"), Befundtyp.getBefundtyp(res.getInt("Befundtyp")), res.getString("Arzt"),
-						res.getDate("Eingangsdatum"), res.getString("Einsender"), res.getDate("Geburtsdatum"),
-						res.getString("Vorname"), res.getString("Name"));
+						eingangsdatum, res.getString("Einsender"), geburtsdatum, res.getString("Vorname"), res.getString("Name"));
 				new_data.add(fall);
 			}
 			success = true;			
@@ -84,13 +89,13 @@ public class controller_Fall implements Initializable {
 			Fall selectedFall = table.getSelectionModel().getSelectedItem();
 			
 			if (selectedFall != null) {
-				if (selectedFall.getGeburtsdatum() != null) txtField_Geburtsdatum.setText(selectedFall.getGeburtsdatum().toString());
+				datePicker_Geburtsdatum.setValue(selectedFall.getGeburtsdatum());
 				txtField_Vorname.setText(selectedFall.getVorname());
 				txtField_Name.setText(selectedFall.getName());
 				txtField_eNummer.setText(selectedFall.getENummer());
 				choiceBox_Befundtyp.setValue(selectedFall.getBefundtyp());
 				txtField_Arzt.setText(selectedFall.getArzt());
-				datePicker_Eingangsdatum.setValue(selectedFall.getEingangsdatum().toLocalDate());
+				datePicker_Eingangsdatum.setValue(selectedFall.getEingangsdatum());
 				txtField_Einsender.setText(selectedFall.getEinsender());				
 			}
 			

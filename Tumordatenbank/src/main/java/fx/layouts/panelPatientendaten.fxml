@@ -14,7 +14,7 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
                      <children>
-                        <TableView fx:id="table" layoutX="35.0" layoutY="7.0" onMouseClicked="#rowToTextField" prefHeight="200.0" prefWidth="200.0" tableMenuButtonVisible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <TableView fx:id="table" layoutX="35.0" layoutY="7.0" onMouseClicked="#rowToTextField" prefHeight="200.0" prefWidth="200.0" tableMenuButtonVisible="true" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
                            <columnResizePolicy>
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                            </columnResizePolicy>
@@ -29,7 +29,6 @@
                   <Label layoutX="130.0" layoutY="10.0" text="Vorname:" AnchorPane.leftAnchor="130.0" AnchorPane.topAnchor="10.0" />
                   <Label layoutX="247.0" layoutY="10.0" text="Nachname:" AnchorPane.leftAnchor="250.0" AnchorPane.topAnchor="10.0" />
                   <Label layoutX="363.0" layoutY="10.0" text="Straße:" AnchorPane.leftAnchor="370.0" AnchorPane.topAnchor="10.0" />
-                  <TextField fx:id="txtField_Geburtsdatum" layoutX="20.0" layoutY="32.0" prefHeight="25.0" prefWidth="100.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="32.0" />
                   <TextField fx:id="txtField_Vorname" layoutX="140.0" layoutY="32.0" prefHeight="25.0" prefWidth="100.0" AnchorPane.leftAnchor="140.0" AnchorPane.topAnchor="32.0" />
                   <TextField fx:id="txtField_Strasse" layoutX="371.0" layoutY="32.0" prefHeight="25.0" prefWidth="100.0" AnchorPane.leftAnchor="380.0" AnchorPane.topAnchor="32.0" />
                   <TextField fx:id="txtField_Name" layoutX="257.0" layoutY="32.0" prefHeight="25.0" prefWidth="100.0" AnchorPane.leftAnchor="260.0" AnchorPane.topAnchor="32.0" />
@@ -43,6 +42,7 @@
                   <Label layoutX="249.0" layoutY="70.0" text="Ort:" AnchorPane.leftAnchor="250.0" AnchorPane.topAnchor="70.0" />
                   <Label layoutX="380.0" layoutY="96.0" text="Datensatz ist vollständig:" AnchorPane.leftAnchor="370.0" AnchorPane.topAnchor="96.0" />
                   <CheckBox fx:id="checkBox" layoutX="514.0" layoutY="96.0" mnemonicParsing="false" AnchorPane.leftAnchor="514.0" AnchorPane.topAnchor="96.0" />
+                  <DatePicker fx:id="datePicker_Geburtsdatum" layoutX="94.0" layoutY="140.0" prefWidth="100.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="32.0" />
                </children>
             </AnchorPane>
         </items>

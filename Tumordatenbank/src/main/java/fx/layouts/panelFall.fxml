@@ -13,7 +13,7 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
                      <children>
-                        <TableView fx:id="table" onMouseClicked="#rowToTextField" prefHeight="200.0" prefWidth="200.0" tableMenuButtonVisible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <TableView fx:id="table" onMouseClicked="#rowToTextField" prefHeight="200.0" prefWidth="200.0" tableMenuButtonVisible="true" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-2.0">
                           <columns>
                             <TableColumn prefWidth="75.0" text="C1" />
                             <TableColumn prefWidth="75.0" text="C2" />
@@ -31,7 +31,6 @@
                   <Label layoutX="10.0" layoutY="16.0" text="Geburtsdatum:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
                   <Label layoutX="140.0" layoutY="20.0" text="Vorname:" AnchorPane.leftAnchor="130.0" AnchorPane.topAnchor="10.0" />
                   <Label layoutX="257.0" layoutY="20.0" text="Nachname:" AnchorPane.leftAnchor="250.0" AnchorPane.topAnchor="10.0" />
-                  <TextField fx:id="txtField_Geburtsdatum" layoutX="15.0" layoutY="27.0" prefWidth="100.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="32.0" />
                   <TextField fx:id="txtField_Vorname" layoutX="131.0" layoutY="32.0" prefWidth="100.0" AnchorPane.leftAnchor="140.0" AnchorPane.topAnchor="32.0" />
                   <TextField fx:id="txtField_Name" layoutX="260.0" layoutY="32.0" prefWidth="100.0" AnchorPane.leftAnchor="260.0" AnchorPane.topAnchor="32.0" />
                   <Label layoutX="283.0" layoutY="158.0" text="Datensatz ist vollständig:" AnchorPane.leftAnchor="130.0" AnchorPane.topAnchor="158.0" />
@@ -46,13 +45,14 @@
                   <TextField fx:id="txtField_Einsender" layoutX="385.0" layoutY="92.0" prefWidth="100.0" AnchorPane.leftAnchor="380.0" AnchorPane.topAnchor="92.0" />
                   <Label layoutX="29.0" layoutY="117.0" text="Arzt:" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="130.0" />
                   <TextField fx:id="txtField_Arzt" layoutX="15.0" layoutY="154.0" prefWidth="100.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="152.0" />
+                  <DatePicker fx:id="datePicker_Geburtsdatum" layoutX="43.0" layoutY="32.0" prefWidth="100.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="32.0" />
                </children>
             </AnchorPane>
         </items>
       </SplitPane>
       <AnchorPane prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: grey;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
-            <Button layoutX="484.0" layoutY="8.0" mnemonicParsing="false" onAction="#fertig_Button" text="Fertig" AnchorPane.bottomAnchor="7.0" AnchorPane.rightAnchor="7.0" />
+            <Button layoutX="484.0" layoutY="8.0" mnemonicParsing="false" onAction="#submitToDB" text="Fertig" AnchorPane.bottomAnchor="7.0" AnchorPane.rightAnchor="7.0" />
             <Button layoutX="415.0" layoutY="8.0" mnemonicParsing="false" onAction="#DBtoTable" text="Tabelle aktualisieren" AnchorPane.bottomAnchor="7.0" AnchorPane.rightAnchor="62.0" />
          </children>
       </AnchorPane>

@@ -16,7 +16,7 @@
                   <Menu mnemonicParsing="false" text="Datenbankeinstellungen">
                     <items>
                       <MenuItem mnemonicParsing="false" text="Schema erneuern" />
-                        <MenuItem mnemonicParsing="false" text="Run SQL Statement" />
+                        <MenuItem mnemonicParsing="false" onAction="#setCenterPanel_SQLManager" text="Run SQL Statement" />
                     </items>
                   </Menu>
                   <MenuItem mnemonicParsing="false" onAction="#setCenterPanel_Patientendaten" text="Patientendaten bearbeiten" />
