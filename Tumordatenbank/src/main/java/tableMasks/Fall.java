@@ -1,5 +1,6 @@
 package tableMasks;
 
+import java.sql.Date;
 import java.util.ArrayList;
 
 import javafx.scene.control.TableColumn;
@@ -8,19 +9,19 @@ import main.Befundtyp;
 
 public class Fall {
 
-	String eNummer;
+	String ENummer;
 	Befundtyp befundtyp;
 	String Arzt;
-	String Eingangsdatum;
+	Date Eingangsdatum;
 	String Einsender;
-	String Geburtsdatum;
+	Date Geburtsdatum;
 	String Vorname;
 	String Name;
 	
-	public Fall(String eNummer, Befundtyp befundtyp, String arzt, String eingangsdatum, String einsender,
-			String geburtsdatum, String vorname, String name) {
+	public Fall(String eNummer, Befundtyp befundtyp, String arzt, Date eingangsdatum, String einsender,
+			Date geburtsdatum, String vorname, String name) {
 		super();
-		this.eNummer = eNummer;
+		this.ENummer = eNummer;
 		this.befundtyp = befundtyp;
 		Arzt = arzt;
 		Eingangsdatum = eingangsdatum;
@@ -34,21 +35,21 @@ public class Fall {
 		
 		ArrayList<TableColumn<Fall, ?>> columns = new ArrayList<TableColumn<Fall, ?>>();
 		
-		TableColumn<Fall, String> col_gebDatum = new TableColumn<Fall, String>("Geburtsdatum");
-		col_gebDatum.setCellValueFactory(new PropertyValueFactory<Fall, String>("geburtsdatum"));
+		TableColumn<Fall, Date> col_gebDatum = new TableColumn<Fall, Date>("Geburtsdatum");
+		col_gebDatum.setCellValueFactory(new PropertyValueFactory<Fall, Date>("geburtsdatum"));
 		TableColumn<Fall, String> col_vorname = new TableColumn<Fall, String>("Vorname");
 		col_vorname.setCellValueFactory(new PropertyValueFactory<Fall, String>("vorname"));
 		TableColumn<Fall, String> col_name = new TableColumn<Fall, String>("Nachname");
 		col_name.setCellValueFactory(new PropertyValueFactory<Fall, String>("name"));
 		
 		TableColumn<Fall, String> col_eNummer = new TableColumn<Fall, String>("E.-Nummer");
-		col_eNummer.setCellValueFactory(new PropertyValueFactory<Fall, String>("eNummer"));
+		col_eNummer.setCellValueFactory(new PropertyValueFactory<Fall, String>("ENummer"));
 		TableColumn<Fall, Befundtyp> col_befundtyp = new TableColumn<Fall, Befundtyp>("Befundtyp");
 		col_befundtyp.setCellValueFactory(new PropertyValueFactory<Fall, Befundtyp>("befundtyp"));
 		TableColumn<Fall, String> col_arzt = new TableColumn<Fall, String>("Arzt");
 		col_arzt.setCellValueFactory(new PropertyValueFactory<Fall, String>("arzt"));
-		TableColumn<Fall, String> col_eingangsdatum = new TableColumn<Fall, String>("Eingangsdatum");
-		col_eingangsdatum.setCellValueFactory(new PropertyValueFactory<Fall, String>("eingangsdatum"));
+		TableColumn<Fall, Date> col_eingangsdatum = new TableColumn<Fall, Date>("Eingangsdatum");
+		col_eingangsdatum.setCellValueFactory(new PropertyValueFactory<Fall, Date>("eingangsdatum"));
 		TableColumn<Fall, String> col_einsender = new TableColumn<Fall, String>("Einsender");
 		col_einsender.setCellValueFactory(new PropertyValueFactory<Fall, String>("einsender"));
 		
@@ -64,12 +65,12 @@ public class Fall {
 		return columns;
 	}
 	
-	public String geteNummer() {
-		return eNummer;
+	public String getENummer() {
+		return ENummer;
 	}
 	
-	public void seteNummer(String eNummer) {
-		this.eNummer = eNummer;
+	public void setENummer(String eNummer) {
+		this.ENummer = eNummer;
 	}
 	
 	public Befundtyp getBefundtyp() {
@@ -88,11 +89,11 @@ public class Fall {
 		Arzt = arzt;
 	}
 	
-	public String getEingangsdatum() {
+	public Date getEingangsdatum() {
 		return Eingangsdatum;
 	}
 	
-	public void setEingangsdatum(String eingangsdatum) {
+	public void setEingangsdatum(Date eingangsdatum) {
 		Eingangsdatum = eingangsdatum;
 	}
 	
@@ -104,11 +105,11 @@ public class Fall {
 		Einsender = einsender;
 	}
 	
-	public String getGeburtsdatum() {
+	public Date getGeburtsdatum() {
 		return Geburtsdatum;
 	}
 	
-	public void setGeburtsdatum(String geburtsdatum) {
+	public void setGeburtsdatum(Date geburtsdatum) {
 		Geburtsdatum = geburtsdatum;
 	}
 	

@@ -40,7 +40,7 @@ public class controller_Patientendaten implements Initializable {
 		
 	}
 	
-	public void DBtoTable_Patientendaten() {
+	public void DBtoTable() {
 		
 		ObservableList<Patientendaten> old_data = table.getItems();
 		ObservableList<Patientendaten> new_data = FXCollections.observableArrayList();
@@ -58,7 +58,7 @@ public class controller_Patientendaten implements Initializable {
 			}
 			success = true;			
 		} catch (SQLException e) {
-			System.out.println(e + " - fx.controller / DBtoTable_Patientendaten");
+			System.out.println(e + " - fx.controller_Patientendaten / DBtoTable");
 		}
 		
 		if (success) {
