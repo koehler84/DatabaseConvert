@@ -91,7 +91,7 @@ public class FX_Main {
 					label.setVisible(true);
 					return true;
 				} catch ( Exception ex ) {
-					System.out.println( ex );
+					System.err.println( ex );
 					return false;
 				}
 				

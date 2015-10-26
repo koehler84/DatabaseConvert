@@ -28,9 +28,13 @@ public class controller_Main implements Initializable {
 		lblConnected.setVisible(false);
 		System.out.println("init");
 		
-		centerPanel.getChildren().setAll(controller_Patientendaten.mainPanel);
-		controller_Patientendaten.mainPanel.prefWidthProperty().bind(centerPanel.widthProperty());
-		controller_Patientendaten.mainPanel.prefHeightProperty().bind(centerPanel.heightProperty());
+		centerPanel.getChildren().setAll(controller_Logo.mainPanel);
+		controller_Logo.mainPanel.prefWidthProperty().bind(centerPanel.widthProperty());
+		controller_Logo.mainPanel.prefHeightProperty().bind(centerPanel.heightProperty());
+		
+//		centerPanel.getChildren().setAll(controller_Patientendaten.mainPanel);
+//		controller_Patientendaten.mainPanel.prefWidthProperty().bind(centerPanel.widthProperty());
+//		controller_Patientendaten.mainPanel.prefHeightProperty().bind(centerPanel.heightProperty());
 		
 		Task<Boolean> task_connect = FX_Main.connect(lblConnected);
 		new Thread(task_connect).start();

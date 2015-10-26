@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<BorderPane fx:id="mainPanel" prefHeight="500.0" prefWidth="500.0" style="-fx-background-color: grey;" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fx.controller_Logo">
+   <center>
+      <ImageView fx:id="image" fitHeight="181.0" fitWidth="500.0" onMouseClicked="#easterEgg" preserveRatio="true" BorderPane.alignment="CENTER">
+         <image>
+            <Image url="@../media/Logo.png" />
+         </image>
+      </ImageView>
+   </center>
+</BorderPane>
