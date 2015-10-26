@@ -3,6 +3,7 @@ package fx;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
@@ -37,6 +38,7 @@ public class FX_Window extends Application {
 		
 		window.setMinWidth(600);
 		window.setMinHeight(550);
+		window.getIcons().add(new Image("fx/media/Icon.png"));
 		
 		long zeit = System.currentTimeMillis() - start;
 		System.out.println("Benötigte Zeit zum Öffnen: " + zeit);
