@@ -108,11 +108,15 @@ public class controller_Main implements Initializable {
 				
 	}
 	
+	/**
+	 * Method starts analyzing an excel file and putting data into the database. This method opens a <i>FileChooser</i> 
+	 * to let the user choose a path.
+	 */
 	public void datenAnalyse() {
 		
 		final File file = new FileChooser().showOpenDialog(FX_Window.window);
 		
-		if (file != null && file.exists()) {
+		if (file != null && file.exists() && FX_Main.cn != null) {
 			
 			Task<XSSFSheet> loadSheet = FX_Main.loadExcel(file);
 			progressBar.setProgress(-1);
@@ -121,6 +125,8 @@ public class controller_Main implements Initializable {
 			Task<Void> startTask = FX_Main.excelToPatient(loadSheet);
 			progressBar.progressProperty().bind(startTask.progressProperty());
 			new Thread(startTask).start();
+			
+		} else if (FX_Main.cn == null) {
 			
 		} else {
 			//user nerven

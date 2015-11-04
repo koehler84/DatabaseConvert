@@ -41,7 +41,7 @@ public class FX_Window extends Application {
 		window.getIcons().add(new Image("fx/media/Icon.png"));
 		
 		long zeit = System.currentTimeMillis() - start;
-		System.out.println("Benötigte Zeit zum Öffnen: " + zeit);
+		System.out.println("Benötigte Zeit zum Öffnen: " + zeit);		
 	}
 	
 	public static void main(String[] args) {

@@ -53,6 +53,11 @@ public class FX_Main {
 		System.out.println("Window closed!");
 	}
 	
+	/**
+	 * Method connects program to database.
+	 * @param label <i>connected</i>-label from rootScene to be set visible after successful connecting. 
+	 * @return Task that can be started, to connect to the database.
+	 */
 	public static Task<Boolean> connect(final Label label) {
 		
 		Task<Boolean> task = new Task<Boolean>() {
@@ -365,5 +370,7 @@ public class FX_Main {
 		
 		return task;
 	}
+	
+	
 	
 }

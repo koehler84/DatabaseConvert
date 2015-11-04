@@ -38,6 +38,15 @@ public class Patientendaten {
 		this.land = land;
 		this.plz = plz;
 		this.ort = ort;
+		
+		if (this.geburtsdatum == null) ;
+		if (this.vorname == null) this.vorname = "";
+		if (this.name == null) this.name = "";
+		if (this.strasse == null) this.strasse = "";
+		if (this.hausnummer == null) this.hausnummer = "";
+		if (this.land == null) this.land = "";
+		if (this.plz == null) this.plz = "";
+		if (this.ort == null) this.ort = "";
 	}
 	
 	/**
