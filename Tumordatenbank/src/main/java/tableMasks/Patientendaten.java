@@ -6,6 +6,10 @@ import java.util.ArrayList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+/**
+ * Class with elements matching the Database table "Patientendaten".
+ * @author Eike Wichern
+ */
 public class Patientendaten {
 
 	LocalDate geburtsdatum;
@@ -35,7 +39,11 @@ public class Patientendaten {
 		this.plz = plz;
 		this.ort = ort;
 	}
-
+	
+	/**
+	 * Use this method to get columns to add or set to a <i>TableView</i>.
+	 * @return ArrayList including <i>TableColumns</i>. To set the Columns in the <i>TableView</i> use: <i>table.getColumns().addAll(Patientendaten.getColumns());</i>
+	 */
 	public static ArrayList<TableColumn<Patientendaten, ?>> getColumns() {
 		
 		ArrayList<TableColumn<Patientendaten, ?>> columns = new ArrayList<TableColumn<Patientendaten, ?>>();

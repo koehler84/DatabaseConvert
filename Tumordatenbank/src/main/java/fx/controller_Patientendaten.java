@@ -74,6 +74,11 @@ public class controller_Patientendaten implements Initializable {
 		
 	}
 	
+	/**
+	 * Method will fill input fields on current panel (<i>textField</i> etc.) with data from the <i>TableView</i> on said panel. 
+	 * Double clicking a <i>TableRow</i> with start the method and use the data from the selected row.
+	 * @param e MouseEvent
+	 */
 	public void rowToTextField(MouseEvent e) {
 		
 		if (e.getClickCount() == 2) {

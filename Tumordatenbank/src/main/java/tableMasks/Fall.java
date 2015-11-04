@@ -7,6 +7,10 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.PropertyValueFactory;
 import main.Befundtyp;
 
+/**
+ * Class with elements matching the Database table "Fall".
+ * @author Eike Wichern
+ */
 public class Fall {
 
 	String ENummer;
@@ -31,6 +35,10 @@ public class Fall {
 		Name = name;
 	}
 	
+	/**
+	 * Use this method to get columns to add or set to a <i>TableView</i>.
+	 * @return ArrayList including <i>TableColumns</i>. To set the Columns in the <i>TableView</i> use: <i>table.getColumns().addAll(Fall.getColumns());</i>
+	 */
 	public static ArrayList<TableColumn<Fall, ?>> getColumns() {
 		
 		ArrayList<TableColumn<Fall, ?>> columns = new ArrayList<TableColumn<Fall, ?>>();
