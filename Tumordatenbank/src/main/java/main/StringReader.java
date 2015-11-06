@@ -110,28 +110,28 @@ public class StringReader {
 		if (Pattern.matches(".*M[ ]?8[\\d]{3}/2.*", textSub)){
 			lage="in situ";
 		}
-		if (Pattern.matches(".*M[ ]?8500.*", textSub)) {
+		if (Pattern.matches(".*M[ ]?8500.*", textSub) || Pattern.matches(".*duktal.*", textSub)) {
 			tumorart="duktal";
 		}
-		if (Pattern.matches(".*M[ ]?8520.*", textSub)) {
+		if (Pattern.matches(".*M[ ]?8520.*", textSub) || Pattern.matches(".*lobulär.*", textSub)) {
 			tumorart="lobulär";
 		}
-		if (Pattern.matches(".*M[ ]?8211.*", textSub)) {
+		if (Pattern.matches(".*M[ ]?8211.*", textSub) || Pattern.matches(".*tubulär.*", textSub)) {
 			tumorart="tubulär";
 		}
-		if (Pattern.matches(".*M[ ]?8480.*", textSub)) {
+		if (Pattern.matches(".*M[ ]?8480.*", textSub) || Pattern.matches(".*muzinös.*", textSub)) {
 			tumorart="muzinös";
 		}
-		if (Pattern.matches(".*M[ ]?8503.*", textSub)) {
+		if (Pattern.matches(".*M[ ]?8503.*", textSub) || Pattern.matches(".*papillär.*", textSub)) {
 			tumorart="papillär";
 		}
-		if (Pattern.matches(".*M[ ]?8201.*", textSub)) {
+		if (Pattern.matches(".*M[ ]?8201.*", textSub) || Pattern.matches(".*kribriform.*", textSub)) {
 			tumorart="kribriform";
 		}
-		if (Pattern.matches(".*M[ ]?8510.*", textSub)) {
+		if (Pattern.matches(".*M[ ]?8510.*", textSub) || Pattern.matches(".*medullär.*", textSub)) {
 			tumorart="medullär";
 		}
-		if (Pattern.matches(".*M[ ]?8575.*", textSub)) {
+		if (Pattern.matches(".*M[ ]?8575.*", textSub) || Pattern.matches(".*metaplastisch.*", textSub)) {
 			tumorart="metaplastisch";
 		}
 
@@ -221,6 +221,12 @@ public class StringReader {
 					Character.toUpperCase(textSub.charAt(i+1)) == 'X')){
 				T=""+ textSub.charAt(i+1);
 
+				switch (textSub.charAt(i-2)){
+				case 'y': T="y"+T;
+				break;
+				default:
+				}
+				
 				switch (textSub.charAt(i-1)){
 				case 'p': T="p"+T;
 				break;
@@ -265,8 +271,6 @@ public class StringReader {
 		if (Character.toUpperCase(textSub.charAt(i)) == 'M' && (i < textSub.length() - 2)) {
 			if (textSub.charAt(i+1) == '1' || textSub.charAt(i+1) == '0'){
 				M=""+ textSub.charAt(i+1);
-
-				//TODO: localisation code (extrem low priority)
 			}
 		}
 
@@ -294,10 +298,6 @@ public class StringReader {
 				R=5;
 			}
 		}
-
-
-
-
 
 
 	}
