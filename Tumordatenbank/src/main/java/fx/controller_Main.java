@@ -374,7 +374,11 @@ public class controller_Main implements Initializable {
 			Task<Void> startTask = FX_Main.excelToPatient(loadSheet);
 			progressBar.progressProperty().bind(startTask.progressProperty());
 			new Thread(startTask).start();
-
+			
+			Task<Void> continueTask = FX_Main.excelToFall(loadSheet);
+			progressBar.progressProperty().bind(continueTask.progressProperty());
+			new Thread(continueTask).start();
+			
 		} else if (FX_Main.cn == null) {
 
 		} else {

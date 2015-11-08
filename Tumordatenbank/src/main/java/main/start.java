@@ -14,7 +14,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class start {
 	
-	public static Connection cn;
+	@Deprecated public static Connection cn;
 	public static MainWindow UIFenster1;
 	public static boolean methodsCompleted;
 	public static int recordsToRead;
@@ -512,7 +512,7 @@ public class start {
 
 	}
 
-	private static void excelToKlassifikation_text(PreparedStatement Pst, String befundtext, String E_Nr, Befundtyp befundtyp) throws SQLException {
+	public static void excelToKlassifikation_text(PreparedStatement Pst, String befundtext, String E_Nr, Befundtyp befundtyp) throws SQLException {
 		
 		StringReader srObject = new StringReader();
 		try {

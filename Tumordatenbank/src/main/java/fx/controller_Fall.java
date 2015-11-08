@@ -1,6 +1,7 @@
 package fx;
 
 import java.net.URL;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -179,12 +180,90 @@ public class controller_Fall implements Initializable {
 			System.out.println("Fehler: Keine Eingabe!");
 		}
 		
-		
-		
-		
 	}
 	
 	private void inputsToDatabase() {
+		
+		try {
+			
+			PreparedStatement Pst = FX_Main.cn.prepareStatement("update mydb.fall set `E.-Nummer` = ? , Befundtyp = ? ,  Arzt = ? , "
+					+ "Eingangsdatum = ? , Einsender = ? , Patientendaten_PatientenID = (select PatientenID from mydb.Patientendaten "
+					+ "where Geburtsdatum = ? and Vorname = ? and Name = ? ), Fehler = ? where `E.-Nummer` = ? and Befundtyp = ? ;");
+			
+			Fall fall = table.getSelectionModel().getSelectedItem();
+			
+			Pst.setString(10, fall.getENummer());	//E.-Nummer
+			Pst.setInt(11, fall.getBefundtyp().getValue());	//Befundtyp
+			
+			Pst.setString(1, txtField_eNummer.getText());
+			Pst.setInt(2, choiceBox_Befundtyp.getValue().getValue());
+			
+			if (datePicker_Geburtsdatum.getValue() != null && datePicker_Geburtsdatum.getEditor().getText().length() == 10) {
+				Pst.setString(6, datePicker_Geburtsdatum.getEditor().getText());
+			} else {
+				Pst.setNull(6, java.sql.Types.NULL);
+			}
+			if (!txtField_Vorname.getText().equals("")) {
+				Pst.setString(7, txtField_Vorname.getText());
+			} else {
+				Pst.setNull(7, java.sql.Types.NULL);
+			}
+			if (!txtField_Name.getText().equals("")) {
+				Pst.setString(8, txtField_Name.getText());
+			} else {
+				Pst.setNull(8, java.sql.Types.NULL);
+			}
+			if (datePicker_Eingangsdatum.getValue() != null && datePicker_Eingangsdatum.getEditor().getText().length() == 10) {
+				Pst.setString(4, datePicker_Eingangsdatum.getEditor().getText());
+			} else {
+				Pst.setNull(4, java.sql.Types.NULL);
+			}
+			if (!txtField_Einsender.getText().equals("")) {
+				Pst.setString(5, txtField_Einsender.getText());
+			} else {
+				Pst.setNull(5, java.sql.Types.NULL);
+			}
+			if (!txtField_Arzt.getText().equals("")) {
+				Pst.setString(3, txtField_Arzt.getText());
+			} else {
+				Pst.setNull(3, java.sql.Types.NULL);
+			}
+			
+			if (checkBox.isSelected()) {
+				Pst.setInt(9, 0);
+			} else {
+				Pst.setInt(9, 1);
+			}
+			
+			System.out.println("Zeilen manuell geändert: " + Pst.executeUpdate());
+			
+			Pst.close();
+			
+			//delete line from table
+			table.getItems().remove(fall);
+			
+			datePicker_Geburtsdatum.setValue(null);
+			txtField_Vorname.setText("");
+			txtField_Name.setText("");
+			txtField_eNummer.setText("");
+			choiceBox_Befundtyp.setSelectionModel(null);
+			datePicker_Eingangsdatum.setValue(null);
+			txtField_Einsender.setText("");
+			txtField_Arzt.setText("");
+			checkBox.setSelected(false);
+			
+			datePicker_Geburtsdatum.setStyle("-fx-border-color: null");
+			txtField_Vorname.setStyle("-fx-border-color: null");
+			txtField_Name.setStyle("-fx-border-color: null");
+			txtField_eNummer.setStyle("-fx-border-color: null");
+			choiceBox_Befundtyp.setStyle("-fx-border-color: null");
+			txtField_Arzt.setStyle("-fx-border-color: null");
+			datePicker_Eingangsdatum.setStyle("-fx-border-color: null");
+			txtField_Einsender.setStyle("-fx-border-color: null");
+			
+		} catch (SQLException e) {
+			System.out.println(e);
+		}
 		
 	}
 	
