@@ -14,7 +14,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class start {
 	
-	public static Connection cn;
+	@Deprecated public static Connection cn;
 	public static MainWindow UIFenster1;
 	public static boolean methodsCompleted;
 	public static int recordsToRead;

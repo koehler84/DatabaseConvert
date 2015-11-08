@@ -89,7 +89,7 @@ public class controller_Main implements Initializable {
 
 	public void rebuildDB() {
 		try {
-			Statement st = start.cn.createStatement();
+			Statement st = FX_Main.cn.createStatement();
 			st.execute("SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;");
 			st.execute("SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;");
 			st.execute("SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';");
@@ -373,7 +373,11 @@ public class controller_Main implements Initializable {
 			Task<Void> startTask = FX_Main.excelToPatient(loadSheet);
 			progressBar.progressProperty().bind(startTask.progressProperty());
 			new Thread(startTask).start();
-
+			
+			Task<Void> continueTask = FX_Main.excelToFall(loadSheet);
+			progressBar.progressProperty().bind(continueTask.progressProperty());
+			new Thread(continueTask).start();
+			
 		} else if (FX_Main.cn == null) {
 
 		} else {

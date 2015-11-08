@@ -20,10 +20,10 @@
             </TableView>
          </content>
       </ScrollPane>
-      <AnchorPane prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: grey;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane layoutX="-1.0" layoutY="3.0" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: grey;" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="3.0">
          <children>
             <Button mnemonicParsing="false" onAction="#executeStatement" text="Execute" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="7.0" />
-            <TextField fx:id="txtField_Statement" onAction="#executeStatement" prefHeight="25.0" prefWidth="405.0" text="select * from " AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="71.0" AnchorPane.topAnchor="7.0" />
+            <ComboBox layoutX="14.0" layoutY="5.0" prefHeight="31.0" prefWidth="401.0" />
          </children>
       </AnchorPane>
    </children>

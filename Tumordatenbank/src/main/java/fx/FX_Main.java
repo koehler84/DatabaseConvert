@@ -18,9 +18,11 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import javafx.concurrent.Task;
 import javafx.scene.control.Label;
+import main.Befundtyp;
 import main.columnData;
 import main.columnIndex;
 import main.columnStructure;
+import main.start;
 
 public class FX_Main {
 	
@@ -371,6 +373,182 @@ public class FX_Main {
 		return task;
 	}
 	
-	
+	public static Task<Void> excelToFall(final Task<XSSFSheet> loadSheetTask) {
+		
+		Task<Void> task = new Task<Void>() {
+
+			@Override
+			protected Void call() throws Exception {
+				// TODO Auto-generated method stub
+				
+				XSSFSheet sheet = loadSheetTask.get();
+				
+				//excelToPatient
+				System.out.println("excelToFall");
+				updateProgress(-1, recordsToRead);
+				
+				//if (spaltenFehler) return;
+				
+				Iterator<Row> itr = sheet.iterator();
+				Row row = itr.next();
+				
+				columnStructure<columnIndex> structure = start.getColumnIndizes(sheet, "fall");
+				//if (spaltenFehler) return;
+						
+				int befundtextColumnIndex = -1;
+				boolean first = true;
+				columnIndex columnObject2 = structure.head;
+				
+				do {
+					if (first) {
+						first = false;
+					} else {
+						columnObject2 = columnObject2.next;									
+					}
+					
+					if (columnObject2.columnName.equals("befundtext")) {
+						befundtextColumnIndex = columnObject2.columnIndex;
+						break;
+					}
+				} while (columnObject2.hasNext());
+				columnObject2 = null;
+				
+				columnStructure<columnIndex> structureKlassifikation = null;
+				if (befundtextColumnIndex == -1) {
+					structureKlassifikation = start.getColumnIndizes(sheet, "klassifikation");
+				}
+				
+				try {
+					
+					PreparedStatement Pst_Fall = cn.prepareStatement("insert into mydb.fall (`Patientendaten_PatientenID`, `E.-Nummer`, "
+							+ "`Eingangsdatum`, `Einsender`, `Befundtyp`, `Fehler`, `Arzt`, `Kryo`, `OP-Datum`, `Mikroskopie`) values "
+							+ "((select PatientenID from mydb.patientendaten where Geburtsdatum = ? and Vorname = ? and Name = ? ),"
+							+ " ? , ? , ? , ? , ? , ? , ? , ? , ? );");
+					PreparedStatement Pst_Klassifikation = cn.prepareStatement("insert into mydb.klassifikation (`Fall_E.-Nummer`, `Fall_Befundtyp`, "
+							+ "G, T, N, M, L, V, R, ER, PR, `Her2/neu`, Lage, Tumorart) "
+							+ "values ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? );");
+					
+					int k = 0;	//iterator
+					
+					while (itr.hasNext() && k < recordsToRead) {
+
+						k++;
+						
+						updateProgress(recordsToRead + k, recordsToRead*2);
+						row = itr.next();
+						// Iterating over each column of Excel file
+						
+						Pst_Fall.clearParameters();
+						Pst_Fall.setNull(5, java.sql.Types.NULL);
+						Pst_Fall.setNull(6, java.sql.Types.NULL);
+						Pst_Fall.setInt(8, 0);
+						Pst_Fall.setNull(9, java.sql.Types.NULL);
+						Pst_Fall.setNull(10, java.sql.Types.NULL);
+						Pst_Fall.setNull(11, java.sql.Types.NULL);
+						Pst_Fall.setNull(12, java.sql.Types.NULL);
+						Cell cell = null;
+						Pst_Klassifikation.clearParameters();
+						
+						for (int i = 2; i <= 14; i++) {
+							Pst_Klassifikation.setNull(i, java.sql.Types.NULL);
+						}
+						
+						String E_NR = null;
+						Befundtyp befundtyp = null;				
+						columnIndex columnObject = structure.head;
+						boolean first2 = true;
+						
+						do {
+							if (first2) {
+								first2 = false;
+							} else {
+								columnObject = columnObject.next;
+							}
+							
+							if (columnObject.PstIndex != -1) {
+								//this is only executed if the parameter can be inserted into the PreparedStatement
+								cell = row.getCell(columnObject.columnIndex);
+								
+								switch (cell.getCellType()) {
+								case Cell.CELL_TYPE_STRING:
+									if (columnObject.PstIndex == 7) {
+										befundtyp = Befundtyp.getBefundtyp(cell.getStringCellValue());
+										if (befundtyp == null) {
+											Pst_Fall.setInt(8, 1);
+											befundtyp = Befundtyp.Fehler;
+										}
+										Pst_Fall.setInt(7, befundtyp.getValue());
+									} else {
+										if (columnObject.PstIndex == 4) E_NR = cell.getStringCellValue();
+										Pst_Fall.setString(columnObject.PstIndex, cell.getStringCellValue());
+									}
+									break;
+								case Cell.CELL_TYPE_NUMERIC:
+									if (columnObject.PstIndex == 1 || columnObject.PstIndex == 5 || columnObject.PstIndex == 11){
+										//Eingangsdatum, Geburtsdatum oder OP-Datum
+										Pst_Fall.setString(columnObject.PstIndex, new java.sql.Date(cell.getDateCellValue().getTime())+"");
+									} else {
+										//Befundtyp - nope der steht als Text in excel
+										Pst_Fall.setInt(columnObject.PstIndex, (int)cell.getNumericCellValue());
+									}
+									break;
+								case Cell.CELL_TYPE_BLANK:
+									if (columnObject.PstIndex == 5) {		//E.-Nummer fehlt
+										Pst_Fall.setString(columnObject.PstIndex, "INVALID");
+										Pst_Fall.setInt(8, 1);
+										break;
+									} else if (columnObject.PstIndex == 7) {	//Befundtyp fehlt
+										Pst_Fall.setInt(columnObject.PstIndex, Befundtyp.Fehler.getValue());
+										befundtyp = Befundtyp.Fehler;
+										Pst_Fall.setInt(8, 1);
+										break;
+									} else {
+										Pst_Fall.setInt(8, 1);
+									}
+									
+									Pst_Fall.setNull(columnObject.PstIndex, java.sql.Types.NULL);
+									break;
+								}
+								//end of switch
+							}
+							
+						} while (columnObject.hasNext());
+						
+						try {
+							System.out.print("Updated rows in mydb.fall: " + Pst_Fall.executeUpdate() + " - ");
+						} catch (SQLException e) {
+							//e.printStackTrace();
+							System.out.print("Fehler beim Ausführen von \"insert into fall\": Fall ggf. doppelt!" + " ");
+						}
+						
+						columnObject = structure.head;
+						
+						if (befundtextColumnIndex != -1) {
+							cell = row.getCell(befundtextColumnIndex);
+							String befundtext = cell.getStringCellValue();
+							
+							start.excelToKlassifikation_text(Pst_Klassifikation, befundtext, E_NR, befundtyp);					
+						} else {
+							start.excelToKlassifikation_spalten(Pst_Klassifikation, E_NR, befundtyp, structureKlassifikation, cell);										
+							//System.out.println();
+						}
+						
+					}
+					//end of while
+					
+					Pst_Fall.close();
+					Pst_Klassifikation.close();
+					System.out.println("Write fall success");
+					System.out.println();
+				} catch (SQLException SQLex) {
+					System.out.println("Fehler beim Erstellen des PreparedStatement \"insert into fall\"!");
+				}
+				
+				return null;
+			}
+		};
+		
+		return task;
+	}
 	
 }
