@@ -512,7 +512,7 @@ public class start {
 
 	}
 
-	private static void excelToKlassifikation_text(PreparedStatement Pst, String befundtext, String E_Nr, Befundtyp befundtyp) throws SQLException {
+	public static void excelToKlassifikation_text(PreparedStatement Pst, String befundtext, String E_Nr, Befundtyp befundtyp) throws SQLException {
 		
 		StringReader srObject = new StringReader();
 		try {
