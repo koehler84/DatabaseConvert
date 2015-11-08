@@ -88,7 +88,6 @@ public class controller_Main implements Initializable {
 	}
 
 	public void rebuildDB() {
-		System.out.println("Test");
 		try {
 			Statement st = start.cn.createStatement();
 			st.execute("SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;");
