@@ -14,6 +14,7 @@ public enum Befundtyp {
 	Korrekturbefund_2(4),
 	Korrekturbefund_3(5),
 	Konsiliarbericht_1(6),
+	Unbekannt(7),
 	Fehler(9);
 	private int value;
 		

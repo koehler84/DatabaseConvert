@@ -33,6 +33,15 @@ public class Fall {
 		Geburtsdatum = geburtsdatum;
 		Vorname = vorname;
 		Name = name;
+		
+		if (this.Geburtsdatum == null) ;
+		if (this.Vorname == null) this.Vorname = "";
+		if (this.Name == null) this.Name = "";
+		if (this.ENummer == null) this.ENummer = "";
+		if (this.befundtyp == null) ;
+		if (this.Eingangsdatum == null) ;
+		if (this.Einsender == null) this.Einsender = "";
+		if (this.Arzt == null) this.Arzt = "";
 	}
 	
 	/**

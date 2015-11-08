@@ -100,6 +100,7 @@ public class controller_Patientendaten implements Initializable {
 		if (e.getClickCount() == 2) {
 			
 			Patientendaten selectedPat = table.getSelectionModel().getSelectedItem();
+			doubleCheck = false;
 			
 			if (selectedPat != null) {
 				datePicker_Geburtsdatum.setValue(selectedPat.getGeburtsdatum());

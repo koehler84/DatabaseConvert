@@ -33,8 +33,8 @@
                   <Label layoutX="257.0" layoutY="20.0" text="Nachname:" AnchorPane.leftAnchor="250.0" AnchorPane.topAnchor="10.0" />
                   <TextField fx:id="txtField_Vorname" layoutX="131.0" layoutY="32.0" prefWidth="100.0" AnchorPane.leftAnchor="140.0" AnchorPane.topAnchor="32.0" />
                   <TextField fx:id="txtField_Name" layoutX="260.0" layoutY="32.0" prefWidth="100.0" AnchorPane.leftAnchor="260.0" AnchorPane.topAnchor="32.0" />
-                  <Label layoutX="283.0" layoutY="158.0" text="Datensatz ist vollständig:" AnchorPane.leftAnchor="130.0" AnchorPane.topAnchor="158.0" />
-                  <CheckBox fx:id="checkBox" layoutX="417.0" layoutY="158.0" mnemonicParsing="false" AnchorPane.leftAnchor="270.0" AnchorPane.topAnchor="158.0" />
+                  <Label layoutX="130.0" layoutY="156.0" text="Datensatz ist vollständig:" AnchorPane.leftAnchor="130.0" AnchorPane.topAnchor="156.0" />
+                  <CheckBox fx:id="checkBox" layoutX="270.0" layoutY="156.0" mnemonicParsing="false" AnchorPane.leftAnchor="270.0" AnchorPane.topAnchor="156.0" />
                   <Label layoutX="20.0" layoutY="73.0" text="E.-Nummer:" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="70.0" />
                   <Label layoutX="116.0" layoutY="70.0" text="Befundtyp:" AnchorPane.leftAnchor="130.0" AnchorPane.topAnchor="70.0" />
                   <TextField fx:id="txtField_eNummer" layoutX="20.0" layoutY="101.0" prefWidth="100.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="92.0" />
