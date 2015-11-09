@@ -47,7 +47,7 @@ public class controller_SQLManager implements Initializable {
 		**********************************/
 		try {
 			st = FX_Main.cn.createStatement();
-			res = st.executeQuery(txtField_Statement.getText());
+			res = st.executeQuery("select * from fall;");
 			resMeta = res.getMetaData();
 		} catch (SQLException e) {
 			System.err.println(e + "\nFehler beim Statement/ResultSet in executeStatement() in " + getClass().getName());
@@ -56,42 +56,42 @@ public class controller_SQLManager implements Initializable {
 		
 		table.getColumns().clear();
 		
-//		try {
-//			
-//			for (int i = 0; i < resMeta.getColumnCount(); i++) {
-//				
-//				final int j = i;
-//				TableColumn column = new TableColumn(resMeta.getColumnName(i+1));
-//				column.setCellValueFactory(new Callback<CellDataFeatures<ObservableList, String>, ObservableValue<String>>() {
-//					@Override
-//					public ObservableValue<String> call(CellDataFeatures<ObservableList, String> param) {
-//						return new SimpleStringProperty(param.getValue().get(j).toString());
-//					}
-//				});
-//				
-//				table.getColumns().addAll(column);
-//			}
-//			
-//			/********************************
-//			* Data added to ObservableList *
-//			********************************/
-//			while (res.next()) {
-//				
-//				ObservableList<String> rowData = FXCollections.observableArrayList();
-//				for (int i = 1; i < resMeta.getColumnCount(); i++) {
-//					rowData.add(res.getString(i));
-//				}				
-//				data.add(rowData);
-//				
-//			}
-//			
-//			//table.setItems(data);
-//			table.getItems().add(data);
-//		} catch (Exception e) {
-//			System.err.println("Fehler beim Erstellen der dynamischen Tabelle");
-//			System.out.println(e);
-//			return;
-//		}
+		try {
+			
+			for (int i = 0; i < resMeta.getColumnCount(); i++) {
+				
+				final int j = i;
+				TableColumn column = new TableColumn(resMeta.getColumnName(i+1));
+				column.setCellValueFactory(new Callback<CellDataFeatures<ObservableList, String>, ObservableValue<String>>() {
+					@Override
+					public ObservableValue<String> call(CellDataFeatures<ObservableList, String> param) {
+						return new SimpleStringProperty(param.getValue().get(j).toString());
+					}
+				});
+				
+				table.getColumns().addAll(column);
+			}
+			
+			/********************************
+			* Data added to ObservableList *
+			********************************/
+			while (res.next()) {
+				
+				ObservableList<String> rowData = FXCollections.observableArrayList();
+				for (int i = 1; i < resMeta.getColumnCount(); i++) {
+					rowData.add(res.getString(i));
+				}				
+				data.add(rowData);
+				
+			}
+			
+			//table.setItems(data);
+			table.getItems().add(data);
+		} catch (Exception e) {
+			System.err.println("Fehler beim Erstellen der dynamischen Tabelle");
+			System.out.println(e);
+			return;
+		}
 		
 	}
 

@@ -369,10 +369,14 @@ public class controller_Main implements Initializable {
 			Task<XSSFSheet> loadSheet = FX_Main.loadExcel(file);
 			progressBar.setProgress(-1);
 			new Thread(loadSheet).start();
+			
+			while (!loadSheet.isDone()) {
+			}
 
 			Task<Void> startTask = FX_Main.excelToPatient(loadSheet);
 			progressBar.progressProperty().bind(startTask.progressProperty());
 			new Thread(startTask).start();
+			System.out.println("test");
 			
 			Task<Void> continueTask = FX_Main.excelToFall(loadSheet);
 			progressBar.progressProperty().bind(continueTask.progressProperty());
