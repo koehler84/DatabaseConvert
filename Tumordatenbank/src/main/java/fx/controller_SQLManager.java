@@ -13,6 +13,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
@@ -24,6 +25,8 @@ public class controller_SQLManager implements Initializable {
 
 	@FXML public static AnchorPane mainPanel;
 	@FXML public TextField txtField_Statement;
+	@SuppressWarnings("rawtypes")
+	@FXML public ComboBox cmbBox_Statement;
 	@SuppressWarnings("rawtypes")
 	@FXML public TableView table;
 	@SuppressWarnings("rawtypes")
