@@ -22,7 +22,7 @@ import javafx.scene.layout.AnchorPane;
 import main.Befundtyp;
 import tableMasks.Fall;
 
-public class controller_Fall implements Initializable {
+public class controller_Fall implements Initializable, PanelController {
 
 	private static boolean doubleCheck = false;
 	@FXML public TableView<Fall> table;
@@ -47,7 +47,7 @@ public class controller_Fall implements Initializable {
 		
 	}
 	
-	public void DBtoTable() {
+	public void loadDataIntoTable() {
 		
 		ObservableList<Fall> old_data = table.getItems();
 		ObservableList<Fall> new_data = FXCollections.observableArrayList();
@@ -80,7 +80,7 @@ public class controller_Fall implements Initializable {
 		
 	}
 	
-	public void rowToTextField(MouseEvent e) {
+	public void tableRowToInputMask(MouseEvent e) {
 		
 		datePicker_Geburtsdatum.setStyle("-fx-border-color: null");
 		txtField_Vorname.setStyle("-fx-border-color: null");

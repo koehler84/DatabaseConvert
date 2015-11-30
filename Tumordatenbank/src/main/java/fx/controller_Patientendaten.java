@@ -20,13 +20,13 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import tableMasks.Patientendaten;
+import tableMasks.Patient;
 
-public class controller_Patientendaten implements Initializable {
+public class controller_Patientendaten implements Initializable, PanelController {
 
 	private boolean doubleCheck = false;
-	private static ArrayList<TableColumn<Patientendaten, ?>> tableData;
-	@FXML public TableView<Patientendaten> table;
+	private static ArrayList<TableColumn<Patient, ?>> tableData;
+	@FXML public TableView<Patient> table;
 	@FXML public static AnchorPane mainPanel;
 	@FXML private DatePicker datePicker_Geburtsdatum;
 	@FXML private TextField txtField_Vorname;
@@ -43,15 +43,15 @@ public class controller_Patientendaten implements Initializable {
 		// TODO Auto-generated method stub
 		System.out.println("controller Pat");
 		
-		tableData = Patientendaten.getColumns();
+		tableData = Patient.getColumns();
 		table.getColumns().addAll(tableData);
 		
 	}
 	
-	public void DBtoTable() {
+	public void loadDataIntoTable() {
 		
-		ObservableList<Patientendaten> old_data = table.getItems();
-		ObservableList<Patientendaten> new_data = FXCollections.observableArrayList();
+		ObservableList<Patient> old_data = table.getItems();
+		ObservableList<Patient> new_data = FXCollections.observableArrayList();
 		boolean success = false;
 		
 		try {
@@ -62,14 +62,16 @@ public class controller_Patientendaten implements Initializable {
 				LocalDate geburtsdatum = null;
 				if (res.getDate("Geburtsdatum") != null) geburtsdatum = res.getDate("Geburtsdatum").toLocalDate();
 				
-				Patientendaten pat = new Patientendaten(geburtsdatum, res.getString("Vorname"),
+				Patient pat = new Patient(geburtsdatum, res.getString("Vorname"),
 						res.getString("Name"), res.getString("Strasse"), res.getString("Hausnummer"), res.getString("Land"),
 						res.getString("PLZ"), res.getString("Ort"));
 				new_data.add(pat);
 			}
 			success = true;			
 		} catch (SQLException e) {
-			System.out.println(e + " - fx.controller_Patientendaten / DBtoTable");
+			System.err.println(e + " - fx.controller_Patientendaten / DBtoTable");
+		} catch (NullPointerException e) {
+			System.err.println(e + " - Datenverbindung fehlt!");
 		}
 		
 		if (success) {
@@ -86,7 +88,7 @@ public class controller_Patientendaten implements Initializable {
 	 * Red borders will be reset.
 	 * @param e MouseEvent
 	 */
-	public void rowToTextField(MouseEvent e) {
+	public void tableRowToInputMask(MouseEvent e) {
 		
 		datePicker_Geburtsdatum.setStyle("-fx-border-color: null");
 		txtField_Vorname.setStyle("-fx-border-color: null");
@@ -99,7 +101,7 @@ public class controller_Patientendaten implements Initializable {
 		
 		if (e.getClickCount() == 2) {
 			
-			Patientendaten selectedPat = table.getSelectionModel().getSelectedItem();
+			Patient selectedPat = table.getSelectionModel().getSelectedItem();
 			doubleCheck = false;
 			
 			if (selectedPat != null) {
@@ -209,7 +211,7 @@ public class controller_Patientendaten implements Initializable {
 					+ "`Name` = ? , `Strasse` = ? , `Hausnummer` = ? , `Land` = ? , `PLZ` = ? , `Ort` = ?, `Fehler` = ? "
 					+ " where `Geburtsdatum` = ? and `Vorname` = ? and `Name` = ? ;");
 			
-			Patientendaten pat = table.getSelectionModel().getSelectedItem();
+			Patient pat = table.getSelectionModel().getSelectedItem();
 			
 			Pst.setString(10, pat.getGeburtsdatum().toString());		//where Geb
 			Pst.setString(11, pat.getVorname());		//where Vorname

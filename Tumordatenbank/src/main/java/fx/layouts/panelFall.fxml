@@ -13,7 +13,7 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
                      <children>
-                        <TableView fx:id="table" onMouseClicked="#rowToTextField" prefHeight="200.0" prefWidth="200.0" tableMenuButtonVisible="true" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-2.0">
+                        <TableView fx:id="table" onMouseClicked="#tableRowToInputMask" prefHeight="200.0" prefWidth="200.0" tableMenuButtonVisible="true" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-2.0">
                           <columns>
                             <TableColumn prefWidth="75.0" text="C1" />
                             <TableColumn prefWidth="75.0" text="C2" />
@@ -53,7 +53,7 @@
       <AnchorPane prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: grey;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
             <Button layoutX="484.0" layoutY="8.0" mnemonicParsing="false" onAction="#submitToDB" text="Fertig" AnchorPane.bottomAnchor="7.0" AnchorPane.rightAnchor="7.0" />
-            <Button layoutX="415.0" layoutY="8.0" mnemonicParsing="false" onAction="#DBtoTable" text="Tabelle aktualisieren" AnchorPane.bottomAnchor="7.0" AnchorPane.rightAnchor="62.0" />
+            <Button layoutX="415.0" layoutY="8.0" mnemonicParsing="false" onAction="#loadDataIntoTable" text="Tabelle aktualisieren" AnchorPane.bottomAnchor="7.0" AnchorPane.rightAnchor="62.0" />
          </children>
       </AnchorPane>
    </children>

@@ -13,14 +13,14 @@ import main.Befundtyp;
  */
 public class Fall {
 
+	LocalDate Geburtsdatum;
+	String Vorname;
+	String Name;
 	String ENummer;
 	Befundtyp befundtyp;
 	String Arzt;
 	LocalDate Eingangsdatum;
 	String Einsender;
-	LocalDate Geburtsdatum;
-	String Vorname;
-	String Name;
 	
 	public Fall(String eNummer, Befundtyp befundtyp, String arzt, LocalDate eingangsdatum, String einsender,
 			LocalDate geburtsdatum, String vorname, String name) {
