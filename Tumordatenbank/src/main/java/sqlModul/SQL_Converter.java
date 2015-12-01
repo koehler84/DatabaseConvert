@@ -1,5 +1,6 @@
 package sqlModul;
 
+import tableMasks.Fall;
 import tableMasks.Patient;
 
 public abstract class SQL_Converter {
@@ -9,9 +10,16 @@ public abstract class SQL_Converter {
 		return null;
 	}
 	
-	public static boolean pushPatient() {
-		return false;
+	public static void pushPatient(Patient p) {
+		
 	}
 	
+	public static Fall loadFall() {
+		return null;
+	}
+	
+	public static void pushFall(Fall fall) {
+		
+	}
 	
 }

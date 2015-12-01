@@ -24,7 +24,7 @@
          <children>
             <Button mnemonicParsing="false" onAction="#executeStatement" text="Execute" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="7.0" />
             <TextField fx:id="txtField_Statement" onAction="#executeStatement" prefHeight="25.0" prefWidth="130.0" text="select * from " AnchorPane.leftAnchor="7.0" AnchorPane.topAnchor="7.0" />
-            <ComboBox fx:id="cmbBox_Statement" editable="true" layoutX="147.0" layoutY="7.0" prefHeight="25.0" prefWidth="278.0" AnchorPane.leftAnchor="144.0" AnchorPane.rightAnchor="71.0" AnchorPane.topAnchor="7.0" />
+            <ComboBox fx:id="cmbBox_Statement" editable="true" layoutX="147.0" layoutY="7.0" onKeyPressed="#addStatementToComboBox" prefHeight="25.0" prefWidth="278.0" AnchorPane.leftAnchor="144.0" AnchorPane.rightAnchor="71.0" AnchorPane.topAnchor="7.0" />
          </children>
       </AnchorPane>
    </children>
