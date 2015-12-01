@@ -18,8 +18,8 @@
                       <MenuItem mnemonicParsing="false" onAction="#rebuildDB" text="Schema erneuern" />
                         <MenuItem mnemonicParsing="false" onAction="#setCenterPanel_SQLManager" text="Run SQL Statement" />
                         <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" text="Verbinden" />
-                        <MenuItem mnemonicParsing="false" text="Trennen" />
+                        <MenuItem mnemonicParsing="false" onAction="#connect" text="Verbinden" />
+                        <MenuItem mnemonicParsing="false" onAction="#disconnect" text="Trennen" />
                     </items>
                   </Menu>
                   <MenuItem mnemonicParsing="false" onAction="#setCenterPanel_Patientendaten" text="Patientendaten bearbeiten" />

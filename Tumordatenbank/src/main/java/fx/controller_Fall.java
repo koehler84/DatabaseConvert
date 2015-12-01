@@ -69,7 +69,7 @@ public class controller_Fall implements Initializable, PanelController {
 			}
 			success = true;			
 		} catch (SQLException e) {
-			System.out.println(e + " - fx.controller_Fall / DBtoTable");
+			System.err.println(e + " - fx.controller_Fall / DBtoTable");
 		}
 		
 		if (success) {

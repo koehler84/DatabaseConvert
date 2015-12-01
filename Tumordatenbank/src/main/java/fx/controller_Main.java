@@ -16,7 +16,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
-import main.start;
 
 public class controller_Main implements Initializable {
 
@@ -388,6 +387,31 @@ public class controller_Main implements Initializable {
 			//user nerven
 		}
 
+	}
+	
+	public void connect() {
+		try {
+			if (FX_Main.cn.isClosed()) {				
+				new Thread(FX_Main.connect(lblConnected)).start();
+			}
+		} catch (SQLException e) {
+			System.err.println(e.getLocalizedMessage() + " - Failed to reconnect.");
+		} catch (NullPointerException e) {
+			new Thread(FX_Main.connect(lblConnected)).start();
+		}
+	}
+	
+	public void disconnect() {
+		try {
+			if (!FX_Main.cn.isClosed()) {
+				FX_Main.cn.close();
+				lblConnected.setVisible(false);
+			}
+		} catch (SQLException e) {
+			System.err.println(e.getLocalizedMessage() + " - Failed to disconnect.");
+		} catch (NullPointerException e) {
+			System.err.println(e.getLocalizedMessage() + " - FX_Main.cn is null.");
+		}
 	}
 
 }
