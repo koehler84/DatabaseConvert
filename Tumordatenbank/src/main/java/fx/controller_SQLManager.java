@@ -132,7 +132,11 @@ public class controller_SQLManager implements Initializable {
 		String[] array = new String[list.size()];
 		
 		for (int i = 0; i < array.length; i++) {			
-			array[i] = list.get(i).toString();			
+			try {				
+				array[i] = list.get(i).toString();
+			} catch (NullPointerException e) {
+				array[i] = "";
+			}
 		}
 		
 		return array;
