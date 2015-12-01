@@ -163,23 +163,23 @@ public class StringReader {
 	private void FindER_PR (String textSub, int i) {
 
 		String[] receptor = {" ER", "ÖSTROGEN", " PR", "PROGESTERON"};
-		String[] value = {"+", "POSITIV", "-", "NEGATIV"};
+		String[] value = {"-", "+", "NEGATIV", "POSITIV"};
 
 		for (int l = 0; l < receptor.length; l++) {
 			if ((i < textSub.length() - receptor[l].length()) && textSub.substring(i, i + receptor[l].length()).toUpperCase().equals(receptor[l])) {
 				for (int m = 0; m < value.length; m++) {
 					for (int j = i + receptor[l].length(); j <= textSub.length() - value[m].length(); j++) {
 						if (textSub.substring(j, j+value[m].length()).toUpperCase().equals(value[m])) {
-							if ((l==0 || l==1) && (m==0 || m==1)) {
+							if ((l==0 || l==1) && (m==1 || m==3)) {
 								ER="+";
 							}
-							if ((l==2 || l==3) && (m==0 || m==1)){
+							if ((l==2 || l==3) && (m==1 || m==3)){
 								PR="+";
 							}
-							if ((l==0 || l==1) && (m==2 || m==3)) {
+							if ((l==0 || l==1) && (m==0 || m==2)) {
 								ER="-";
 							} 
-							if ((l==2 || l==3) && (m==2 || m==3)){
+							if ((l==2 || l==3) && (m==0 || m==2)){
 								PR="-";
 							}
 							break;
@@ -248,7 +248,7 @@ public class StringReader {
 		}
 
 		if (Character.toUpperCase(textSub.charAt(i)) == 'N' && (i < textSub.length() - 2)) {
-			if ((textSub.charAt(i+1) == '1' || textSub.charAt(i+1) == '2' || 
+			if ((textSub.charAt(i+1) == '0' || textSub.charAt(i+1) == '1' || textSub.charAt(i+1) == '2' || 
 					textSub.charAt(i+1) == '3' || Character.toUpperCase(textSub.charAt(i+1)) == 'X')){
 				N=""+ textSub.charAt(i+1);
 
