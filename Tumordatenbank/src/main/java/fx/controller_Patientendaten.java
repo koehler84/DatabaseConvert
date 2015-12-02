@@ -9,7 +9,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-import com.mysql.jdbc.CommunicationsException;
+import com.mysql.jdbc.exceptions.jdbc4.CommunicationsException;
+import com.mysql.jdbc.exceptions.jdbc4.MySQLNonTransientConnectionException;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -79,7 +80,10 @@ public class controller_Patientendaten implements Initializable, PanelController
 			}
 			success = true;			
 		} catch (CommunicationsException ex) {
-			controller_Main.getStatic_lblConnected().setVisible(false);
+			controller_Main.setConnectionIndicatorState(false);
+		} catch (MySQLNonTransientConnectionException e) {
+			System.err.println(e + " - fx.controller_Patientendaten / DBtoTable");
+			controller_Main.setConnectionIndicatorState(false);
 		} catch (SQLException e) {
 			System.err.println(e + " - fx.controller_Patientendaten / DBtoTable");
 		} catch (NullPointerException e) {
@@ -292,7 +296,10 @@ public class controller_Patientendaten implements Initializable, PanelController
 			txtField_Ort.setStyle("-fx-border-color: null");
 			
 		} catch (CommunicationsException ex) {
-			controller_Main.getStatic_lblConnected().setVisible(false);
+			controller_Main.setConnectionIndicatorState(false);
+		} catch (MySQLNonTransientConnectionException e) {
+			System.err.println(e + " - fx.controller_Patientendaten / DBtoTable");
+			controller_Main.setConnectionIndicatorState(false);
 		} catch (SQLException e) {
 			System.out.println(e);
 			//TODO Fenster "Diese Person existiert bereits in der Datenbank!"

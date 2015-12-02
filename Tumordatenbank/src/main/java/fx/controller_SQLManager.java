@@ -104,9 +104,9 @@ public class controller_SQLManager implements Initializable {
 			table.getItems().setAll(tableData);
 		} catch (CommunicationsException ex) {	
 			System.err.println("Verbindung verloren");
-			controller_Main.getStatic_lblConnected().setVisible(false);
-		} catch (MySQLNonTransientConnectionException ex) { 
-			//No operations allowed after connection closed.
+			controller_Main.setConnectionIndicatorState(false);
+		} catch (MySQLNonTransientConnectionException e) {
+			controller_Main.setConnectionIndicatorState(false);
 		} catch (SQLException ex) {
 			System.err.println(ex + "\nFehler beim Statement/ResultSet in executeStatement() in " + getClass().getName());
 		}

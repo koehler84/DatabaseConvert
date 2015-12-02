@@ -90,13 +90,11 @@ public class FX_Main {
 				}
 				
 				try {
-					System.out.println("\nhallo");
 					cn = DriverManager.getConnection( dbUrl, dbUsr, dbPwd );
-					System.out.println("hallo " + cn.isClosed());
 					controller_Main.setConnectionIndicatorState(true);
 					return true;
 				} catch (Exception ex) {
-					ex.printStackTrace();
+					//ex.printStackTrace();
 					System.err.println(ex);
 					return false;
 				}

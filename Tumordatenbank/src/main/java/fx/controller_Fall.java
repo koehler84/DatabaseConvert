@@ -8,7 +8,8 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 
-import com.mysql.jdbc.CommunicationsException;
+import com.mysql.jdbc.exceptions.jdbc4.CommunicationsException;
+import com.mysql.jdbc.exceptions.jdbc4.MySQLNonTransientConnectionException;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -80,9 +81,12 @@ public class controller_Fall implements Initializable, PanelController {
 			}
 			success = true;			
 		} catch (CommunicationsException ex) {
-			controller_Main.getStatic_lblConnected().setVisible(false);
+			controller_Main.setConnectionIndicatorState(false);
+		} catch (MySQLNonTransientConnectionException e) {
+			System.err.println(e + " - fx.controller_Fall / DBtoTable");
+			controller_Main.setConnectionIndicatorState(false);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			System.err.println(e + " - fx.controller_Fall / DBtoTable");
 		}
 		
@@ -276,7 +280,10 @@ public class controller_Fall implements Initializable, PanelController {
 			txtField_Einsender.setStyle("-fx-border-color: null");
 			
 		} catch (CommunicationsException ex) {
-			controller_Main.getStatic_lblConnected().setVisible(false);
+			controller_Main.setConnectionIndicatorState(false);
+		} catch (MySQLNonTransientConnectionException e) {
+			System.err.println(e + " - fx.controller_Fall / DBtoTable");
+			controller_Main.setConnectionIndicatorState(false);
 		} catch (SQLException e) {
 			System.out.println(e);
 		}

@@ -453,32 +453,19 @@ public class controller_Main implements Initializable {
 	}
 	
 	public void connect() {
-		try {
-			new Thread().start();
-			if (FX_Main.cn.isClosed()) {		
-			}
-		} catch (SQLException e) {
-			System.err.println(e.getLocalizedMessage() + " - Failed to reconnect.");
-		} catch (NullPointerException e) {
-			new Thread().start();
-		} /*finally {
-			setConnectionIndicatorState(true);
-		}*/
+		new Thread(FX_Main.connect()).start();
 	}
 	
 	public void disconnect() {
 		try {
-			if (!FX_Main.cn.isClosed()) {
-				FX_Main.cn.close();
-				setConnectionIndicatorState(false);
-			}
+			FX_Main.cn.close();
 		} catch (SQLException e) {
 			System.err.println(e.getLocalizedMessage() + " - Failed to disconnect.");
 		} catch (NullPointerException e) {
 			System.err.println(e.getLocalizedMessage() + " - FX_Main.cn is null.");
-		} /*finally {
+		} finally {
 			setConnectionIndicatorState(false);
-		}*/
+		}
 	}
 
 }
