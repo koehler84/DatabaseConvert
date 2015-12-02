@@ -9,6 +9,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import com.mysql.jdbc.exceptions.jdbc4.CommunicationsException;
+import com.mysql.jdbc.exceptions.jdbc4.MySQLNonTransientConnectionException;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -99,9 +102,13 @@ public class controller_SQLManager implements Initializable {
 			//---------------
 			
 			table.getItems().setAll(tableData);
-			
-		} catch (SQLException e) {
-			System.err.println(e + "\nFehler beim Statement/ResultSet in executeStatement() in " + getClass().getName());
+		} catch (CommunicationsException ex) {	
+			System.err.println("Verbindung verloren");
+			controller_Main.getStatic_lblConnected().setVisible(false);
+		} catch (MySQLNonTransientConnectionException ex) { 
+			//No operations allowed after connection closed.
+		} catch (SQLException ex) {
+			System.err.println(ex + "\nFehler beim Statement/ResultSet in executeStatement() in " + getClass().getName());
 		}
 	}
 	
@@ -134,14 +141,12 @@ public class controller_SQLManager implements Initializable {
 		return array;
 	}
 	
-	private void handleComboBoxText() {
-		
+	private void handleComboBoxText() {		
 		if (!cmbBox_Statement.getItems().contains(cmbBox_Statement.getEditor().getText())) {
 			cmbBox_Statement.getItems().add(cmbBox_Statement.getEditor().getText());
 			int index = cmbBox_Statement.getItems().indexOf(cmbBox_Statement.getEditor().getText());
 			cmbBox_Statement.getSelectionModel().select(index);
-		}
-		
+		}		
 	}
 	
 }

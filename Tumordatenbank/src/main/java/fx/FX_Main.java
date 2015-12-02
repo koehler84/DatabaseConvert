@@ -17,7 +17,6 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import javafx.concurrent.Task;
-import javafx.scene.control.Label;
 import main.Befundtyp;
 import main.columnData;
 import main.columnIndex;
@@ -60,7 +59,7 @@ public class FX_Main {
 	 * @param label <i>connected</i>-label from rootScene to be set visible after successful connecting. 
 	 * @return Task that can be started, to connect to the database.
 	 */
-	public static Task<Boolean> connect(final Label label) {
+	public static Task<Boolean> connect() {
 		
 		Task<Boolean> task = new Task<Boolean>() {
 
@@ -68,12 +67,11 @@ public class FX_Main {
 			protected Boolean call() throws Exception {
 				// TODO Auto-generated method stub
 				
-				String dbDrv="", dbUrl="", dbUsr="", dbPwd="";
+				String dbUrl="", dbUsr="", dbPwd="";
 				
 				//-----------------------------------
 				//DB connection data
 				//-----------------------------------
-				dbDrv = "com.mysql.jdbc.Driver";
 				dbUrl = "jdbc:mysql://localhost:3306/mydb";
 				dbUsr = "java";
 				dbPwd = "geheim";
@@ -92,13 +90,14 @@ public class FX_Main {
 				}
 				
 				try {
-					// Select fitting database driver and connect:
-					Class.forName( dbDrv );
+					System.out.println("\nhallo");
 					cn = DriverManager.getConnection( dbUrl, dbUsr, dbPwd );
-					label.setVisible(true);
+					System.out.println("hallo " + cn.isClosed());
+					controller_Main.setConnectionIndicatorState(true);
 					return true;
-				} catch ( Exception ex ) {
-					System.err.println( ex );
+				} catch (Exception ex) {
+					ex.printStackTrace();
+					System.err.println(ex);
 					return false;
 				}
 				

@@ -9,6 +9,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import com.mysql.jdbc.CommunicationsException;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -76,6 +78,8 @@ public class controller_Patientendaten implements Initializable, PanelController
 				new_data.add(pat);
 			}
 			success = true;			
+		} catch (CommunicationsException ex) {
+			controller_Main.getStatic_lblConnected().setVisible(false);
 		} catch (SQLException e) {
 			System.err.println(e + " - fx.controller_Patientendaten / DBtoTable");
 		} catch (NullPointerException e) {
@@ -287,6 +291,8 @@ public class controller_Patientendaten implements Initializable, PanelController
 			txtField_PLZ.setStyle("-fx-border-color: null");
 			txtField_Ort.setStyle("-fx-border-color: null");
 			
+		} catch (CommunicationsException ex) {
+			controller_Main.getStatic_lblConnected().setVisible(false);
 		} catch (SQLException e) {
 			System.out.println(e);
 			//TODO Fenster "Diese Person existiert bereits in der Datenbank!"

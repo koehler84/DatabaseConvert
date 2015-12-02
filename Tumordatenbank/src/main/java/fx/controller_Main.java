@@ -8,12 +8,15 @@ import java.util.ResourceBundle;
 
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 
+import com.mysql.jdbc.CommunicationsException;
+
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
@@ -22,19 +25,33 @@ public class controller_Main implements Initializable {
 
 	@FXML public AnchorPane centerPanel;
 	@FXML public ProgressBar progressBar;
-	@FXML public Label lblConnected;
+	@FXML private ImageView imgConnected;
+	@FXML private ImageView imgDisconnected;
+	@FXML private Label lblConnected;
+	private static Label static_lblConnected;
+	private static ImageView static_imgConnected;
+	private static ImageView static_imgDisconnected;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-
+		//access to non-static variable!
+		static_lblConnected = lblConnected;
+		static_imgConnected = imgConnected;
+		static_imgDisconnected = imgDisconnected;
+		
+		imgConnected.setVisible(false);
 		lblConnected.setVisible(false);
 		System.out.println("init");
 
 		setCenterPanel(controller_Logo.getMainPanel());
 		
-		Task<Boolean> task_connect = FX_Main.connect(lblConnected);
+		Task<Boolean> task_connect = FX_Main.connect();
 		new Thread(task_connect).start();
+		
+	}
 
+	static Label getStatic_lblConnected() {
+		return static_lblConnected;
 	}
 
 	public void abbrechen_Button(ActionEvent e) {
@@ -321,10 +338,61 @@ public class controller_Main implements Initializable {
 			st.execute("SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;");
 			st.execute("SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;");
 
+		} catch (CommunicationsException ex) {
+			controller_Main.getStatic_lblConnected().setVisible(false);
 		} catch (SQLException e) {
 			System.out.println(e);
 		}
 
+	}
+	
+	/**
+	 * Method returns whether the Connection indicator (Label/picture) shows the database connection as connected or disconnected
+	 * @return <b>true</b> - Connection indicator shows connected state<br>
+	 * <b>false</b> - Connection indicator shows disconnected state
+	 */
+	public static boolean getConnectionIndicatorState() {
+		if (static_lblConnected.isVisible()) return true;
+		return false;
+	}
+	
+	/**
+	 * Changes the appearance of the Connection indicator (Label/picture). If it shows the database connection as connected, 
+	 * it will change it to show a disconnected state and vice versa. 
+	 */
+	public static void changeConnectionIndicatorState() {
+		boolean state = getConnectionIndicatorState();
+		
+		if (state) {
+			static_imgConnected.setVisible(false);
+			static_imgDisconnected.setVisible(true);
+		} else {
+			static_imgDisconnected.setVisible(false);
+			static_imgConnected.setVisible(true);
+		}
+		
+		if (state) {
+			static_lblConnected.setVisible(false);
+		} else {
+			static_lblConnected.setVisible(true);
+		}		
+	}
+	
+	/**
+	 * Method sets Connection indicator to certain state. 
+	 * @param b <b>true</b> - Connection indicator will show connected state<br>
+	 * <b>false</b> - Connection indicator will show disconnected state
+	 */
+	public static void setConnectionIndicatorState(boolean b) {
+		if (b) {
+			static_lblConnected.setVisible(true);
+			static_imgDisconnected.setVisible(false);
+			static_imgConnected.setVisible(true);
+		} else {
+			static_lblConnected.setVisible(false);
+			static_imgConnected.setVisible(false);
+			static_imgDisconnected.setVisible(true);
+		}
 	}
 
 	public void setProgress() {
@@ -386,27 +454,31 @@ public class controller_Main implements Initializable {
 	
 	public void connect() {
 		try {
-			if (FX_Main.cn.isClosed()) {				
-				new Thread(FX_Main.connect(lblConnected)).start();
+			new Thread().start();
+			if (FX_Main.cn.isClosed()) {		
 			}
 		} catch (SQLException e) {
 			System.err.println(e.getLocalizedMessage() + " - Failed to reconnect.");
 		} catch (NullPointerException e) {
-			new Thread(FX_Main.connect(lblConnected)).start();
-		}
+			new Thread().start();
+		} /*finally {
+			setConnectionIndicatorState(true);
+		}*/
 	}
 	
 	public void disconnect() {
 		try {
 			if (!FX_Main.cn.isClosed()) {
 				FX_Main.cn.close();
-				lblConnected.setVisible(false);
+				setConnectionIndicatorState(false);
 			}
 		} catch (SQLException e) {
 			System.err.println(e.getLocalizedMessage() + " - Failed to disconnect.");
 		} catch (NullPointerException e) {
 			System.err.println(e.getLocalizedMessage() + " - FX_Main.cn is null.");
-		}
+		} /*finally {
+			setConnectionIndicatorState(false);
+		}*/
 	}
 
 }

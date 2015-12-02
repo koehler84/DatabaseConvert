@@ -8,6 +8,8 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 
+import com.mysql.jdbc.CommunicationsException;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -77,7 +79,10 @@ public class controller_Fall implements Initializable, PanelController {
 				new_data.add(fall);
 			}
 			success = true;			
+		} catch (CommunicationsException ex) {
+			controller_Main.getStatic_lblConnected().setVisible(false);
 		} catch (SQLException e) {
+			e.printStackTrace();
 			System.err.println(e + " - fx.controller_Fall / DBtoTable");
 		}
 		
@@ -270,6 +275,8 @@ public class controller_Fall implements Initializable, PanelController {
 			datePicker_Eingangsdatum.setStyle("-fx-border-color: null");
 			txtField_Einsender.setStyle("-fx-border-color: null");
 			
+		} catch (CommunicationsException ex) {
+			controller_Main.getStatic_lblConnected().setVisible(false);
 		} catch (SQLException e) {
 			System.out.println(e);
 		}

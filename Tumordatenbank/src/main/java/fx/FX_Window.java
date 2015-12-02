@@ -27,7 +27,7 @@ public class FX_Window extends Application {
 		
 		//load child scenes before root
 		FXMLLoader loader = new FXMLLoader();
-		loader.setLocation(FX_Window.class.getResource("/fx/layouts/rootScene.fxml"));
+		loader.setLocation(FX_Window.class.getResource("/fx/layouts/MainPanel.fxml"));
 		rootScene = loader.load();
 		
 		Scene scene = new Scene(rootScene);	
