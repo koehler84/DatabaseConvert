@@ -11,8 +11,7 @@
          <content>
             <TableView fx:id="table" prefHeight="200.0" prefWidth="200.0" tableMenuButtonVisible="true">
               <columns>
-                <TableColumn prefWidth="75.0" text="C1" />
-                <TableColumn prefWidth="75.0" text="C2" />
+                <TableColumn prefWidth="75.0" text="Tabelle" />
               </columns>
                <columnResizePolicy>
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
