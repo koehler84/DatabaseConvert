@@ -7,6 +7,6 @@ interface PanelController {
 	
 	public void loadDataIntoTable();	
 	public void tableRowToInputMask(MouseEvent e);
-	public void submitToDB();
+	public void submitToDB();	
 	
 }

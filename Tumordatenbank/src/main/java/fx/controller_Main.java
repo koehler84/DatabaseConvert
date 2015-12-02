@@ -15,6 +15,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 
 public class controller_Main implements Initializable {
@@ -29,14 +30,8 @@ public class controller_Main implements Initializable {
 		lblConnected.setVisible(false);
 		System.out.println("init");
 
-		centerPanel.getChildren().setAll(controller_Logo.mainPanel);
-		controller_Logo.mainPanel.prefWidthProperty().bind(centerPanel.widthProperty());
-		controller_Logo.mainPanel.prefHeightProperty().bind(centerPanel.heightProperty());
-
-		//		centerPanel.getChildren().setAll(controller_Patientendaten.mainPanel);
-		//		controller_Patientendaten.mainPanel.prefWidthProperty().bind(centerPanel.widthProperty());
-		//		controller_Patientendaten.mainPanel.prefHeightProperty().bind(centerPanel.heightProperty());
-
+		setCenterPanel(controller_Logo.getMainPanel());
+		
 		Task<Boolean> task_connect = FX_Main.connect(lblConnected);
 		new Thread(task_connect).start();
 
@@ -67,23 +62,23 @@ public class controller_Main implements Initializable {
 
 		FX_Window.window.close();
 	}
-
-	public void setCenterPanel_Patientendaten() {
-		centerPanel.getChildren().setAll(controller_Patientendaten.mainPanel);
-		controller_Patientendaten.mainPanel.prefWidthProperty().bind(centerPanel.widthProperty());
-		controller_Patientendaten.mainPanel.prefHeightProperty().bind(centerPanel.heightProperty());
+	
+	public void setCenterPanel(Pane pane) {
+		centerPanel.getChildren().setAll(pane);
+		pane.prefWidthProperty().bind(centerPanel.widthProperty());
+		pane.prefHeightProperty().bind(centerPanel.heightProperty());
 	}
 
-	public void setCenterPanel_Faelle() {
-		centerPanel.getChildren().setAll(controller_Fall.mainPanel);
-		controller_Fall.mainPanel.prefWidthProperty().bind(centerPanel.widthProperty());
-		controller_Fall.mainPanel.prefHeightProperty().bind(centerPanel.heightProperty());
+	public void setCenterPanel_Patientendaten() {
+		setCenterPanel(controller_Patientendaten.getMainPanel());
+	}
+
+	public void setCenterPanel_Fall() {
+		setCenterPanel(controller_Fall.getMainPanel());
 	}
 
 	public void setCenterPanel_SQLManager() {
-		centerPanel.getChildren().setAll(controller_SQLManager.mainPanel);
-		controller_SQLManager.mainPanel.prefWidthProperty().bind(centerPanel.widthProperty());
-		controller_SQLManager.mainPanel.prefHeightProperty().bind(centerPanel.heightProperty());
+		setCenterPanel(controller_SQLManager.getMainPanel());
 	}
 
 	public void rebuildDB() {

@@ -20,10 +20,10 @@ public class FX_Window extends Application {
 		window = primaryStage;
 		
 		//TODO load subscenes, maybe put into thread/task
-		controller_Patientendaten.mainPanel = FXMLLoader.load(getClass().getResource("/fx/layouts/panelPatientendaten.fxml"));
-		controller_Fall.mainPanel = FXMLLoader.load(getClass().getResource("/fx/layouts/panelFall.fxml"));
-		controller_SQLManager.mainPanel = FXMLLoader.load(getClass().getResource("/fx/layouts/panelSQLManager.fxml"));
-		controller_Logo.mainPanel = FXMLLoader.load(getClass().getResource("/fx/layouts/panelLogo.fxml"));
+		controller_Patientendaten.setMainPanel(FXMLLoader.load(getClass().getResource("/fx/layouts/panelPatientendaten.fxml")));
+		controller_Fall.setMainPanel(FXMLLoader.load(getClass().getResource("/fx/layouts/panelFall.fxml")));
+		controller_SQLManager.setMainPanel(FXMLLoader.load(getClass().getResource("/fx/layouts/panelSQLManager.fxml")));
+		controller_Logo.setMainPanel(FXMLLoader.load(getClass().getResource("/fx/layouts/panelLogo.fxml")));
 		
 		//load child scenes before root
 		FXMLLoader loader = new FXMLLoader();

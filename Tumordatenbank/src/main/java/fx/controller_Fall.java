@@ -19,6 +19,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import main.Befundtyp;
 import tableMasks.Fall;
 
@@ -26,7 +27,7 @@ public class controller_Fall implements Initializable, PanelController {
 
 	private static boolean doubleCheck = false;
 	@FXML public TableView<Fall> table;
-	@FXML public static AnchorPane mainPanel;
+	@FXML private static AnchorPane mainPanel;
 	@FXML private DatePicker datePicker_Geburtsdatum;
 	@FXML private TextField txtField_Vorname;
 	@FXML private TextField txtField_Name;
@@ -45,6 +46,14 @@ public class controller_Fall implements Initializable, PanelController {
 		choiceBox_Befundtyp.getItems().setAll(Befundtyp.values());
 		table.getColumns().setAll(Fall.getColumns());
 		
+	}
+	
+	public static Pane getMainPanel() {
+		return mainPanel;
+	}
+	
+	public static void setMainPanel(Object obj) {
+		mainPanel = (AnchorPane) obj;
 	}
 	
 	public void loadDataIntoTable() {

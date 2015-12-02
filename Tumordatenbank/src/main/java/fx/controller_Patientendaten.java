@@ -20,6 +20,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import tableMasks.Patient;
 
 public class controller_Patientendaten implements Initializable, PanelController {
@@ -27,7 +28,7 @@ public class controller_Patientendaten implements Initializable, PanelController
 	private boolean doubleCheck = false;
 	private static ArrayList<TableColumn<Patient, ?>> tableData;
 	@FXML public TableView<Patient> table;
-	@FXML public static AnchorPane mainPanel;
+	@FXML private static AnchorPane mainPanel;
 	@FXML private DatePicker datePicker_Geburtsdatum;
 	@FXML private TextField txtField_Vorname;
 	@FXML private TextField txtField_Name;
@@ -40,12 +41,19 @@ public class controller_Patientendaten implements Initializable, PanelController
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		// TODO Auto-generated method stub
 		System.out.println("controller Pat");
 		
 		tableData = Patient.getColumns();
 		table.getColumns().addAll(tableData);
 		
+	}
+	
+	public static Pane getMainPanel() {
+		return mainPanel;
+	}
+	
+	public static void setMainPanel(Object obj) {
+		mainPanel = (AnchorPane) obj;
 	}
 	
 	public void loadDataIntoTable() {

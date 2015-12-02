@@ -23,7 +23,7 @@
                     </items>
                   </Menu>
                   <MenuItem mnemonicParsing="false" onAction="#setCenterPanel_Patientendaten" text="Patientendaten bearbeiten" />
-                  <MenuItem mnemonicParsing="false" onAction="#setCenterPanel_Faelle" text="Fälle bearbeiten" />
+                  <MenuItem mnemonicParsing="false" onAction="#setCenterPanel_Fall" text="Fälle bearbeiten" />
                   <MenuItem mnemonicParsing="false" text="Personen verknüpfen" />
                   <MenuItem mnemonicParsing="false" text="Daten erneut einfügen" />
                   <SeparatorMenuItem mnemonicParsing="false" />

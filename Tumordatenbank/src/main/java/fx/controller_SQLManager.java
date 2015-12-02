@@ -19,7 +19,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
@@ -27,22 +26,34 @@ import javafx.util.Callback;
 
 public class controller_SQLManager implements Initializable {
 
-	@FXML public static AnchorPane mainPanel;
-	@FXML public TextField txtField_Statement;
+	@FXML private static AnchorPane mainPanel;
 	@FXML public ComboBox<String> cmbBox_Statement;
-	//@FXML public TableView<Prototyp_universell> table;
 	@FXML public TableView<String[]> table;
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		System.out.println("controller SQLManager");
 		
-		//*table.getColumns().setAll(Prototyp_universell.getColumns());
+		cmbBox_Statement.getItems().addAll("select * from Patientendaten;", "select * from Fall;");
+	}
+	
+	
+	public static AnchorPane getMainPanel() {
+		return mainPanel;
+	}
+	
+	public static void setMainPanel(Object obj) {
+		mainPanel = (AnchorPane) obj;
 	}
 	
 	@SuppressWarnings("unchecked")
 	public void executeStatement() {
 
+		try {
+			if (cmbBox_Statement.getEditor().getText().length() == 0) return;
+		} catch(NullPointerException ex) {
+			
+		}
 		handleComboBoxText();
 		
 		Statement st = null;
@@ -50,27 +61,8 @@ public class controller_SQLManager implements Initializable {
 		ResultSetMetaData rsMeta = null;
 		ObservableList<String[]> tableData = FXCollections.observableArrayList();
 		
-		try {
-			st = FX_Main.cn.createStatement();
-			//rs = st.executeQuery(cmbBox_Statement.getSelectionModel().getSelectedItem());
-//			rs = st.executeQuery("select patdaten.`Name`, patdaten.Vorname, patdaten.Geburtsdatum ,mydb.fall.`E.-Nummer`, mydb.klassifikation.ER, mydb.klassifikation.PR,  mydb.klassifikation.`Her2/neu`, mydb.klassifikation.lage, mydb.klassifikation.Tumorart,\r\n" + 
-//					" klassifikation.G, klassifikation.T, klassifikation.N, klassifikation.N, klassifikation.M, klassifikation.L, klassifikation.V, klassifikation.R\r\n" + 
-//					"from mydb.klassifikation as klassifikation\r\n" + 
-//					"join mydb.fall as fall \r\n" + 
-//					"join mydb.patientendaten as patdaten on klassifikation.`Fall_E.-Nummer` = fall.`E.-Nummer` and klassifikation.Fall_Befundtyp = fall.Befundtyp and patdaten.PatientenID = fall.Patientendaten_PatientenID;");
-//			
-//			while (rs.next()) {
-//				LocalDate geburtsdatum = null;
-//				if (rs.getDate("Geburtsdatum") != null) geburtsdatum = rs.getDate("Geburtsdatum").toLocalDate();
-//				
-//				Prototyp_universell data = new Prototyp_universell(geburtsdatum, rs.getString("Vorname"), rs.getString("Name"),
-//						rs.getString("E.-Nummer"), rs.getString("ER"), rs.getString("PR"), rs.getString("Her2/neu"), 
-//						rs.getString("Tumorart"), rs.getString("T"), rs.getString("N"), rs.getString("M"), 
-//						rs.getInt("G"), rs.getInt("L"), rs.getInt("R"), rs.getInt("V"));
-//				
-//				table.getItems().add(data);
-//			}
-			
+		try {			
+			st = FX_Main.cn.createStatement();						
 			rs = st.executeQuery(cmbBox_Statement.getSelectionModel().getSelectedItem());
 			rsMeta = rs.getMetaData();
 			
@@ -146,7 +138,8 @@ public class controller_SQLManager implements Initializable {
 		
 		if (!cmbBox_Statement.getItems().contains(cmbBox_Statement.getEditor().getText())) {
 			cmbBox_Statement.getItems().add(cmbBox_Statement.getEditor().getText());
-			cmbBox_Statement.getSelectionModel().selectFirst();
+			int index = cmbBox_Statement.getItems().indexOf(cmbBox_Statement.getEditor().getText());
+			cmbBox_Statement.getSelectionModel().select(index);
 		}
 		
 	}
