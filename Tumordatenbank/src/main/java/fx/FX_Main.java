@@ -37,7 +37,7 @@ public class FX_Main {
 		// TODO Auto-generated method stub
 		
 		methodsCompleted = true;
-		recordsToRead = 30;
+		recordsToRead = -1;
 		
 		FX_Window.launch(FX_Window.class, args);
 		
@@ -121,7 +121,11 @@ public class FX_Main {
 				
 				book.setMissingCellPolicy(Row.CREATE_NULL_AS_BLANK);
 				
+				if (recordsToRead == -1) {
+					recordsToRead=sheet.getPhysicalNumberOfRows();
+				}
 				return sheet;
+
 			}
 			
 		};
