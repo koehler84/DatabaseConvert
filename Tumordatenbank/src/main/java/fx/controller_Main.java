@@ -14,6 +14,8 @@ import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.ImageView;
@@ -38,16 +40,16 @@ public class controller_Main implements Initializable {
 		static_lblConnected = lblConnected;
 		static_imgConnected = imgConnected;
 		static_imgDisconnected = imgDisconnected;
-		
+
 		imgConnected.setVisible(false);
 		lblConnected.setVisible(false);
 		System.out.println("init");
 
 		setCenterPanel(controller_Logo.getMainPanel());
-		
+
 		Task<Boolean> task_connect = FX_Main.connect();
 		new Thread(task_connect).start();
-		
+
 	}
 
 	static Label getStatic_lblConnected() {
@@ -79,7 +81,7 @@ public class controller_Main implements Initializable {
 
 		FX_Window.window.close();
 	}
-	
+
 	public void setCenterPanel(Pane pane) {
 		centerPanel.getChildren().setAll(pane);
 		pane.prefWidthProperty().bind(centerPanel.widthProperty());
@@ -107,24 +109,45 @@ public class controller_Main implements Initializable {
 			st.execute("DROP SCHEMA IF EXISTS `mydb` ;");
 			st.execute("CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;");
 			st.execute("USE `mydb` ;");
-			st.execute("CREATE TABLE IF NOT EXISTS `mydb`.`patientendaten` (\r\n" + 
-					"  `PatientenID` INT(11) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT COMMENT '',\r\n" + 
-					"  `Name` VARCHAR(100) NOT NULL COMMENT '',\r\n" + 
-					"  `Vorname` VARCHAR(100) NOT NULL COMMENT '',\r\n" + 
-					"  `Geburtsdatum` DATE NOT NULL COMMENT '',\r\n" + 
-					"  `Verstorben (Quelle)` VARCHAR(45) NULL DEFAULT NULL COMMENT '',\r\n" + 
-					"  `Verstorben (Datum)` DATE NULL DEFAULT NULL COMMENT '',\r\n" + 
-					"  `Bemerkung Tod` TEXT CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL COMMENT '',\r\n" + 
-					"  `Follow-up` DATE NULL DEFAULT NULL COMMENT '',\r\n" + 
-					"  `Follow-up Status` INT(11) UNSIGNED NULL DEFAULT NULL COMMENT '',\r\n" + 
-					"  `EE-Status` INT(11) UNSIGNED NULL DEFAULT NULL COMMENT '',\r\n" + 
-					"  `Strasse` VARCHAR(100) NULL DEFAULT NULL COMMENT '',\r\n" + 
-					"  `Hausnummer` VARCHAR(20) NULL DEFAULT NULL COMMENT '',\r\n" + 
-					"  `Land` VARCHAR(3) NULL DEFAULT NULL COMMENT '',\r\n" + 
-					"  `PLZ` VARCHAR(6) NULL DEFAULT NULL COMMENT '',\r\n" + 
-					"  `Ort` VARCHAR(45) NULL DEFAULT NULL COMMENT '',\r\n" + 
-					"  `Fehler` INT(1) NULL DEFAULT NULL COMMENT '',\r\n" + 
-					"  PRIMARY KEY (`PatientenID`)  COMMENT '')\r\n" + 
+
+			st.execute("CREATE TABLE IF NOT EXISTS `mydb`.`Einverständnis` (\r\n" +
+					"`Kategorie` VARCHAR(45) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"`Einsender` VARCHAR(45) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"`Pseudonym` VARCHAR(45) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"`Pseudonym2` VARCHAR(45) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"`altEEStatus` INT(11) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"`altEEDatum` DATE NULL DEFAULT NULL COMMENT '',\r\n" +
+					"`2015EEStatus` INT(11) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"`2015EEDatum` DATE NULL DEFAULT NULL COMMENT '',\r\n" +
+					"`Notizen` LONGTEXT NULL DEFAULT NULL COMMENT '',\r\n" +
+					"`QuelleTod` LONGTEXT NULL DEFAULT NULL COMMENT '',\r\n" +
+					"`TodDatum` DATE NULL DEFAULT NULL COMMENT '',\r\n" +
+					"`patientendaten_PatientenID` INT(11) UNSIGNED ZEROFILL NOT NULL COMMENT '',\r\n" +
+					"PRIMARY KEY (`patientendaten_PatientenID`)  COMMENT '',\r\n" +
+					"INDEX `fk_Einverständnis_patientendaten1_idx` (`patientendaten_PatientenID` ASC)  COMMENT '',\r\n" +
+					"CONSTRAINT `fk_Einverständnis_patientendaten1`\r\n" +
+					"  FOREIGN KEY (`patientendaten_PatientenID`)\r\n" +
+					"  REFERENCES `mydb`.`patientendaten` (`PatientenID`)\r\n" +
+					"  ON DELETE NO ACTION\r\n" +
+					"  ON UPDATE NO ACTION)\r\n" +
+					"ENGINE = InnoDB\r\n" +
+					"DEFAULT CHARACTER SET = utf8\r\n" +
+					"COLLATE = utf8_general_ci;");
+
+
+			st.execute("CREATE TABLE IF NOT EXISTS `mydb`.`patientendaten` (\r\n" +
+					"`PatientenID` INT(11) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT COMMENT '',\r\n" +
+					"`Name` VARCHAR(100) NOT NULL COMMENT '',\r\n" +
+					"`altName` VARCHAR(45) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"`Vorname` VARCHAR(100) NOT NULL COMMENT '',\r\n" +
+					"`Geburtsdatum` DATE NOT NULL COMMENT '',\r\n" +
+					"`Strasse` VARCHAR(100) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"`Hausnummer` VARCHAR(20) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"`Land` VARCHAR(3) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"`PLZ` VARCHAR(6) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"`Ort` VARCHAR(45) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"`Fehler` INT(1) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"PRIMARY KEY (`PatientenID`)  COMMENT '') \r\n" +
 					"ENGINE = InnoDB\r\n" + 
 					"AUTO_INCREMENT = 0\r\n" + 
 					"DEFAULT CHARACTER SET = utf8\r\n" + 
@@ -345,7 +368,7 @@ public class controller_Main implements Initializable {
 		}
 
 	}
-	
+
 	/**
 	 * Method returns whether the Connection indicator (Label/picture) shows the database connection as connected or disconnected
 	 * @return <b>true</b> - Connection indicator shows connected state<br>
@@ -355,14 +378,14 @@ public class controller_Main implements Initializable {
 		if (static_lblConnected.isVisible()) return true;
 		return false;
 	}
-	
+
 	/**
 	 * Changes the appearance of the Connection indicator (Label/picture). If it shows the database connection as connected, 
 	 * it will change it to show a disconnected state and vice versa. 
 	 */
 	public static void changeConnectionIndicatorState() {
 		boolean state = getConnectionIndicatorState();
-		
+
 		if (state) {
 			static_imgConnected.setVisible(false);
 			static_imgDisconnected.setVisible(true);
@@ -370,14 +393,14 @@ public class controller_Main implements Initializable {
 			static_imgDisconnected.setVisible(false);
 			static_imgConnected.setVisible(true);
 		}
-		
+
 		if (state) {
 			static_lblConnected.setVisible(false);
 		} else {
 			static_lblConnected.setVisible(true);
 		}		
 	}
-	
+
 	/**
 	 * Method sets Connection indicator to certain state. 
 	 * @param b <b>true</b> - Connection indicator will show connected state<br>
@@ -432,18 +455,41 @@ public class controller_Main implements Initializable {
 			progressBar.setProgress(-1);
 			new Thread(loadSheet).start();
 			
-			while (!loadSheet.isDone()) {
+			
+//			Alert alert = new Alert(AlertType.INFORMATION);
+//			alert.setTitle("Information Dialog");
+//			alert.setHeaderText(null);
+//			alert.setContentText("Load Sheet");
+//
+//			alert.showAndWait();
+			while (loadSheet.isRunning()) {
 			}
-
+//			alert.setTitle("Information Dialog");
+//			alert.setHeaderText(null);
+//			alert.setContentText("Sheet loaded, E2P");
+//
+//			alert.show();
+			//TODO Überprüfen parallel
+			
 			Task<Void> startTask = FX_Main.excelToPatient(loadSheet);
 			progressBar.progressProperty().bind(startTask.progressProperty());
 			new Thread(startTask).start();
-			System.out.println("test");
 			
+
+			while (startTask.isRunning()) {
+			}
+			
+//			alert.setTitle("Information Dialog");
+//			alert.setHeaderText(null);
+//			alert.setContentText("Sheet loaded, E2K");
+//
+//			alert.show();
+			System.out.println("test");
+
 			Task<Void> continueTask = FX_Main.excelToFall(loadSheet);
 			progressBar.progressProperty().bind(continueTask.progressProperty());
 			new Thread(continueTask).start();
-			
+
 		} else if (FX_Main.cn == null) {
 
 		} else {
@@ -451,11 +497,32 @@ public class controller_Main implements Initializable {
 		}
 
 	}
-	
+
+	public void datenExprimage() {
+		//TODO Überprüfen ob funktion
+		final File file = new FileChooser().showOpenDialog(FX_Window.window);
+
+		if (file != null && file.exists() && FX_Main.cn != null) {
+
+			Task<XSSFSheet> loadSheet = FX_Main.loadExcel(file);
+			progressBar.setProgress(-1);
+			new Thread(loadSheet).start();
+
+			while (!loadSheet.isDone()) {
+			}
+
+			Task<Void> startTask = FX_Main.excelToEinv(loadSheet);
+			progressBar.progressProperty().bind(startTask.progressProperty());
+			new Thread(startTask).start();
+
+		}
+
+	}
+
 	public void connect() {
 		new Thread(FX_Main.connect()).start();
 	}
-	
+
 	public void disconnect() {
 		try {
 			FX_Main.cn.close();

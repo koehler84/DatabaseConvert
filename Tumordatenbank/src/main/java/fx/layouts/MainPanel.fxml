@@ -33,7 +33,8 @@
           </Menu>
             <Menu mnemonicParsing="false" text="Datenanalyse">
               <items>
-                <MenuItem mnemonicParsing="false" onAction="#datenAnalyse" text="Quelle wählen" />
+                  <MenuItem mnemonicParsing="false" onAction="#datenExprimage" text="Rücklauf_akt" />
+                <MenuItem mnemonicParsing="false" onAction="#datenAnalyse" text="Basis" />
               </items>
             </Menu>
           <Menu mnemonicParsing="false" text="Hilfe">
@@ -48,7 +49,6 @@
          <children>
             <ButtonBar layoutX="308.0" layoutY="17.0" prefHeight="35.0" prefWidth="162.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="5.0">
                <buttons>
-                  <Button mnemonicParsing="false" onAction="#ok_Button" text="OK" />
                   <Button mnemonicParsing="false" onAction="#abbrechen_Button" text="Abbrechen" />
                </buttons>
             </ButtonBar>

@@ -1,4 +1,5 @@
 package main;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class StringReader {
@@ -162,14 +163,53 @@ public class StringReader {
 
 	private void FindER_PR (String textSub, int i) {
 
-		String[] receptor = {" ER", "ÖSTROGEN", " PR", "PROGESTERON"};
-		String[] value = {"-", "+", "NEGATIV", "POSITIV"};
-
+		String[] receptor = {" ER ", "ÖSTROGEN", " PR ", "PROGESTERON"};
+		String[] value = {"-", "\\+", "NEGATIV", "POSITIV"};
+		
 		for (int l = 0; l < receptor.length; l++) {
 			if ((i < textSub.length() - receptor[l].length()) && textSub.substring(i, i + receptor[l].length()).toUpperCase().equals(receptor[l])) {
 				for (int m = 0; m < value.length; m++) {
-					for (int j = i + receptor[l].length(); j <= textSub.length() - value[m].length(); j++) {
-						if (textSub.substring(j, j+value[m].length()).toUpperCase().equals(value[m])) {
+					//for (int j = i + receptor[l].length(); j <= textSub.length() - value[m].length(); j++) {
+						/*
+						if (textSub.substring(j, j+value[m].length()).toUpperCase().equals(value[m]) && (
+								((l==1) && textSub.substring(j,j+1).equals("-") && (textSub.substring(j+1, j+1+value[m].length()).toUpperCase().equals(value[m])&&!(Pattern.matches(".*nkoprotein.*", textSub.substring(j,j+75)))) ||
+								((l==1) && !(Pattern.matches(".*nkoprotein.*", textSub.substring(j,j+50))))||
+								((l==2 || l==3 || l==0) && !(Pattern.matches(".*nkoprotein.*", textSub.substring(j,j+20))))
+								)) {
+								
+						if (
+							(l==1) && textSub.substring(j,j+1).equals("-") && !(Pattern.matches(".*nkoprotein.*", textSub.substring(j,j+75))) && (Pattern.matches(value[m],textSub.substring(j,j+75))
+								
+								
+							)	
+						*/
+					int end60 =0;
+					int end40 =0;
+					int end20 =0;
+					if (textSub.length()-i- receptor[l].length()<60){
+						end60 = textSub.length() - i - receptor[l].length();
+					}else {
+						end60 =60;
+					}
+					if (textSub.length()-i- receptor[l].length()<40){
+						end40 = textSub.length() - i - receptor[l].length();
+					}else {
+						end40 =40;
+					}
+					if (textSub.length()-i- receptor[l].length()<20){
+						end20 = textSub.length() - i - receptor[l].length();
+					}else {
+						end20 =20;
+					}
+						if (((l==1) && !(Pattern.matches(".*nkoprotein.*", textSub.substring(i + receptor[l].length(),i + receptor[l].length() +end60))) 
+								&& (Pattern.matches("(?i).*"+value[m]+".*",textSub.substring(i + 1 + receptor[l].length(),i + receptor[l].length()+end60)))) ||
+							((l==2 || l==3 || l==0) && !(Pattern.matches(".*nkoprotein.*", textSub.substring(i + receptor[l].length(),i + receptor[l].length()+end40)))
+								&& (Pattern.matches("(?i).*"+value[m]+".*",textSub.substring(i + receptor[l].length(),i + receptor[l].length()+end20))))
+								) {
+							
+							if ((m==0 && textSub.substring(i + receptor[l].length(),i + receptor[l].length()+1).equals("-") && !(textSub.substring(i + receptor[l].length() +1,i + receptor[l].length()+2).equals(" ") || textSub.substring(i + receptor[l].length() +1,i + receptor[l].length()+2).equals(".")))){
+							 continue;
+							}
 							if ((l==0 || l==1) && (m==1 || m==3)) {
 								ER="+";
 							}
@@ -182,16 +222,15 @@ public class StringReader {
 							if ((l==2 || l==3) && (m==0 || m==2)){
 								PR="-";
 							}
-							break;
 						}
-						if ((j - i > 35 && (l==1 || l==3)) || (j - i > 4 && (l==0 || l==2))) {
-							break;
-						}
+//						if ((receptor[l].length() > 35 && (l==1 || l==3)) || (j - i > 4 && (l==0 || l==2))) {
+//							break;
+//						}
 					}
 				}
 			}
 		}
-	}
+//	}
 
 	private void FindKlassifikation (String textSub,int i) {
 
@@ -226,7 +265,7 @@ public class StringReader {
 				break;
 				default:
 				}
-				
+
 				switch (textSub.charAt(i-1)){
 				case 'p': T="p"+T;
 				break;
