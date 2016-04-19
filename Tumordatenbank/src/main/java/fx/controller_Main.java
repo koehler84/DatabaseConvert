@@ -110,26 +110,70 @@ public class controller_Main implements Initializable {
 			st.execute("CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;");
 			st.execute("USE `mydb` ;");
 
-			st.execute("CREATE TABLE IF NOT EXISTS `mydb`.`Einverständnis` (\r\n" +
-					"`Kategorie` VARCHAR(45) NULL DEFAULT NULL COMMENT '',\r\n" +
-					"`Einsender` VARCHAR(45) NULL DEFAULT NULL COMMENT '',\r\n" +
-					"`Pseudonym` VARCHAR(45) NULL DEFAULT NULL COMMENT '',\r\n" +
-					"`Pseudonym2` VARCHAR(45) NULL DEFAULT NULL COMMENT '',\r\n" +
-					"`altEEStatus` INT(11) NULL DEFAULT NULL COMMENT '',\r\n" +
-					"`altEEDatum` DATE NULL DEFAULT NULL COMMENT '',\r\n" +
-					"`2015EEStatus` INT(11) NULL DEFAULT NULL COMMENT '',\r\n" +
-					"`2015EEDatum` DATE NULL DEFAULT NULL COMMENT '',\r\n" +
-					"`Notizen` LONGTEXT NULL DEFAULT NULL COMMENT '',\r\n" +
-					"`QuelleTod` LONGTEXT NULL DEFAULT NULL COMMENT '',\r\n" +
-					"`TodDatum` DATE NULL DEFAULT NULL COMMENT '',\r\n" +
-					"`patientendaten_PatientenID` INT(11) UNSIGNED ZEROFILL NOT NULL COMMENT '',\r\n" +
-					"PRIMARY KEY (`patientendaten_PatientenID`)  COMMENT '',\r\n" +
-					"INDEX `fk_Einverständnis_patientendaten1_idx` (`patientendaten_PatientenID` ASC)  COMMENT '',\r\n" +
-					"CONSTRAINT `fk_Einverständnis_patientendaten1`\r\n" +
-					"  FOREIGN KEY (`patientendaten_PatientenID`)\r\n" +
-					"  REFERENCES `mydb`.`patientendaten` (`PatientenID`)\r\n" +
-					"  ON DELETE NO ACTION\r\n" +
-					"  ON UPDATE NO ACTION)\r\n" +
+			st.execute("CREATE TABLE IF NOT EXISTS `mydb`.`fragebogen` (\r\n" +
+					"  `Pseudonym` VARCHAR(45) NOT NULL COMMENT '',\r\n" +
+					"  `Welle` VARCHAR(45) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `rawid` VARCHAR(45) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `source` VARCHAR(45) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `zeit` DATETIME NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `chemo` VARCHAR(45) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `chemo_zeitpunkt` VARCHAR(45) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `medikamente` VARCHAR(45) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `bestrahlung` VARCHAR(45) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `med_anithormon` BIT(1) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `med_antihormon_unbekannt` BIT(1) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `med_antihormon_tamoxifen` BIT(1) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `med_antihormon_arimidex` BIT(1) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `med_antihormon_aromasin` BIT(1) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `med_antihormon_fe03a` BIT(1) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `herceptin` VARCHAR(45) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `biophosphonaten` VARCHAR(45) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `weitere_erkrankung` VARCHAR(45) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `rezidiv` BIT(1) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `metastasen` BIT(1) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `metastasen_abrust` BIT(1) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `metastasen_lymphknoten` BIT(1) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `metastasen_knochen` BIT(1) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `metastasen_lunge` BIT(1) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `metastasen_gehirn` BIT(1) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `metastasen_leber` BIT(1) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `metastasen_andere` BIT(1) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `metastasen_andere_text` VARCHAR(45) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `rezidiv_zeitpunkt` DATE NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `hausarzt` VARCHAR(45) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `frauenarzt` VARCHAR(45) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `anmerkungen` MEDIUMTEXT NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `information` VARCHAR(45) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  PRIMARY KEY (`Pseudonym`)  COMMENT '',\r\n" +
+					"  UNIQUE INDEX `Pseudonym_UNIQUE` (`Pseudonym` ASC)  COMMENT '')\r\n" +
+					"ENGINE = InnoDB\r\n" +
+					"DEFAULT CHARACTER SET = utf8\r\n" +
+					"COLLATE = utf8_general_ci");
+
+
+			st.execute("CREATE TABLE IF NOT EXISTS `mydb`.`einverständnis` (\r\n" +
+					"  `Pseudonym` VARCHAR(45) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `Pseudonym2` VARCHAR(45) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `2015EEStatus` INT(11) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `2015EEDatum` DATE NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `Notizen` LONGTEXT NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `QuelleTod` LONGTEXT NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `TodDatum` DATE NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `patientendaten_PatientenID` INT(11) UNSIGNED ZEROFILL NOT NULL COMMENT '',\r\n" +
+					"  PRIMARY KEY (`patientendaten_PatientenID`)  COMMENT '',\r\n" +
+					"  INDEX `fk_Einverständnis_patientendaten1_idx` (`patientendaten_PatientenID` ASC)  COMMENT '',\r\n" +
+					"  UNIQUE INDEX `Pseudonym_UNIQUE` (`Pseudonym` ASC)  COMMENT '',\r\n" +
+					"  UNIQUE INDEX `Pseudonym2_UNIQUE` (`Pseudonym2` ASC)  COMMENT '',\r\n" +
+					"  CONSTRAINT `fk_Einverständnis_patientendaten1`\r\n" +
+					"    FOREIGN KEY (`patientendaten_PatientenID`)\r\n" +
+					"    REFERENCES `mydb`.`patientendaten` (`PatientenID`)\r\n" +
+					"    ON DELETE NO ACTION\r\n" +
+					"    ON UPDATE NO ACTION,\r\n" +
+					"  CONSTRAINT `fk_einverständnis_fragebogen1`\r\n" +
+					"    FOREIGN KEY (`Pseudonym`)\r\n" +
+					"    REFERENCES `mydb`.`fragebogen` (`Pseudonym`)\r\n" +
+					"    ON DELETE NO ACTION\r\n" +
+					"    ON UPDATE NO ACTION)\r\n" +
 					"ENGINE = InnoDB\r\n" +
 					"DEFAULT CHARACTER SET = utf8\r\n" +
 					"COLLATE = utf8_general_ci;");
@@ -454,37 +498,55 @@ public class controller_Main implements Initializable {
 			Task<XSSFSheet> loadSheet = FX_Main.loadExcel(file);
 			progressBar.setProgress(-1);
 			new Thread(loadSheet).start();
-			
-			
-//			Alert alert = new Alert(AlertType.INFORMATION);
-//			alert.setTitle("Information Dialog");
-//			alert.setHeaderText(null);
-//			alert.setContentText("Load Sheet");
-//
-//			alert.showAndWait();
-			while (loadSheet.isRunning()) {
+
+
+			//			Alert alert = new Alert(AlertType.INFORMATION);
+			//			alert.setTitle("Information Dialog");
+			//			alert.setHeaderText(null);
+			//			alert.setContentText("Load Sheet");
+			//
+			//			alert.showAndWait();
+
+			if (!Thread.currentThread().equals(loadSheet)){
+				try {
+					Thread.sleep(60000);
+					System.out.println("work");
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
-//			alert.setTitle("Information Dialog");
-//			alert.setHeaderText(null);
-//			alert.setContentText("Sheet loaded, E2P");
-//
-//			alert.show();
+			//			while (!loadSheet.getState().equals(Thread.State.TERMINATED)){
+
+			//			alert.setTitle("Information Dialog");
+			//			alert.setHeaderText(null);
+			//			alert.setContentText("Sheet loaded, E2P");
+			//
+			//			alert.show();
 			//TODO Überprüfen parallel
-			
+
+
+
 			Task<Void> startTask = FX_Main.excelToPatient(loadSheet);
 			progressBar.progressProperty().bind(startTask.progressProperty());
 			new Thread(startTask).start();
-			
 
-			while (startTask.isRunning()) {
+
+			if (!Thread.currentThread().equals(startTask)){
+				try {
+					Thread.sleep(60000);
+					System.out.println("work");
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
-			
-//			alert.setTitle("Information Dialog");
-//			alert.setHeaderText(null);
-//			alert.setContentText("Sheet loaded, E2K");
-//
-//			alert.show();
-			System.out.println("test");
+
+			//			alert.setTitle("Information Dialog");
+			//			alert.setHeaderText(null);
+			//			alert.setContentText("Sheet loaded, E2K");
+			//
+			//			alert.show();
 
 			Task<Void> continueTask = FX_Main.excelToFall(loadSheet);
 			progressBar.progressProperty().bind(continueTask.progressProperty());
@@ -518,6 +580,31 @@ public class controller_Main implements Initializable {
 		}
 
 	}
+
+	//new 17.04 questor und rumpf vitaldaten===============================================================
+	public void datenQuestor() {
+		//TODO Überprüfen ob funktion
+		final File file = new FileChooser().showOpenDialog(FX_Window.window);
+
+		if (file != null && file.exists() && FX_Main.cn != null) {
+
+			Task<XSSFSheet> loadSheet = FX_Main.loadExcel(file);
+			progressBar.setProgress(-1);
+			new Thread(loadSheet).start();
+
+			while (!loadSheet.isDone()) {
+			}
+
+			Task<Void> startTask = FX_Main.excelToQuestor(loadSheet);
+			progressBar.progressProperty().bind(startTask.progressProperty());
+			new Thread(startTask).start();
+
+		}
+
+	}
+	//=====================================================================================================
+
+
 
 	public void connect() {
 		new Thread(FX_Main.connect()).start();

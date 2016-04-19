@@ -33,8 +33,9 @@
           </Menu>
             <Menu mnemonicParsing="false" text="Datenanalyse">
               <items>
-                  <MenuItem mnemonicParsing="false" onAction="#datenExprimage" text="Rücklauf_akt" />
-                <MenuItem mnemonicParsing="false" onAction="#datenAnalyse" text="Basis" />
+                <MenuItem mnemonicParsing="false" onAction="#datenAnalyse" text="1. Basis" />
+                  <MenuItem mnemonicParsing="false" onAction="#datenExprimage" text="2. Rücklauf_akt" />
+                  <MenuItem mnemonicParsing="false" onAction="#datenQuestor" text="3. Questor PRO" />
               </items>
             </Menu>
           <Menu mnemonicParsing="false" text="Hilfe">
