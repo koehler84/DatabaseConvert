@@ -122,10 +122,10 @@ public class FX_Main {
 				// TODO Auto-generated method stub
 				updateProgress(-1, 5);
 
+				
 				FileInputStream fis = new FileInputStream(excel);
-				OPCPackage pkg = OPCPackage.open(fis);
 
-				XSSFWorkbook book = new XSSFWorkbook(pkg);
+				XSSFWorkbook book = new XSSFWorkbook(fis);
 				XSSFSheet sheet = book.getSheetAt(0);
 
 				book.setMissingCellPolicy(Row.CREATE_NULL_AS_BLANK);
@@ -729,7 +729,7 @@ public class FX_Main {
 						try {
 							System.out.print("Updated rows in mydb.fall: " + Pst_Einv.executeUpdate() + " - ");
 						} catch (SQLException e) {
-							//e.printStackTrace();
+							e.printStackTrace();
 							System.out.print("Fehler beim Ausführen von \"insert into fall\": Fall ggf. doppelt!" + " ");
 							pWriter.println(Pst_UpPat.toString());
 						}
