@@ -109,6 +109,30 @@ public class controller_Main implements Initializable {
 			st.execute("DROP SCHEMA IF EXISTS `mydb` ;");
 			st.execute("CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;");
 			st.execute("USE `mydb` ;");
+			
+			st.execute("CREATE TABLE IF NOT EXISTS `mydb`.`einverstaendnis2011` (\r\n" +
+					"  `2011EEStatus` INT(11) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `2011EEDatum` DATE NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `Rezidiv/Metastase` INT(11) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `RDatum` DATE NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `RDatum2` DATE NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `Notizen3` LONGTEXT NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `Chemo` INT(11) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `Radiatio` INT(11) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `aH` CHAR NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `R` INT(11) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `HA` VARCHAR(255) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `FA` VARCHAR(255) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `patientendaten_PatientenID` INT(11) UNSIGNED ZEROFILL NOT NULL COMMENT '',\r\n" +
+					"  PRIMARY KEY (`patientendaten_PatientenID`)  COMMENT '',\r\n" +
+					"  CONSTRAINT `fk_einverstaendnis2011_patientendaten1`\r\n" +
+					"    FOREIGN KEY (`patientendaten_PatientenID`)\r\n" +
+					"    REFERENCES `mydb`.`patientendaten` (`PatientenID`)\r\n" +
+					"    ON DELETE NO ACTION\r\n" +
+					"    ON UPDATE NO ACTION)\r\n" +
+					"ENGINE = InnoDB\r\n" +
+					"DEFAULT CHARACTER SET = utf8\r\n" +
+					"COLLATE = utf8_general_ci");
 
 			st.execute("CREATE TABLE IF NOT EXISTS `mydb`.`fragebogen` (\r\n" +
 					"  `Pseudonym` VARCHAR(45) NOT NULL COMMENT '',\r\n" +
@@ -118,7 +142,7 @@ public class controller_Main implements Initializable {
 					"  `zeit` DATETIME NULL DEFAULT NULL COMMENT '',\r\n" +
 					"  `chemo` VARCHAR(45) NULL DEFAULT NULL COMMENT '',\r\n" +
 					"  `chemo_zeitpunkt` VARCHAR(45) NULL DEFAULT NULL COMMENT '',\r\n" +
-					"  `medikamente` VARCHAR(45) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `medikamente` VARCHAR(255) NULL DEFAULT NULL COMMENT '',\r\n" +
 					"  `bestrahlung` VARCHAR(45) NULL DEFAULT NULL COMMENT '',\r\n" +
 					"  `med_anithormon` BIT(1) NULL DEFAULT NULL COMMENT '',\r\n" +
 					"  `med_antihormon_unbekannt` BIT(1) NULL DEFAULT NULL COMMENT '',\r\n" +
@@ -128,6 +152,7 @@ public class controller_Main implements Initializable {
 					"  `med_antihormon_fe03a` BIT(1) NULL DEFAULT NULL COMMENT '',\r\n" +
 					"  `herceptin` VARCHAR(45) NULL DEFAULT NULL COMMENT '',\r\n" +
 					"  `biophosphonaten` VARCHAR(45) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `biophosphaten_text` MEDIUMTEXT NULL DEFAULT NULL COMMENT '',\r\n" +
 					"  `weitere_erkrankung` VARCHAR(45) NULL DEFAULT NULL COMMENT '',\r\n" +
 					"  `rezidiv` BIT(1) NULL DEFAULT NULL COMMENT '',\r\n" +
 					"  `metastasen` BIT(1) NULL DEFAULT NULL COMMENT '',\r\n" +
@@ -140,8 +165,8 @@ public class controller_Main implements Initializable {
 					"  `metastasen_andere` BIT(1) NULL DEFAULT NULL COMMENT '',\r\n" +
 					"  `metastasen_andere_text` VARCHAR(45) NULL DEFAULT NULL COMMENT '',\r\n" +
 					"  `rezidiv_zeitpunkt` DATE NULL DEFAULT NULL COMMENT '',\r\n" +
-					"  `hausarzt` VARCHAR(45) NULL DEFAULT NULL COMMENT '',\r\n" +
-					"  `frauenarzt` VARCHAR(45) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `hausarzt` VARCHAR(255) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"  `frauenarzt` VARCHAR(255) NULL DEFAULT NULL COMMENT '',\r\n" +
 					"  `anmerkungen` MEDIUMTEXT NULL DEFAULT NULL COMMENT '',\r\n" +
 					"  `information` VARCHAR(45) NULL DEFAULT NULL COMMENT '',\r\n" +
 					"  PRIMARY KEY (`Pseudonym`)  COMMENT '',\r\n" +
@@ -190,6 +215,7 @@ public class controller_Main implements Initializable {
 					"`Land` VARCHAR(3) NULL DEFAULT NULL COMMENT '',\r\n" +
 					"`PLZ` VARCHAR(6) NULL DEFAULT NULL COMMENT '',\r\n" +
 					"`Ort` VARCHAR(45) NULL DEFAULT NULL COMMENT '',\r\n" +
+					"`TodDatum` DATE NULL DEFAULT NULL COMMENT '',\r\n" +
 					"`Fehler` INT(1) NULL DEFAULT NULL COMMENT '',\r\n" +
 					"PRIMARY KEY (`PatientenID`)  COMMENT '') \r\n" +
 					"ENGINE = InnoDB\r\n" + 
@@ -604,7 +630,47 @@ public class controller_Main implements Initializable {
 	}
 	//=====================================================================================================
 
+	public void datenEinv2011() {
+		//TODO Überprüfen ob funktion
+		final File file = new FileChooser().showOpenDialog(FX_Window.window);
 
+		if (file != null && file.exists() && FX_Main.cn != null) {
+
+			Task<XSSFSheet> loadSheet = FX_Main.loadExcel(file);
+			progressBar.setProgress(-1);
+			new Thread(loadSheet).start();
+
+			while (!loadSheet.isDone()) {
+			}
+
+			Task<Void> startTask = FX_Main.excelToEinv2011(loadSheet);
+			progressBar.progressProperty().bind(startTask.progressProperty());
+			new Thread(startTask).start();
+
+		}
+
+	}
+	
+	public void krebsregister() {
+		//TODO Überprüfen ob funktion
+		final File file = new FileChooser().showOpenDialog(FX_Window.window);
+
+		if (file != null && file.exists() && FX_Main.cn != null) {
+
+			Task<XSSFSheet> loadSheet = FX_Main.loadExcel(file);
+			progressBar.setProgress(-1);
+			new Thread(loadSheet).start();
+
+			while (!loadSheet.isDone()) {
+			}
+
+			Task<Void> startTask = FX_Main.excelToKrebsregister(loadSheet);
+			progressBar.progressProperty().bind(startTask.progressProperty());
+			new Thread(startTask).start();
+
+		}
+
+	}
 
 	public void connect() {
 		new Thread(FX_Main.connect()).start();

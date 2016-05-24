@@ -124,10 +124,10 @@ public class start {
 				String columnName = cell.getStringCellValue().toLowerCase();
 				columnIndex index = null;
 				columnIndex index2 = null;
-				
+
 				switch (columnName) {
-//				case "kat.":  index = new columnIndex(columnName, i, 1); index2 = new columnIndex(columnName, i, 15); break;
-//				case "einsender": index = new columnIndex(columnName, i, 2); index2 = new columnIndex(columnName, i, 16); break;
+				//				case "kat.":  index = new columnIndex(columnName, i, 1); index2 = new columnIndex(columnName, i, 15); break;
+				//				case "einsender": index = new columnIndex(columnName, i, 2); index2 = new columnIndex(columnName, i, 16); break;
 				case "pseudonym":  index = new columnIndex(columnName, i, 1); index2 = new columnIndex(columnName, i, 11); break;
 				case "pseudonym2": index = new columnIndex(columnName, i, 2); index2 = new columnIndex(columnName, i, 12); break;
 				case "altern. name": index = new columnIndex(columnName, i, -1, 2); break;
@@ -135,21 +135,21 @@ public class start {
 				case "vorname":  index = new columnIndex(columnName, i, 9, 3);  index2 = new columnIndex(columnName, i, 19);break;
 				case "geb.datum":  index = new columnIndex(columnName, i, 8, 4); index2 = new columnIndex(columnName, i, 18); break;
 				//TODO
-				
+
 				case "straße":  index = new columnIndex(columnName, i, -1, 5); break;
 				case "hausnr.":  index = new columnIndex(columnName, i, -1, 6); break;
 				case "plz":  index = new columnIndex(columnName, i, -1, 7); break;
 				case "stadt":  index = new columnIndex(columnName, i, -1, 8); break;
-				
-//				case "frühere ee":  index = new columnIndex(columnName, i, 5); index2 = new columnIndex(columnName, i, 19); break;
-//				case "datum früheres einverständnis":  index = new columnIndex(columnName, i, 6); index2 = new columnIndex(columnName, i, 20); break;
+
+				//				case "frühere ee":  index = new columnIndex(columnName, i, 5); index2 = new columnIndex(columnName, i, 19); break;
+				//				case "datum früheres einverständnis":  index = new columnIndex(columnName, i, 6); index2 = new columnIndex(columnName, i, 20); break;
 				case "ee 2015":  index = new columnIndex(columnName, i, 3); index2 = new columnIndex(columnName, i, 13); break;
 				case "datum ee 2015":  index = new columnIndex(columnName, i, 4); index2 = new columnIndex(columnName, i, 14); break;
 				case "notizen":  index = new columnIndex(columnName, i, 5); index2 = new columnIndex(columnName, i, 15); break;
 				case "notizen 2 /verstorben quelle":  index = new columnIndex(columnName, i, 6); index2 = new columnIndex(columnName, i, 16); break;
 				case "tod_dat":  index = new columnIndex(columnName, i, 7); index2 = new columnIndex(columnName, i, 17); break;
 				//case "op datum":  index = new columnIndex(columnName, i); break;
-				
+
 				}
 
 				if (index != null) structure.add(index);
@@ -167,42 +167,42 @@ public class start {
 				Cell cell = row.getCell(i);
 				String columnName = cell.getStringCellValue().toLowerCase();
 				columnIndex index = null;
-				
+
 				switch (columnName) {
-				case "Pseudonym":  index = new columnIndex(columnName, i, 1); break;
-				case "Welle": index = new columnIndex(columnName, i, 2); break;
+				case "pseudonym":  index = new columnIndex(columnName, i, 1); break;
+				case "welle": index = new columnIndex(columnName, i, 2); break;
 				case "rawid":  index = new columnIndex(columnName, i, 3); break;
 				case "source": index = new columnIndex(columnName, i, 4); break;
 				case "zeit": index = new columnIndex(columnName, i, 5); break;
-				case "1. Wurde zur Behandlung Ihrer Brustkrebserkrankung bei Ihnen eine Chemotherapie durchgeführt?":  index = new columnIndex(columnName, i, 6); break;
-				case "1.1 Wann wurde die Chemotherapie durchgeführt?":  index = new columnIndex(columnName, i, 7); break;
-				case "1.2 Mit welchem/n Medikament/en wurde die Therapie durchgeführt?":  index = new columnIndex(columnName, i, 8); break;
-				case "2. Wurde bei Ihnen eine Bestrahlung/Radiatio durchgeführt?":  index = new columnIndex(columnName, i, 9); break;
-				case "3. Nehmen oder nahmen Sie Medikamente einer Anti-Hormon-Therapie ein und falls ja welche/s?; nein":  index = new columnIndex(columnName, i, 10); break;
-				case "3. Nehmen oder nahmen Sie Medikamente einer Anti-Hormon-Therapie ein und falls ja welche/s?; ja, aber ich ich bin mir nicht sicher welches":  index = new columnIndex(columnName, i, 11); break;
-				case "3. Nehmen oder nahmen Sie Medikamente einer Anti-Hormon-Therapie ein und falls ja welche/s?; Tamoxifen":  index = new columnIndex(columnName, i, 12); break;
-				case "3. Nehmen oder nahmen Sie Medikamente einer Anti-Hormon-Therapie ein und falls ja welche/s?; Arimidex® (Anastrozol)":  index = new columnIndex(columnName, i, 13); break;
-				case "3. Nehmen oder nahmen Sie Medikamente einer Anti-Hormon-Therapie ein und falls ja welche/s?; Aromasin® (Exemestan)":  index = new columnIndex(columnName, i, 14); break;
-				case "3. Nehmen oder nahmen Sie Medikamente einer Anti-Hormon-Therapie ein und falls ja welche/s?; Femara® (Letrozol)":  index = new columnIndex(columnName, i, 15); break;
-				case "4. Wurden oder werden Sie mit Herceptin® (Trastuzumab) behandelt?":  index = new columnIndex(columnName, i, 16); break;
-				case "5. Wurden Sie mit Biophosphonaten zur Vorbeugung/ Behandlung von Osteoporose behandelt (z.B. Fosamax®/Alendron, Bonviva®/ Bondronat®, Actonel®, Bonefos®/Clodron/Ostac®, Zometa®)? ":  index = new columnIndex(columnName, i, 17); break;
-				case "5. Wurden Sie mit Biophosphonaten zur Vorbeugung/ Behandlung von Osteoporose behandelt (z.B. Fosamax®/Alendron, Bonviva®/ Bondronat®, Actonel®, Bonefos®/Clodron/Ostac®, Zometa®)? ; ja und zwar:_text":  index = new columnIndex(columnName, i, 18); break;
-				case "6. Ist seit der Ersterkrankung eine weitere Brustkrebserkrankung aufgetreten? (Falls ja, beantworten Sie bitte die Fragen 6.1 - 6.3.)":  index = new columnIndex(columnName, i, 19); break;
-				case "6.1 Wie hat sich die erneute Erkrankung bei Ihnen bemerkbar gemacht?; Rezidiv - die gleiche Brust ist erneut von Krebs betroffen":  index = new columnIndex(columnName, i, 20); break;
-				case "6.1 Wie hat sich die erneute Erkrankung bei Ihnen bemerkbar gemacht?; Metastasen - andere Organe sind von Krebs betroffen":  index = new columnIndex(columnName, i, 21); break;
-				case "6.2. Wo genau sind Metastasen aufgetreten?; andere Brust":  index = new columnIndex(columnName, i, 22); break;
-				case "6.2. Wo genau sind Metastasen aufgetreten?; Lymphknoten":  index = new columnIndex(columnName, i, 23); break;
-				case "6.2. Wo genau sind Metastasen aufgetreten?; Knochen":  index = new columnIndex(columnName, i, 24); break;
-				case "6.2. Wo genau sind Metastasen aufgetreten?; Lunge":  index = new columnIndex(columnName, i, 25); break;
-				case "6.2. Wo genau sind Metastasen aufgetreten?; Gehirn":  index = new columnIndex(columnName, i, 26); break;
-				case "6.2. Wo genau sind Metastasen aufgetreten?; Leber":  index = new columnIndex(columnName, i, 27); break;
-				case "6.2. Wo genau sind Metastasen aufgetreten?; andere Organe":  index = new columnIndex(columnName, i, 28); break;
-				case "6.2. Wo genau sind Metastasen aufgetreten?; andere Organe_text":  index = new columnIndex(columnName, i, 29); break;
-				case "6.3 Wann ist die Krebserkrankung erneut aufgetreten?":  index = new columnIndex(columnName, i, 30); break;
-				case "7. Wer ist Ihr Hausarzt/ Ihre Hausärztin?":  index = new columnIndex(columnName, i, 31); break;
-				case "8. Wer ist Ihr Frauenarzt/ Ihre Frauenärztin?":  index = new columnIndex(columnName, i, 32); break;
-				case "9. Möchten Sie zu Ihrer Erkrankung noch etwas anmerken?":  index = new columnIndex(columnName, i, 33); break;
-				case "Ich möchte informiert werden, sollten Ergebnisse vorliegen, die nur mich bzw. meinen Krankheitsverlauf betreffen.":  index = new columnIndex(columnName, i, 34); break;
+				case "1. wurde zur behandlung ihrer brustkrebserkrankung bei ihnen eine chemotherapie durchgeführt?":  index = new columnIndex(columnName, i, 6); break;
+				case "1.1 wann wurde die chemotherapie durchgeführt?":  index = new columnIndex(columnName, i, 7); break;
+				case "1.2 mit welchem/n medikament/en wurde die therapie durchgeführt?":  index = new columnIndex(columnName, i, 8); break;
+				case "2. wurde bei ihnen eine bestrahlung/radiatio durchgeführt?":  index = new columnIndex(columnName, i, 9); break;
+				case "3. nehmen oder nahmen sie medikamente einer anti-hormon-therapie ein und falls ja welche/s?; nein":  index = new columnIndex(columnName, i, 10); break;
+				case "3. nehmen oder nahmen sie medikamente einer anti-hormon-therapie ein und falls ja welche/s?; ja, aber ich ich bin mir nicht sicher welches":  index = new columnIndex(columnName, i, 11); break;
+				case "3. nehmen oder nahmen sie medikamente einer anti-hormon-therapie ein und falls ja welche/s?; tamoxifen":  index = new columnIndex(columnName, i, 12); break;
+				case "3. nehmen oder nahmen sie medikamente einer anti-hormon-therapie ein und falls ja welche/s?; arimidex® (anastrozol)":  index = new columnIndex(columnName, i, 13); break;
+				case "3. nehmen oder nahmen sie medikamente einer anti-hormon-therapie ein und falls ja welche/s?; aromasin® (exemestan)":  index = new columnIndex(columnName, i, 14); break;
+				case "3. nehmen oder nahmen sie medikamente einer anti-hormon-therapie ein und falls ja welche/s?; fe03a® (letrozol)":  index = new columnIndex(columnName, i, 15); break;
+				case "4. wurden oder werden sie mit herceptin® (trastuzumab) behandelt?":  index = new columnIndex(columnName, i, 16); break;
+				case "5. wurden sie mit biophosphonaten zur vorbeugung/ behandlung von osteoporose behandelt (z.b. fosamax®/alendron, bonviva®/ bondronat®, actonel®, bonefos®/clodron/ostac®, zometa®)? ":  index = new columnIndex(columnName, i, 17); break;
+				case "5. wurden sie mit biophosphonaten zur vorbeugung/ behandlung von osteoporose behandelt (z.b. fosamax®/alendron, bonviva®/ bondronat®, actonel®, bonefos®/clodron/ostac®, zometa®)? ; ja und zwar:_text":  index = new columnIndex(columnName, i, 18); break;
+				case "6. ist seit der ersterkrankung eine weitere brustkrebserkrankung aufgetreten? (falls ja, beantworten sie bitte die fragen 6.1 - 6.3.)":  index = new columnIndex(columnName, i, 19); break;
+				case "6.1 wie hat sich die erneute erkrankung bei ihnen bemerkbar gemacht?; rezidiv - die gleiche brust ist erneut von krebs betroffen":  index = new columnIndex(columnName, i, 20); break;
+				case "6.1 wie hat sich die erneute erkrankung bei ihnen bemerkbar gemacht?; metastasen - andere organe sind von krebs betroffen":  index = new columnIndex(columnName, i, 21); break;
+				case "6.2. wo genau sind metastasen aufgetreten?; andere brust":  index = new columnIndex(columnName, i, 22); break;
+				case "6.2. wo genau sind metastasen aufgetreten?; lymphknoten":  index = new columnIndex(columnName, i, 23); break;
+				case "6.2. wo genau sind metastasen aufgetreten?; knochen":  index = new columnIndex(columnName, i, 24); break;
+				case "6.2. wo genau sind metastasen aufgetreten?; lunge":  index = new columnIndex(columnName, i, 25); break;
+				case "6.2. wo genau sind metastasen aufgetreten?; gehirn":  index = new columnIndex(columnName, i, 26); break;
+				case "6.2. wo genau sind metastasen aufgetreten?; leber":  index = new columnIndex(columnName, i, 27); break;
+				case "6.2. wo genau sind metastasen aufgetreten?; andere organe":  index = new columnIndex(columnName, i, 28); break;
+				case "6.2. wo genau sind metastasen aufgetreten?; andere organe_text":  index = new columnIndex(columnName, i, 29); break;
+				case "6.3 wann ist die krebserkrankung erneut aufgetreten?":  index = new columnIndex(columnName, i, 30); break;
+				case "7. wer ist ihr hausarzt/ ihre hausärztin?":  index = new columnIndex(columnName, i, 31); break;
+				case "8. wer ist ihr frauenarzt/ ihre frauenärztin?":  index = new columnIndex(columnName, i, 32); break;
+				case "9. möchten sie zu ihrer erkrankung noch etwas anmerken?":  index = new columnIndex(columnName, i, 33); break;
+				case "ich möchte informiert werden, sollten ergebnisse vorliegen, die nur mich bzw. meinen krankheitsverlauf betreffen.":  index = new columnIndex(columnName, i, 34); break;
 
 				}
 
@@ -213,6 +213,42 @@ public class start {
 				//TODO structure anpassen
 				return structure;
 			}
+		} else if (method.equals("einv2011")) {
+			for (int i = row.getFirstCellNum(); i < row.getLastCellNum(); i++) {
+
+				Cell cell = row.getCell(i);
+				String columnName = cell.getStringCellValue().toLowerCase();
+				columnIndex index = null;
+				columnIndex index2 = null;
+
+				switch (columnName) {
+				case "nachname":  index = new columnIndex(columnName, i, 15); index2 = new columnIndex(columnName, i, 30); break;
+				case "vorname":  index = new columnIndex(columnName, i, 14); index2 = new columnIndex(columnName, i, 29); break;
+				case "geb.datum":  index = new columnIndex(columnName, i, 13); index2 = new columnIndex(columnName, i, 28); break;
+				case "ee 2011":  index = new columnIndex(columnName, i, 1); index2 = new columnIndex(columnName, i, 16); break;
+				case "datum ee 2011":  index = new columnIndex(columnName, i, 2); index2 = new columnIndex(columnName, i, 17); break;
+				case "rezidiv/metastase":  index = new columnIndex(columnName, i, 3); index2 = new columnIndex(columnName, i, 18); break;
+				case "r_datum1":  index = new columnIndex(columnName, i, 4); index2 = new columnIndex(columnName, i, 19); break;
+				case "r_datum2":  index = new columnIndex(columnName, i, 5); index2 = new columnIndex(columnName, i, 20); break;
+				case "notizen 3":  index = new columnIndex(columnName, i, 6); index2 = new columnIndex(columnName, i, 21); break;
+				case "ha":  index = new columnIndex(columnName, i, 7); index2 = new columnIndex(columnName, i, 22); break;
+				case "fa":  index = new columnIndex(columnName, i, 8); index2 = new columnIndex(columnName, i, 23); break;
+				case "chemo":  index = new columnIndex(columnName, i, 9); index2 = new columnIndex(columnName, i, 24); break;
+				case "radiatio":  index = new columnIndex(columnName, i, 10); index2 = new columnIndex(columnName, i, 25); break;
+				case "ah":  index = new columnIndex(columnName, i, 11); index2 = new columnIndex(columnName, i, 26); break;
+				case "r ":  index = new columnIndex(columnName, i, 12); index2 = new columnIndex(columnName, i, 27); break;
+
+				}
+				if (index != null) structure.add(index);
+				if (index2 != null) structure.add(index2);
+
+			}
+
+			if (structure.check("exprimage")) {
+				//TODO structure anpassen
+				return structure;
+			}
+
 		}
 
 		System.out.println("Spaltennamen wurden nicht gefunden!");
@@ -769,115 +805,115 @@ public class start {
 
 	}
 
-//	public static void main(String[] args) {
-//		//TODO
-//		String dbDrv="", dbUrl="", dbUsr="", dbPwd="", excelPath="";
-//
-//		excelPath = "C://Project Pathologie/test.xlsx";
-//		//-----------------------------------
-//		//DB connection data
-//		//-----------------------------------
-//		dbDrv = "com.mysql.jdbc.Driver";
-//		dbUrl = "jdbc:mysql://localhost:3306/mydb";
-//		dbUsr = "java";
-//		dbPwd = "geheim";
-//
-//		UIFenster1 = new MainWindow();
-//		UIFenster1.progressBar.setIndeterminate(true);
-//
-//		//-----------------------------------
-//		//Um das zu connection mit localhost zu beschleunigen  kannst das auskommentieren,
-//		//ist dafür da, das es auf allen meinen rechnern parallel mit einer datenbank funktioniert
-//		//-----------------------------------
-//		try {
-//			Socket socket = new Socket ();
-//			socket.connect(new InetSocketAddress("192.168.178.22", 3306), 200 );
-//			socket.close();
-//			dbUrl = "jdbc:mysql://192.168.178.22:3306/mydb";
-//		} catch (Exception e) {
-//			//System.out.println(e);
-//		}
-//
-//		try {
-//			// Select fitting database driver and connect:
-//			/*???	*/Class.forName( dbDrv );
-//			cn = DriverManager.getConnection( dbUrl, dbUsr, dbPwd );
-//			UIFenster1.lblConnected.setVisible(true);
-//			UIFenster1.DBtoTable_Patientendaten();
-//
-//		} catch ( Exception ex ) {
-//			System.out.println( ex );
-//		}
-//
-//		//----------------------------------------------------
-//
-//		readExcelToPatientendaten = true;
-//		readExcelToFall = true;
-//
-//		try {
-//
-//			File excel = null;
-//			FileInputStream fis = null;
-//			XSSFSheet sheet = null;
-//			XSSFWorkbook book = null;
-//
-//			if (readExcelToPatientendaten || readExcelToFall) {
-//				excel = new File(excelPath);
-//				fis = new FileInputStream(excel);
-//				book = new XSSFWorkbook(fis);
-//				sheet = book.getSheetAt(0);
-//				book.setMissingCellPolicy(Row.CREATE_NULL_AS_BLANK);
-//			}
-//
-//			//Alle Reihen lesen: sheet.getPhysicalNumberOfRows()
-//			recordsToRead = 15;
-//
-//			if (readExcelToPatientendaten && readExcelToFall) {
-//				UIFenster1.progressBar.setIndeterminate(false);
-//				UIFenster1.progressBar.setMaximum(recordsToRead*2);
-//				excelToPatient(sheet);
-//				excelToFall(sheet);
-//				book.close();
-//				fis.close();
-//			} else if (readExcelToPatientendaten && !readExcelToFall) {
-//				UIFenster1.progressBar.setIndeterminate(false);
-//				UIFenster1.progressBar.setMaximum(recordsToRead);
-//				excelToPatient(sheet);
-//				book.close();
-//				fis.close();
-//			} else if (readExcelToFall && !readExcelToPatientendaten) {
-//				UIFenster1.progressBar.setIndeterminate(false);
-//				UIFenster1.progressBar.setMaximum(recordsToRead);
-//				excelToFall(sheet);
-//				book.close();
-//				fis.close();
-//			}
-//
-//		} catch (Exception e) {
-//			System.out.println(e);
-//			e.printStackTrace();
-//			System.out.println("Fehler: Irgendetwas stimmt mit der Datei nicht!");
-//		}
-//
-//		methodsCompleted = true;
-//		UIFenster1.DBtoTable_Patientendaten();
-//		UIFenster1.DBtoTable_Fall();
-//
-//		try {
-//			if (cn != null && !cn.isClosed() && !UIFenster1.isShowing()) {
-//				cn.close();
-//				System.out.println("Datenbankverbindung beednet! STARTCLASS");
-//			}
-//		} catch (SQLException e) {
-//			System.out.println("Fehler beim Beenden der Datenbankverbindung!");
-//		}
-//
-//		if (!readExcelToPatientendaten && !readExcelToFall) {
-//			UIFenster1.progressBar.setIndeterminate(false);
-//			UIFenster1.progressBar.setValue(UIFenster1.progressBar.getMaximum());
-//		}
-//
-//	}
+	//	public static void main(String[] args) {
+	//		//TODO
+	//		String dbDrv="", dbUrl="", dbUsr="", dbPwd="", excelPath="";
+	//
+	//		excelPath = "C://Project Pathologie/test.xlsx";
+	//		//-----------------------------------
+	//		//DB connection data
+	//		//-----------------------------------
+	//		dbDrv = "com.mysql.jdbc.Driver";
+	//		dbUrl = "jdbc:mysql://localhost:3306/mydb";
+	//		dbUsr = "java";
+	//		dbPwd = "geheim";
+	//
+	//		UIFenster1 = new MainWindow();
+	//		UIFenster1.progressBar.setIndeterminate(true);
+	//
+	//		//-----------------------------------
+	//		//Um das zu connection mit localhost zu beschleunigen  kannst das auskommentieren,
+	//		//ist dafür da, das es auf allen meinen rechnern parallel mit einer datenbank funktioniert
+	//		//-----------------------------------
+	//		try {
+	//			Socket socket = new Socket ();
+	//			socket.connect(new InetSocketAddress("192.168.178.22", 3306), 200 );
+	//			socket.close();
+	//			dbUrl = "jdbc:mysql://192.168.178.22:3306/mydb";
+	//		} catch (Exception e) {
+	//			//System.out.println(e);
+	//		}
+	//
+	//		try {
+	//			// Select fitting database driver and connect:
+	//			/*???	*/Class.forName( dbDrv );
+	//			cn = DriverManager.getConnection( dbUrl, dbUsr, dbPwd );
+	//			UIFenster1.lblConnected.setVisible(true);
+	//			UIFenster1.DBtoTable_Patientendaten();
+	//
+	//		} catch ( Exception ex ) {
+	//			System.out.println( ex );
+	//		}
+	//
+	//		//----------------------------------------------------
+	//
+	//		readExcelToPatientendaten = true;
+	//		readExcelToFall = true;
+	//
+	//		try {
+	//
+	//			File excel = null;
+	//			FileInputStream fis = null;
+	//			XSSFSheet sheet = null;
+	//			XSSFWorkbook book = null;
+	//
+	//			if (readExcelToPatientendaten || readExcelToFall) {
+	//				excel = new File(excelPath);
+	//				fis = new FileInputStream(excel);
+	//				book = new XSSFWorkbook(fis);
+	//				sheet = book.getSheetAt(0);
+	//				book.setMissingCellPolicy(Row.CREATE_NULL_AS_BLANK);
+	//			}
+	//
+	//			//Alle Reihen lesen: sheet.getPhysicalNumberOfRows()
+	//			recordsToRead = 15;
+	//
+	//			if (readExcelToPatientendaten && readExcelToFall) {
+	//				UIFenster1.progressBar.setIndeterminate(false);
+	//				UIFenster1.progressBar.setMaximum(recordsToRead*2);
+	//				excelToPatient(sheet);
+	//				excelToFall(sheet);
+	//				book.close();
+	//				fis.close();
+	//			} else if (readExcelToPatientendaten && !readExcelToFall) {
+	//				UIFenster1.progressBar.setIndeterminate(false);
+	//				UIFenster1.progressBar.setMaximum(recordsToRead);
+	//				excelToPatient(sheet);
+	//				book.close();
+	//				fis.close();
+	//			} else if (readExcelToFall && !readExcelToPatientendaten) {
+	//				UIFenster1.progressBar.setIndeterminate(false);
+	//				UIFenster1.progressBar.setMaximum(recordsToRead);
+	//				excelToFall(sheet);
+	//				book.close();
+	//				fis.close();
+	//			}
+	//
+	//		} catch (Exception e) {
+	//			System.out.println(e);
+	//			e.printStackTrace();
+	//			System.out.println("Fehler: Irgendetwas stimmt mit der Datei nicht!");
+	//		}
+	//
+	//		methodsCompleted = true;
+	//		UIFenster1.DBtoTable_Patientendaten();
+	//		UIFenster1.DBtoTable_Fall();
+	//
+	//		try {
+	//			if (cn != null && !cn.isClosed() && !UIFenster1.isShowing()) {
+	//				cn.close();
+	//				System.out.println("Datenbankverbindung beednet! STARTCLASS");
+	//			}
+	//		} catch (SQLException e) {
+	//			System.out.println("Fehler beim Beenden der Datenbankverbindung!");
+	//		}
+	//
+	//		if (!readExcelToPatientendaten && !readExcelToFall) {
+	//			UIFenster1.progressBar.setIndeterminate(false);
+	//			UIFenster1.progressBar.setValue(UIFenster1.progressBar.getMaximum());
+	//		}
+	//
+	//	}
 
 	//http://download.eclipse.org/egit/github/updates-nightly/ <- GITHUB Task manager (über help -> install new software)
 

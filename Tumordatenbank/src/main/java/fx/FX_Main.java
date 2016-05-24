@@ -122,7 +122,7 @@ public class FX_Main {
 				// TODO Auto-generated method stub
 				updateProgress(-1, 5);
 
-				
+
 				FileInputStream fis = new FileInputStream(excel);
 
 				XSSFWorkbook book = new XSSFWorkbook(fis);
@@ -171,7 +171,9 @@ public class FX_Main {
 
 					PreparedStatement Pst = cn.prepareStatement("insert into patientendaten (`Geburtsdatum`, `Vorname`, `Name`,"
 							+ " `Strasse`, `Hausnummer`, `Land`, `PLZ`, `Ort`, `Fehler`) "
-							+ "values ( ? , ? , ? , ? , ? , ? , ? , ? , ? );");
+							+ "values ( ? , ? , ? , ? , ? , ? , ? , ? , ? ) ON DUPLICATE KEY UPDATE `Geburtsdatum`=VALUES(`Geburtsdatum`), `Vorname`= VALUES(`Vorname`), `Name`= VALUES(`Name`),"
+							+ " `Strasse`=VALUES(`Strasse`), `Hausnummer`= VALUES(`Hausnummer`), `Land`= VALUES(`Land`), `PLZ`= VALUES(`PLZ`),`Ort`= `Ort`,`Fehler`= `Fehler`) ");
+							
 					PreparedStatement Pst_update = cn.prepareStatement("UPDATE mydb.patientendaten\r\n" + 
 							"SET\r\n" + 
 							"`Strasse` = IFNULL(`Strasse`, ? ),\r\n" + 
@@ -582,10 +584,13 @@ public class FX_Main {
 
 
 
-					pWriter = new PrintWriter(new BufferedWriter(new FileWriter("test.txt"))); 
+					pWriter = new PrintWriter(new BufferedWriter(new FileWriter("einv.log"))); 
 
 
-					PreparedStatement Pst_UpPat = cn.prepareStatement("UPDATE mydb.patientendaten SET Name=?, altName=?, Vorname=?,Geburtsdatum=?, Strasse=?, Hausnummer=? ,PLZ=? , Ort=? WHERE Geburtsdatum=? AND Vorname=? AND Name=?");
+					//					PreparedStatement Pst_UpPat = cn.prepareStatement("UPDATE mydb.patientendaten SET Name=?, altName=?, Vorname=?,Geburtsdatum=?, Strasse=?, Hausnummer=? ,PLZ=? , Ort=? WHERE Geburtsdatum=? AND Vorname=? AND Name=?");
+					PreparedStatement Pst_UpPat = cn.prepareStatement("INSERT INTO mydb.patientendaten (Name, altName, Vorname, Geburtsdatum, Strasse, Hausnummer, PLZ, Ort) "
+							+ "VALUES (?,?,?,?,?,?,?,?) "
+							+ "ON DUPLICATE KEY UPDATE Name=?, altName=?, Vorname=?,Geburtsdatum=?, Strasse=?, Hausnummer=? ,PLZ=? , Ort=?");
 
 
 
@@ -594,7 +599,7 @@ public class FX_Main {
 					PreparedStatement Pst_Einv = cn.prepareStatement("INSERT INTO mydb.`einverständnis` ( Pseudonym, Pseudonym2, 2015EEStatus, 2015EEDatum, Notizen, QuelleTod, TodDatum, patientendaten_PatientenID) "
 							+" VALUES ( ?, ?, ?, ?, ?, ?, ?, (select PatientenID from mydb.patientendaten where Geburtsdatum = ? and Vorname = ? and Name = ? ))"
 							+" ON DUPLICATE KEY UPDATE Pseudonym=?, Pseudonym2=?, 2015EEStatus=?, 2015EEDatum=?, Notizen=?, "
-							+" QuelleTod=?, TodDatum=?, patientendaten_PatientenID=(select PatientenID from mydb.patientendaten where Geburtsdatum = ? and Vorname = ? and Name = ? );");
+							+" QuelleTod=?, TodDatum=?, patientendaten_PatientenID=(select PatientenID from mydb.patientendaten where Geburtsdatum = ? and Vorname = ? and Name = ?);");
 					int k = 0;	//iterator
 
 					while (itr.hasNext() && k < recordsToRead) {
@@ -630,42 +635,51 @@ public class FX_Main {
 								switch (cell.getCellType()) {
 								case Cell.CELL_TYPE_STRING:
 									if (columnObject.columnIndex==4){
+										Pst_UpPat.setString(9, cell.getStringCellValue());
 										Pst_UpPat.setString(1, cell.getStringCellValue());
-										if (writeableName) Pst_UpPat.setString(11, cell.getStringCellValue());
+										//if (writeableName) Pst_UpPat.setString(19, cell.getStringCellValue());
 									}
 									if (columnObject.columnIndex==6){
+										Pst_UpPat.setString(11, cell.getStringCellValue());
 										Pst_UpPat.setString(3, cell.getStringCellValue());
-										if (writeableVorname) Pst_UpPat.setString(10, cell.getStringCellValue());
+										//if (writeableVorname) Pst_UpPat.setString(18, cell.getStringCellValue());
 									}
 									if (columnObject.columnIndex==5){
 										String alt = cell.getStringCellValue();
 										if (alt.startsWith("?")){
+											Pst_UpPat.setString(10, alt);
 											Pst_UpPat.setString(2, alt);
-											Pst_UpPat.setString(10, alt.substring(1));
+											//Pst_UpPat.setString(18, alt.substring(1));
 											writeableVorname = false;
 										}else if (alt.startsWith("!") || alt==""){
+											Pst_UpPat.setString(10, alt);
 											Pst_UpPat.setString(2, alt);
 										} else {
+											Pst_UpPat.setString(10, alt);
 											Pst_UpPat.setString(2, alt);
-											Pst_UpPat.setString(11, alt);
+											//Pst_UpPat.setString(19, alt);
 											writeableName = false;
 										}
 									} 
 									if (columnObject.columnIndex==9 || columnObject.columnIndex==10 || columnObject.columnIndex==11 || columnObject.columnIndex==8){
 										Pst_UpPat.setString(columnObject.Pst_updateIndex, cell.getStringCellValue());
+										Pst_UpPat.setString(columnObject.Pst_updateIndex+8, cell.getStringCellValue());
 									}
 									break;
 								case Cell.CELL_TYPE_NUMERIC:
 									if (columnObject.columnIndex==9 || columnObject.columnIndex==10 || columnObject.columnIndex==11 || columnObject.columnIndex==8){
+										Pst_UpPat.setInt(columnObject.Pst_updateIndex+8,(int) cell.getNumericCellValue());
 										Pst_UpPat.setInt(columnObject.Pst_updateIndex,(int) cell.getNumericCellValue());
 									} else if (columnObject.columnIndex==7) {
-										Pst_UpPat.setString(columnObject.Pst_updateIndex, new java.sql.Date(cell.getDateCellValue().getTime())+"");
-										Pst_UpPat.setString(9, new java.sql.Date(cell.getDateCellValue().getTime())+"");
+										Pst_UpPat.setDate(columnObject.Pst_updateIndex+8, new java.sql.Date(cell.getDateCellValue().getTime()));
+										Pst_UpPat.setDate(columnObject.Pst_updateIndex, new java.sql.Date(cell.getDateCellValue().getTime()));
+										//Pst_UpPat.setDate(17, new java.sql.Date(cell.getDateCellValue().getTime()));
 									}
 									break;
 								case Cell.CELL_TYPE_BLANK:
-									if (columnObject.columnIndex==9 || columnObject.columnIndex==10 || columnObject.columnIndex==11 || columnObject.columnIndex==12){
+									if (columnObject.columnIndex==9 || columnObject.columnIndex==5 || columnObject.columnIndex==10 || columnObject.columnIndex==11 || columnObject.columnIndex==12){
 										Pst_UpPat.setNull(columnObject.Pst_updateIndex, java.sql.Types.NULL);
+										Pst_UpPat.setNull(columnObject.Pst_updateIndex+8, java.sql.Types.NULL);
 									}
 									break;
 								}
@@ -674,10 +688,12 @@ public class FX_Main {
 
 						} while (columnObject.hasNext());
 						try {
+							System.out.println("wait");
 							System.out.print("Updated rows in mydb.PatUp: " + Pst_UpPat.executeUpdate() + " - ");
 						} catch (SQLException e) {
 							//e.printStackTrace();
 							System.out.print("PatUp: Fehler beim Ausführen von \"insert into fall\": Fall ggf. doppelt!" + " ");
+							pWriter.println(Pst_UpPat.toString());
 						}
 
 
@@ -706,7 +722,7 @@ public class FX_Main {
 								case Cell.CELL_TYPE_NUMERIC:
 									if (columnObject.columnIndex == 7 || columnObject.columnIndex == 13 || columnObject.columnIndex == 15 || columnObject.columnIndex == 18 || columnObject.columnIndex == 19){
 										//Eingangsdatum, Geburtsdatum oder OP-Datum
-										Pst_Einv.setString(columnObject.PstIndex, new java.sql.Date(cell.getDateCellValue().getTime())+"");
+										Pst_Einv.setDate(columnObject.PstIndex, new java.sql.Date(cell.getDateCellValue().getTime()));
 									}else if (columnObject.columnIndex==3){
 										Pst_Einv.setString(columnObject.PstIndex, String.format("%05d", cell.getNumericCellValue()));
 
@@ -731,7 +747,7 @@ public class FX_Main {
 						} catch (SQLException e) {
 							e.printStackTrace();
 							System.out.print("Fehler beim Ausführen von \"insert into fall\": Fall ggf. doppelt!" + " ");
-							pWriter.println(Pst_UpPat.toString());
+							pWriter.println(Pst_Einv.toString());
 						}
 
 						columnObject = structure.head;
@@ -788,7 +804,7 @@ public class FX_Main {
 
 
 
-					pWriter = new PrintWriter(new BufferedWriter(new FileWriter("test.txt"))); 
+					pWriter = new PrintWriter(new BufferedWriter(new FileWriter("questor.log"))); 
 
 
 					//					PreparedStatement Pst_UpPat = cn.prepareStatement("UPDATE mydb.patientendaten SET Name=?, altName=?, Vorname=?,Geburtsdatum=?, Strasse=?, Hausnummer=? ,PLZ=? , Ort=? WHERE Geburtsdatum=? AND Vorname=? AND Name=?");
@@ -905,19 +921,31 @@ public class FX_Main {
 
 								switch (cell.getCellType()) {
 								case Cell.CELL_TYPE_STRING:
-									Pst_Qest.setString(columnObject.PstIndex, cell.getStringCellValue());
+									if (cell.getStringCellValue().equals("00/0000")){
+										Pst_Qest.setNull(columnObject.PstIndex, java.sql.Types.NULL);
+									} else {
+										Pst_Qest.setString(columnObject.PstIndex, cell.getStringCellValue());
+									}
 									break;
 								case Cell.CELL_TYPE_NUMERIC:
 									if (columnObject.PstIndex == 5 || columnObject.PstIndex == 30){
 										//Eingangsdatum, Geburtsdatum oder OP-Datum
-										Pst_Qest.setString(columnObject.PstIndex, new java.sql.Date(cell.getDateCellValue().getTime())+"");
+										if ((int) cell.getNumericCellValue()==-42){
+											Pst_Qest.setNull(columnObject.PstIndex, java.sql.Types.NULL);
+										} else {
+											Pst_Qest.setDate(columnObject.PstIndex, new java.sql.Date(cell.getDateCellValue().getTime()));
+										} 
+
 									} else if (columnObject.PstIndex == 10 ||columnObject.PstIndex == 11 ||columnObject.PstIndex == 12 ||columnObject.PstIndex == 13 ||columnObject.PstIndex == 14 ||columnObject.PstIndex == 15 || columnObject.PstIndex == 20 || columnObject.PstIndex == 21 ||columnObject.PstIndex == 22 ||columnObject.PstIndex == 23 ||columnObject.PstIndex == 24 ||columnObject.PstIndex == 25 ||columnObject.PstIndex == 26 ||columnObject.PstIndex == 27 ||columnObject.PstIndex == 28) {
 										if ((int) cell.getNumericCellValue()==1){
 											Pst_Qest.setBoolean(columnObject.PstIndex, true);
 										} else if ((int) cell.getNumericCellValue()==-42){
 											Pst_Qest.setBoolean(columnObject.PstIndex, false);
 										}
-									} else {
+									} else if (columnObject.Pst_updateIndex==1){
+										Pst_Qest.setString(columnObject.PstIndex, String.format("%05d", cell.getNumericCellValue()));
+
+									}else {
 										//Befundtyp - nope der steht als Text in excel
 										if ((int) cell.getNumericCellValue()==-42){
 											Pst_Qest.setNull(columnObject.PstIndex, java.sql.Types.NULL);
@@ -941,7 +969,7 @@ public class FX_Main {
 						} catch (SQLException e) {
 							//e.printStackTrace();
 							System.out.print("Fehler beim Ausführen von \"insert into fall\": Fall ggf. doppelt!" + " ");
-							//							pWriter.println(Pst_UpPat.toString());
+							pWriter.println(Pst_Qest.toString());
 						}
 
 						columnObject = structure.head;
@@ -971,6 +999,258 @@ public class FX_Main {
 		return task;
 	}
 
+	public static Task<Void> excelToEinv2011(final Task<XSSFSheet> loadSheetTask) {
+
+		Task<Void> task = new Task<Void>() {
+
+			@Override
+			protected Void call() throws Exception {
+				// TODO Auto-generated method stub
+
+				XSSFSheet sheet = loadSheetTask.get();
+
+				//excelToPatient
+				System.out.println("excelToEinv2011");
+				updateProgress(-1, recordsToRead);
+
+				Iterator<Row> itr = sheet.iterator();
+				Row row = itr.next();
+
+				columnStructure<columnIndex> structure = start.getColumnIndizes(sheet, "einv2011");
+
+				PrintWriter pWriter = null; 
+
+				try {
+
+
+
+
+					pWriter = new PrintWriter(new BufferedWriter(new FileWriter("einv2011.log"))); 
+
+
+
+
+
+					PreparedStatement Pst_Einv11 = cn.prepareStatement("INSERT INTO mydb.`einverstaendnis2011` (2011EEStatus, 2011EEDatum, `Rezidiv/Metastase`, RDatum, RDatum2, `Notizen3`, HA, FA ,Chemo, Radiatio, aH ,R, patientendaten_PatientenID) "
+							+" VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, (select PatientenID from mydb.patientendaten where Geburtsdatum = ? and Vorname = ? and Name = ? ))"
+							+" ON DUPLICATE KEY UPDATE 2011EEStatus=?, 2011EEDatum=?, `Rezidiv/Metastase`=?, RDatum=?, RDatum2=?, `Notizen3`=?, HA=?, FA=?, Chemo=?, Radiatio=?, aH=?, R=? , "
+							+" patientendaten_PatientenID=(select PatientenID from mydb.patientendaten where Geburtsdatum = ? and Vorname = ? and Name = ? );");
+					int k = 0;	//iterator
+
+					while (itr.hasNext() && k < recordsToRead) {
+
+						k++;
+
+						updateProgress(recordsToRead + k, recordsToRead*2);
+						row = itr.next();
+						// Iterating over each column of Excel file
+
+						Pst_Einv11.clearParameters();
+						//						Pst_UpPat.clearParameters();
+
+						Cell cell = null;
+
+						columnIndex columnObject = structure.head;
+						boolean first = true;
+						cell = null;
+						columnObject = structure.head;
+						first = true;
+
+						do {
+							if (first) {
+								first = false;
+							} else {
+								columnObject = columnObject.next;									
+							}
+
+							cell = row.getCell(columnObject.columnIndex);
+
+							if (columnObject.PstIndex != -1) {
+								//this is only executed if the parameter can be inserted into the PreparedStatement
+
+								switch (cell.getCellType()) {
+								case Cell.CELL_TYPE_STRING:
+									Pst_Einv11.setString(columnObject.PstIndex, cell.getStringCellValue());
+									break;
+								case Cell.CELL_TYPE_NUMERIC:
+									if (columnObject.PstIndex == 2 || columnObject.PstIndex == 4 || columnObject.PstIndex == 5 || columnObject.PstIndex == 13 || columnObject.PstIndex == 17 || columnObject.PstIndex == 19 || columnObject.PstIndex == 20 || columnObject.PstIndex == 28){
+										//Eingangsdatum, Geburtsdatum oder OP-Datum
+										Pst_Einv11.setDate(columnObject.PstIndex, new java.sql.Date(cell.getDateCellValue().getTime()));
+									} else if (columnObject.PstIndex == 26 || columnObject.PstIndex == 11){
+										Pst_Einv11.setString(columnObject.PstIndex,(int) cell.getNumericCellValue()+"");
+									} else {
+										Pst_Einv11.setInt(columnObject.PstIndex, (int)cell.getNumericCellValue());;
+									}
+									break;
+								case Cell.CELL_TYPE_BLANK:
+									Pst_Einv11.setNull(columnObject.PstIndex, java.sql.Types.NULL);
+									break;
+								}
+								//end of switch
+							}
+
+						} while (columnObject.hasNext());
+
+						try {
+							System.out.print("Updated rows in mydb.fall: " + Pst_Einv11.executeUpdate() + " - ");
+						} catch (SQLException e) {
+							//e.printStackTrace();
+							System.out.print("Fehler beim Ausführen von \"insert into fall\": Fall ggf. doppelt!" + " ");
+							pWriter.println(Pst_Einv11.toString());
+						}
+
+						columnObject = structure.head;
+
+					}
+					//end of while
+
+					Pst_Einv11.close();
+					//					Pst_UpPat.close();
+					System.out.println("Write fall success");
+					System.out.println();
+				} catch (SQLException SQLex) {
+					System.out.println("Fehler beim Erstellen des PreparedStatement \"insert into fall\"!");
+				} catch (IOException ioe) { 
+					ioe.printStackTrace(); 
+				} finally { 
+					if (pWriter != null){ 
+						pWriter.flush(); 
+						pWriter.close(); 
+					} 
+				} 
+
+				return null;
+			}
+		};
+
+		return task;
+	}
+	public static Task<Void> excelToKrebsregister(final Task<XSSFSheet> loadSheetTask) {
+
+		Task<Void> task = new Task<Void>() {
+
+			@Override
+			protected Void call() throws Exception {
+				// TODO Auto-generated method stub
+
+				XSSFSheet sheet = loadSheetTask.get();
+
+				//excelToPatient
+				System.out.println("excelToKrebsregister");
+				updateProgress(-1, recordsToRead);
+
+				Iterator<Row> itr = sheet.iterator();
+				Row row = itr.next();
+
+				columnStructure<columnIndex> structure = start.getColumnIndizes(sheet, "einv2011");
+
+				PrintWriter pWriter = null; 
+
+				try {
+
+
+
+
+					pWriter = new PrintWriter(new BufferedWriter(new FileWriter("krebsr.log"))); 
+
+
+
+
+
+					PreparedStatement Pst_Einv11 = cn.prepareStatement("INSERT INTO mydb.`einverstaendnis2011` (2011EEStatus, 2011EEDatum, `Rezidiv/Metastase`, RDatum, RDatum2, `Notizen3`, HA, FA ,Chemo, Radiatio, aH ,R, patientendaten_PatientenID) "
+							+" VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, (select PatientenID from mydb.patientendaten where Geburtsdatum = ? and Vorname = ? and Name = ? ))"
+							+" ON DUPLICATE KEY UPDATE 2011EEStatus=?, 2011EEDatum=?, `Rezidiv/Metastase`=?, RDatum=?, RDatum2=?, `Notizen3`=?, HA=?, FA=?, Chemo=?, Radiatio=?, aH=?, R=? , "
+							+" patientendaten_PatientenID=(select PatientenID from mydb.patientendaten where Geburtsdatum = ? and Vorname = ? and Name = ? );");
+					int k = 0;	//iterator
+
+					while (itr.hasNext() && k < recordsToRead) {
+
+						k++;
+
+						updateProgress(recordsToRead + k, recordsToRead*2);
+						row = itr.next();
+						// Iterating over each column of Excel file
+
+						Pst_Einv11.clearParameters();
+						//						Pst_UpPat.clearParameters();
+
+						Cell cell = null;
+
+						columnIndex columnObject = structure.head;
+						boolean first = true;
+						cell = null;
+						columnObject = structure.head;
+						first = true;
+
+						do {
+							if (first) {
+								first = false;
+							} else {
+								columnObject = columnObject.next;									
+							}
+
+							cell = row.getCell(columnObject.columnIndex);
+
+							if (columnObject.PstIndex != -1) {
+								//this is only executed if the parameter can be inserted into the PreparedStatement
+
+								switch (cell.getCellType()) {
+								case Cell.CELL_TYPE_STRING:
+									Pst_Einv11.setString(columnObject.PstIndex, cell.getStringCellValue());
+									break;
+								case Cell.CELL_TYPE_NUMERIC:
+									if (columnObject.PstIndex == 2 || columnObject.PstIndex == 4 || columnObject.PstIndex == 5 || columnObject.PstIndex == 13 || columnObject.PstIndex == 17 || columnObject.PstIndex == 19 || columnObject.PstIndex == 20 || columnObject.PstIndex == 28){
+										//Eingangsdatum, Geburtsdatum oder OP-Datum
+										Pst_Einv11.setDate(columnObject.PstIndex, new java.sql.Date(cell.getDateCellValue().getTime()));
+									} else if (columnObject.PstIndex == 26 || columnObject.PstIndex == 11){
+										Pst_Einv11.setString(columnObject.PstIndex,(int) cell.getNumericCellValue()+"");
+									} else {
+										Pst_Einv11.setInt(columnObject.PstIndex, (int)cell.getNumericCellValue());;
+									}
+									break;
+								case Cell.CELL_TYPE_BLANK:
+									Pst_Einv11.setNull(columnObject.PstIndex, java.sql.Types.NULL);
+									break;
+								}
+								//end of switch
+							}
+
+						} while (columnObject.hasNext());
+
+						try {
+							System.out.print("Updated rows in mydb.fall: " + Pst_Einv11.executeUpdate() + " - ");
+						} catch (SQLException e) {
+							//e.printStackTrace();
+							System.out.print("Fehler beim Ausführen von \"insert into fall\": Fall ggf. doppelt!" + " ");
+							pWriter.println(Pst_Einv11.toString());
+						}
+
+						columnObject = structure.head;
+
+					}
+					//end of while
+
+					Pst_Einv11.close();
+					//					Pst_UpPat.close();
+					System.out.println("Write fall success");
+					System.out.println();
+				} catch (SQLException SQLex) {
+					System.out.println("Fehler beim Erstellen des PreparedStatement \"insert into fall\"!");
+				} catch (IOException ioe) { 
+					ioe.printStackTrace(); 
+				} finally { 
+					if (pWriter != null){ 
+						pWriter.flush(); 
+						pWriter.close(); 
+					} 
+				} 
+
+				return null;
+			}
+		};
+
+		return task;
+	}
 	//==========================================================================
 
 }
