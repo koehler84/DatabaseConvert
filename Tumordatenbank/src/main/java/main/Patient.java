@@ -1,5 +1,6 @@
 package main;
 
+@Deprecated
 public class Patient {
 	
 	String Geburtsdatum = null;
