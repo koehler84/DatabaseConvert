@@ -21,6 +21,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import de.pathologie_hh_west.tumordatenbank.data.sql.DBManager;
 import javafx.concurrent.Task;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -99,6 +100,11 @@ public class FX_Main {
 				try {
 					cn = DriverManager.getConnection( dbUrl, dbUsr, dbPwd );
 					controller_Main.setConnectionIndicatorState(true);
+					
+					//NEW STRUCTURE
+					DBManager.openConnection();
+					//NEW STRUCTURE
+					
 					return true;
 				} catch (Exception ex) {
 					//ex.printStackTrace();

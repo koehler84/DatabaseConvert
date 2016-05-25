@@ -1,5 +1,8 @@
 package de.pathologie_hh_west.tumordatenbank.logic;
 
+import de.pathologie_hh_west.tumordatenbank.data.sql.DataAccessException;
+import de.pathologie_hh_west.tumordatenbank.data.sql.PatientDAO;
+
 public class Patient {
 
 	private String geburtsdatum;
@@ -24,14 +27,46 @@ public class Patient {
 		this.ort = ort;
 	}
 	
-//	public Patient(TransferObject) {
+//	public Patient(TransferObject transferObject) {
 //		
 //	}
 	
-	private void save() {
-		//TODO
+	@SuppressWarnings("unused")
+	private void save() throws DataAccessException {
+		PatientDAO dao = new PatientDAO();
+		dao.upsert(this);
 	}
-	
-	
+
+	public String getGeburtsdatum() {
+		return geburtsdatum;
+	}
+
+	public String getVorname() {
+		return vorname;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public String getStrasse() {
+		return strasse;
+	}
+
+	public String getHausnummer() {
+		return hausnummer;
+	}
+
+	public String getLand() {
+		return land;
+	}
+
+	public String getPlz() {
+		return plz;
+	}
+
+	public String getOrt() {
+		return ort;
+	}
 	
 }

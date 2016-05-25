@@ -1,4 +1,4 @@
-package de.pathologie_hh_west.tumordatenbank.data;
+package de.pathologie_hh_west.tumordatenbank.data.sql;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -33,11 +33,19 @@ public class DBManager {
 		this.statement = this.connection.createStatement();
 	}
 	
-	static DBManager getInstance() throws SQLException {
+	public static DBManager getInstance() throws SQLException {
 		if (manager == null) {
 			manager = new DBManager();
 		}
 		return manager;
+	}
+	
+	public boolean isConnected()  {
+		try {
+			return this.connection.isValid(2);
+		} catch (SQLException e) {
+			return false;
+		}
 	}
 	
 	Connection getConnection() throws SQLException {
