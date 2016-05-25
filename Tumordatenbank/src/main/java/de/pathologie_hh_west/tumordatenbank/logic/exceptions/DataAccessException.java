@@ -1,4 +1,4 @@
-package de.pathologie_hh_west.tumordatenbank.data.sql;
+package de.pathologie_hh_west.tumordatenbank.logic.exceptions;
 
 public class DataAccessException extends Exception {
 

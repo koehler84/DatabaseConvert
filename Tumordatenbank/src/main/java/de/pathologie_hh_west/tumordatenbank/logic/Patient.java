@@ -1,7 +1,7 @@
 package de.pathologie_hh_west.tumordatenbank.logic;
 
-import de.pathologie_hh_west.tumordatenbank.data.sql.DataAccessException;
 import de.pathologie_hh_west.tumordatenbank.data.sql.PatientDAO;
+import de.pathologie_hh_west.tumordatenbank.logic.exceptions.DataAccessException;
 
 public class Patient {
 

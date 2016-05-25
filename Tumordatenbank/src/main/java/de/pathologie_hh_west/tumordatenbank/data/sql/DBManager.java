@@ -8,6 +8,8 @@ import java.sql.Statement;
 
 import com.mysql.jdbc.Driver;
 
+import de.pathologie_hh_west.tumordatenbank.logic.exceptions.DataAccessException;
+
 public class DBManager {
 
 	private static DBManager manager;

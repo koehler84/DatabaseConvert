@@ -6,6 +6,7 @@ import java.sql.SQLException;
 
 import de.pathologie_hh_west.tumordatenbank.logic.Patient;
 import de.pathologie_hh_west.tumordatenbank.logic.PatientKey;
+import de.pathologie_hh_west.tumordatenbank.logic.exceptions.DataAccessException;
 
 public class PatientDAO implements DataAccessObject<PatientKey, Patient> {
 

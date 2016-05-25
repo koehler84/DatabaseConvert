@@ -1,10 +1,12 @@
 package de.pathologie_hh_west.tumordatenbank.data.excel;
 
 import java.io.File;
+import java.util.NoSuchElementException;
 
 import de.pathologie_hh_west.tumordatenbank.data.excel.analyzer.ColumnAnalyzer;
+import de.pathologie_hh_west.tumordatenbank.data.excel.analyzer.DefaultAnalyzer;
 import de.pathologie_hh_west.tumordatenbank.data.excel.analyzer.TestAnalyzer;
-import de.pathologie_hh_west.tumordatenbank.data.sql.DataAccessException;
+import de.pathologie_hh_west.tumordatenbank.logic.exceptions.DataAccessException;
 
 public class ExcelFileBuilder {
 	
@@ -12,7 +14,7 @@ public class ExcelFileBuilder {
 		
 	}
 	
-	public static ExcelFile build(File file, ExcelType type) throws DataAccessException {
+	public static ExcelFile build(File file, ExcelType type) throws DataAccessException, NoSuchElementException {
 		if (file == null || type == null) {
 			throw new NullPointerException("File or Type equals null.");
 		}
@@ -20,6 +22,9 @@ public class ExcelFileBuilder {
 		ColumnAnalyzer analyzer = null;
 		
 		switch (type) {
+		case DEFAULT:
+			analyzer = new DefaultAnalyzer();
+			break;
 		case ANALYSE:
 			analyzer = null;
 			break;

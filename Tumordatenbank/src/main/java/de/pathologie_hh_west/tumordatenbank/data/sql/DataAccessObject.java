@@ -1,5 +1,7 @@
 package de.pathologie_hh_west.tumordatenbank.data.sql;
 
+import de.pathologie_hh_west.tumordatenbank.logic.exceptions.DataAccessException;
+
 interface DataAccessObject<K, T> {
 	
 	T get(K key) throws DataAccessException;
