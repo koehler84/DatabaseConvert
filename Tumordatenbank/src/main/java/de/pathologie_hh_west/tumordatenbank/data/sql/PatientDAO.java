@@ -1,5 +1,6 @@
 package de.pathologie_hh_west.tumordatenbank.data.sql;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -96,10 +97,16 @@ public class PatientDAO implements DataAccessObject<PatientKey, Patient> {
 		
 		ResultSet resCheckId = null;
 		try {
-			resCheckId = DBManager.getInstance().getStatement().executeQuery("select COUNT(*) from mydb.patientendaten where " /*TODO*/);
+			resCheckId = DBManager.getInstance().getStatement().executeQuery("select COUNT(*) as 'amount' from mydb.patientendaten where " /*TODO*/);
 			
 			if (resCheckId.next()) {
+				int numberOfRowsFound = resCheckId.getInt("amount");
 				
+				if (numberOfRowsFound == 0) {
+					insert(obj);
+				} else {
+					update(obj);
+				}
 			} else {
 				//TODO some kind of exception 
 			}
@@ -119,7 +126,40 @@ public class PatientDAO implements DataAccessObject<PatientKey, Patient> {
 			} catch (NullPointerException e) {
 			}
 		}
+	}
+	
+	@Override
+	public void delete(Patient obj) throws DataAccessException {
+		if (obj == null) {
+			return;
+		}
 		
+		PreparedStatement pst = null;
+		try {
+			pst = DBManager.getInstance().prepareStatement("delete from mydb.patientendaten where `Geburtsdatum` = ? and `Vorname` = ? and `Name` = ? ;");
+			
+			pst.setDate(1, Date.valueOf(obj.getGeburtsdatum()));
+			pst.setString(2, obj.getVorname());
+			pst.setString(3, obj.getName());
+			
+			pst.executeUpdate();
+			
+			DBManager.getInstance().commit();
+		} catch (SQLException e) {
+			try {
+				DBManager.getInstance().rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			throw new DataAccessException(e.getMessage());
+		} finally {
+			try {
+				pst.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} catch (NullPointerException e) {
+			}
+		}
 	}
 	
 }

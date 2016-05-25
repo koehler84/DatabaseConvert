@@ -1,11 +1,13 @@
 package de.pathologie_hh_west.tumordatenbank.logic;
 
+import java.time.LocalDate;
+
 import de.pathologie_hh_west.tumordatenbank.data.sql.PatientDAO;
 import de.pathologie_hh_west.tumordatenbank.logic.exceptions.DataAccessException;
 
 public class Patient {
 
-	private String geburtsdatum;
+	private LocalDate geburtsdatum;
 	private String vorname;
 	private String name;
 	private String strasse;
@@ -14,7 +16,7 @@ public class Patient {
 	private String plz;
 	private String ort;
 	
-	public Patient(String geburtsdatum, String vorname, String name, String strasse, String hausnummer, String land,
+	public Patient(LocalDate geburtsdatum, String vorname, String name, String strasse, String hausnummer, String land,
 			String plz, String ort) {
 		super();
 		this.geburtsdatum = geburtsdatum;
@@ -37,7 +39,7 @@ public class Patient {
 		dao.upsert(this);
 	}
 
-	public String getGeburtsdatum() {
+	public LocalDate getGeburtsdatum() {
 		return geburtsdatum;
 	}
 

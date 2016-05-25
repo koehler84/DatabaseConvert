@@ -12,4 +12,6 @@ interface DataAccessObject<K, T> {
 	
 	void upsert(T obj) throws DataAccessException;
 	
+	void delete(T obj) throws DataAccessException;
+	
 }
