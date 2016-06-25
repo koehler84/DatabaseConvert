@@ -1190,7 +1190,7 @@ public class FX_Main {
 							if (first) {
 								first = false;
 							} else {
-								columnObject = columnObject.next;									
+								columnObject = columnObject.next;
 							}
 
 							cell = row.getCell(columnObject.columnIndex);
@@ -1277,18 +1277,10 @@ public class FX_Main {
 				try {
 					pWriter = new PrintWriter(new BufferedWriter(new FileWriter("exprimage.log"))); 
 
-					//ResultSetMetaData rsMeta = rs.getMetaData();						
-					ResultSet rs = cn.createStatement().executeQuery( "select patd.`Name`, patd.Vorname, patd.Geburtsdatum ,fall.`E.-Nummer`, klass.er, klass.pr, klass.`Her2/neu`, fall.Einsender from mydb.klassifikation as klass join mydb.fall as fall  join mydb.patientendaten as patd  on klass.`Fall_E.-Nummer` = fall.`E.-Nummer` and klass.Fall_Befundtyp = fall.Befundtyp and patd.PatientenID = fall.Patientendaten_PatientenID where patd.PatientenID =1 ;" );
-					while (rs.next() ){
-						System.out.println(rs.getString(1));
-					}
-					/*
-					PreparedStatement Pst_Einv11 = cn.prepareStatement("INSERT INTO mydb.`einverstaendnis2011` (2011EEStatus, 2011EEDatum, `Rezidiv/Metastase`, RDatum, RDatum2, `Notizen3`, HA, FA ,Chemo, Radiatio, aH ,R, patientendaten_PatientenID) "
-							+" VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, (select PatientenID from mydb.patientendaten where Geburtsdatum = ? and Vorname = ? and Name = ? ))"
-							+" ON DUPLICATE KEY UPDATE 2011EEStatus=?, 2011EEDatum=?, `Rezidiv/Metastase`=?, RDatum=?, RDatum2=?, `Notizen3`=?, HA=?, FA=?, Chemo=?, Radiatio=?, aH=?, R=? , "
-							+" patientendaten_PatientenID=(select PatientenID from mydb.patientendaten where Geburtsdatum = ? and Vorname = ? and Name = ? );");
-					 */
+
+					int[] iter = {0,1,3,4,5,25,26,27,56,57,59,61,62,63,64,65,66,67,73};
 					int k = 0;	//iterator
+					exprimageDaten Daten = new exprimageDaten();
 
 					while (itr.hasNext() && k < recordsToRead) {
 
@@ -1299,71 +1291,152 @@ public class FX_Main {
 						// Iterating over each column of Excel file
 
 						Cell cell = null;
-						
-						
-						switch (cell.getCellType()) {
-						case Cell.CELL_TYPE_STRING:
-							cell.getColumnIndex()
-							break;
-						case Cell.CELL_TYPE_NUMERIC:
-							if (columnObject.PstIndex == 2 || columnObject.PstIndex == 4 || columnObject.PstIndex == 5 || columnObject.PstIndex == 13 || columnObject.PstIndex == 17 || columnObject.PstIndex == 19 || columnObject.PstIndex == 20 || columnObject.PstIndex == 28){
-								//Eingangsdatum, Geburtsdatum oder OP-Datum
-								Pst_Einv11.setDate(columnObject.PstIndex, new java.sql.Date(cell.getDateCellValue().getTime()));
-							} else if (columnObject.PstIndex == 26 || columnObject.PstIndex == 11){
-								Pst_Einv11.setString(columnObject.PstIndex,(int) cell.getNumericCellValue()+"");
-							} else {
-								Pst_Einv11.setInt(columnObject.PstIndex, (int)cell.getNumericCellValue());;
+
+						for (int i: iter){
+
+							cell = row.getCell(i);
+
+							switch (cell.getCellType()) {
+							case Cell.CELL_TYPE_STRING:
+								switch (cell.getColumnIndex()) {
+								case 0:
+									Daten.setEinsenderExcel(cell.getStringCellValue());
+									break;
+								case 1:
+									Daten.seteNR(cell.getStringCellValue());
+									break;
+								case 3:
+									Daten.setName(cell.getStringCellValue());
+									break;
+								case 4:
+									Daten.setVorname(cell.getStringCellValue());
+									break;
+								case 25:
+									Daten.setErExcel(cell.getStringCellValue());
+									break;
+								case 26:
+									Daten.setPrExcel(cell.getStringCellValue());
+									break;
+								case 27:
+									Daten.setHer2NeuExcel(cell.getStringCellValue());
+									break;
+								case 56:
+									Daten.setNotizenExcel(cell.getStringCellValue());
+									break;
+								case 63:
+									Daten.setEE2015StatusExcel(cell.getStringCellValue());
+									break;
+								case 66:
+									Daten.setQuelleTodExcel(cell.getStringCellValue());
+									break;
+								case 73:
+									Daten.setARZT_EXCEL(cell.getStringCellValue());
+									break;
+
+								}
+								break;
+							case Cell.CELL_TYPE_NUMERIC:
+								switch (cell.getColumnIndex()){
+								case 5:
+									Daten.setGebDatum(cell.getDateCellValue());
+									break;
+								case 57:
+									Daten.setChemoExcel((int) cell.getNumericCellValue());
+									break;
+								case 58:
+									Daten.setMedAntihormonTamoxifenExcel((int) cell.getNumericCellValue());
+									break;
+								case 61:
+									Daten.setrDatumExcel(cell.getDateCellValue());
+									break;
+								case 62:
+									Daten.setrDatum2Excel(cell.getDateCellValue());
+									break;
+								case 64:
+									Daten.setEE2015DatumExcel(cell.getDateCellValue());
+									break;
+								case 67:
+									Daten.setTodDatumExcel(cell.getDateCellValue());
+									break;
+								}
+								break;
+							case Cell.CELL_TYPE_BLANK:
+								//TODO Exception handling? Not needed, oldest Source of Data 
+								break;
 							}
-							break;
-						case Cell.CELL_TYPE_BLANK:
-							Pst_Einv11.setNull(columnObject.PstIndex, java.sql.Types.NULL);
-							break;
+							//end of switch
 						}
-						//end of switch
+
+
+						//ResultSetMetaData rsMeta = rs.getMetaData();
+						String statement = "select klass.er, klass.pr, klass.`Her2/neu`, fall.Einsender, patd.PatientenID from "
+								+ "mydb.klassifikation as klass join mydb.fall as fall  join mydb.patientendaten as patd "
+								+ "on klass.`Fall_E.-Nummer` = fall.`E.-Nummer` and klass.Fall_Befundtyp = fall.Befundtyp and patd.PatientenID = fall.Patientendaten_PatientenID "
+								+ "where patd.`Name`= '"+Daten.getName()+"' and patd.Vorname = '"+Daten.getVorname()+"' and patd.Geburtsdatum = '"+Daten.getGebDatum()+"' "
+								+ "and fall.`E.-Nummer` = '"+Daten.geteNR()+"';";
+						ResultSet rs = cn.createStatement().executeQuery(statement);
+						while (rs.next() ){
+							Daten.setErDB(rs.getString(1));
+							Daten.setPrDB(rs.getString(2));
+							Daten.setHer2NeuDB(rs.getString(3));
+							Daten.setEinsenderDB(rs.getString(4));
+							Daten.setPatIDDB(rs.getInt(5));
+						}
+						
+						statement = "select ee2015.Notizen, frag.Chemo, frag.med_antihormon_tamoxifen, ee2015.`2015EEStatus`, ee2015.`2015EEDatum`, ee2015.QuelleTod, "
+								+ "ee2015.TodDatum from mydb.fragebogen as frag join mydb.einverständnis as ee2015 join mydb.patientendaten as patd "
+								+ "on frag.Pseudonym = ee2015.Pseudonym and ee2015.patientendaten_PatientenID = patd.PatientenID "
+								+ "where patd.`Name`= '"+Daten.getName()+"' and patd.Vorname = '"+Daten.getVorname()+"' and patd.Geburtsdatum = '"+Daten.getGebDatum()+"' ;";
+						rs = cn.createStatement().executeQuery(statement);
+						while (rs.next() ){
+							Daten.setNotizenDB(rs.getString(1));
+							Daten.setChemoDB(rs.getString(2));
+							Daten.setMedAntihormonTamoxifenDB(rs.getInt(3));
+							Daten.setEE2015StatusDB(rs.getString(4));
+							Daten.setEE2015DatumDB(rs.getDate(5));
+							Daten.setQuelleTodDB(rs.getString(6));
+							Daten.setTodDatumDB(rs.getDate(7));
+						}
+
+						statement = "select ee2011.RDatum, ee2011.RDatum2, ee2011.HA, ee2011.FA from mydb.patientendaten as patd "
+								+ "join mydb.einverstaendnis2011 as ee2011 on patd.PatientenID = ee2011.patientendaten_PatientenID "
+								+ "where patd.`Name`= '"+Daten.getName()+"' and patd.Vorname = '"+Daten.getVorname()+"' and patd.Geburtsdatum = '"+Daten.getGebDatum()+"' ;";
+						rs = cn.createStatement().executeQuery(statement);
+						while (rs.next() ){
+							Daten.setrDatumDB(rs.getDate(1));
+							Daten.setrDatum2DB(rs.getDate(2));
+							Daten.setHA_DB(rs.getString(3));
+							Daten.setFA_DB(rs.getString(4));
+						}
+
+						//end of while
+
 					}
+					//					Pst_UpPat.close();
+					System.out.println("Write fall success");
+					System.out.println();
+				} catch (SQLException SQLex) {
+					System.out.println("Fehler beim Erstellen des PreparedStatement \"insert into fall\"!");
+					SQLex.printStackTrace();
+				} catch (IOException ioe) { 
+					ioe.printStackTrace(); 
+				} catch (Exception e){
+					e.printStackTrace();
+				} finally { 
+					if (pWriter != null){ 
+						pWriter.flush(); 
+						pWriter.close(); 
 
-
-					try {
-						System.out.print("Updated rows in mydb.fall: " +  " - ");
-					} catch (SQLException e) {
-						//e.printStackTrace();
-						System.out.print("Fehler beim Ausführen von \"insert into fall\": Fall ggf. doppelt!" + " ");
-						pWriter.println(Pst_Einv11.toString());
-					}
-
-					columnObject = structure.head;
-
-				}
-				//end of while
-
-				Pst_Einv11.close(); 
-
-				=============================================================*/
-						//					Pst_UpPat.close();
-						System.out.println("Write fall success");
-				System.out.println();
-			} catch (SQLException SQLex) {
-				System.out.println("Fehler beim Erstellen des PreparedStatement \"insert into fall\"!");
-				SQLex.printStackTrace();
-			} catch (IOException ioe) { 
-				ioe.printStackTrace(); 
-			} catch (Exception e){
-				e.printStackTrace();
-			}				finally { 
-				if (pWriter != null){ 
-					pWriter.flush(); 
-					pWriter.close(); 
-
+					} 
 				} 
+
+
+				return null;
 			} 
+		};
 
-
-			return null;
-		} 
-	};
-
-	return task;
-}
-//==========================================================================
+		return task;
+	}
+	//==========================================================================
 
 }
