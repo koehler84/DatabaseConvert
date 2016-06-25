@@ -35,9 +35,10 @@
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#datenAnalyse" text="1. Basis" />
                   <MenuItem mnemonicParsing="false" onAction="#datenQuestor" text="2. Questor PRO" />
-                  <MenuItem mnemonicParsing="false" onAction="#datenExprimage" text="3. Rücklauf_akt" />
+                  <MenuItem mnemonicParsing="false" onAction="#datenEinv2015" text="3. Rücklauf_akt" />
                   <MenuItem mnemonicParsing="false" onAction="#datenEinv2011" text="4. Rücklauf_2011" />
-                  <MenuItem mnemonicParsing="false" onAction="#krebsregister" text="5. Krebsregister" />
+                  <MenuItem mnemonicParsing="false" onAction="#datenKrebsregister" text="5. Krebsregister DNU" />
+                  <MenuItem mnemonicParsing="false" onAction="#datenExpri" text="6. Exprimage" />
               </items>
             </Menu>
           <Menu mnemonicParsing="false" text="Hilfe">

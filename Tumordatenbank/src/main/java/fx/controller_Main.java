@@ -554,13 +554,14 @@ public class controller_Main implements Initializable {
 
 
 			Task<Void> startTask = FX_Main.excelToPatient(loadSheet);
+			progressBar.progressProperty().unbind();
 			progressBar.progressProperty().bind(startTask.progressProperty());
 			new Thread(startTask).start();
 
 
 			if (!Thread.currentThread().equals(startTask)){
 				try {
-					Thread.sleep(60000);
+					Thread.sleep(1);
 					System.out.println("work");
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
@@ -577,7 +578,7 @@ public class controller_Main implements Initializable {
 			Task<Void> continueTask = FX_Main.excelToFall(loadSheet);
 			progressBar.progressProperty().bind(continueTask.progressProperty());
 			new Thread(continueTask).start();
-
+			
 		} else if (FX_Main.cn == null) {
 
 		} else {
@@ -586,7 +587,7 @@ public class controller_Main implements Initializable {
 
 	}
 
-	public void datenExprimage() {
+	public void datenEinv2015() {
 		//TODO Überprüfen ob funktion
 		final File file = new FileChooser().showOpenDialog(FX_Window.window);
 
@@ -600,6 +601,7 @@ public class controller_Main implements Initializable {
 			}
 
 			Task<Void> startTask = FX_Main.excelToEinv(loadSheet);
+			progressBar.progressProperty().unbind();
 			progressBar.progressProperty().bind(startTask.progressProperty());
 			new Thread(startTask).start();
 
@@ -622,9 +624,10 @@ public class controller_Main implements Initializable {
 			}
 
 			Task<Void> startTask = FX_Main.excelToQuestor(loadSheet);
+			progressBar.progressProperty().unbind();
 			progressBar.progressProperty().bind(startTask.progressProperty());
 			new Thread(startTask).start();
-
+			
 		}
 
 	}
@@ -644,6 +647,7 @@ public class controller_Main implements Initializable {
 			}
 
 			Task<Void> startTask = FX_Main.excelToEinv2011(loadSheet);
+			progressBar.progressProperty().unbind();
 			progressBar.progressProperty().bind(startTask.progressProperty());
 			new Thread(startTask).start();
 
@@ -651,7 +655,7 @@ public class controller_Main implements Initializable {
 
 	}
 	
-	public void krebsregister() {
+	public void datenKrebsregister() {
 		//TODO Überprüfen ob funktion
 		final File file = new FileChooser().showOpenDialog(FX_Window.window);
 
@@ -665,6 +669,7 @@ public class controller_Main implements Initializable {
 			}
 
 			Task<Void> startTask = FX_Main.excelToKrebsregister(loadSheet);
+			progressBar.progressProperty().unbind();
 			progressBar.progressProperty().bind(startTask.progressProperty());
 			new Thread(startTask).start();
 
@@ -672,6 +677,28 @@ public class controller_Main implements Initializable {
 
 	}
 
+	public void datenExpri() {
+		//TODO Überprüfen ob funktion
+		final File file = new FileChooser().showOpenDialog(FX_Window.window);
+
+		if (file != null && file.exists() && FX_Main.cn != null) {
+
+			Task<XSSFSheet> loadSheet = FX_Main.loadExcel(file);
+			progressBar.setProgress(-1);
+			new Thread(loadSheet).start();
+
+			while (!loadSheet.isDone()) {
+			}
+
+			Task<Void> startTask = FX_Main.excelToExpri(loadSheet);
+			progressBar.progressProperty().unbind();
+			progressBar.progressProperty().bind(startTask.progressProperty());
+			new Thread(startTask).start();
+
+		}
+
+	}
+	
 	public void connect() {
 		new Thread(FX_Main.connect()).start();
 	}

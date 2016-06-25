@@ -12,7 +12,10 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Iterator;
 
 import org.apache.poi.openxml4j.opc.OPCPackage;
@@ -173,7 +176,7 @@ public class FX_Main {
 							+ " `Strasse`, `Hausnummer`, `Land`, `PLZ`, `Ort`, `Fehler`) "
 							+ "values ( ? , ? , ? , ? , ? , ? , ? , ? , ? ) ON DUPLICATE KEY UPDATE `Geburtsdatum`=VALUES(`Geburtsdatum`), `Vorname`= VALUES(`Vorname`), `Name`= VALUES(`Name`),"
 							+ " `Strasse`=VALUES(`Strasse`), `Hausnummer`= VALUES(`Hausnummer`), `Land`= VALUES(`Land`), `PLZ`= VALUES(`PLZ`),`Ort`= `Ort`,`Fehler`= `Fehler`) ");
-							
+
 					PreparedStatement Pst_update = cn.prepareStatement("UPDATE mydb.patientendaten\r\n" + 
 							"SET\r\n" + 
 							"`Strasse` = IFNULL(`Strasse`, ? ),\r\n" + 
@@ -677,7 +680,7 @@ public class FX_Main {
 									}
 									break;
 								case Cell.CELL_TYPE_BLANK:
-									if (columnObject.columnIndex==9 || columnObject.columnIndex==5 || columnObject.columnIndex==10 || columnObject.columnIndex==11 || columnObject.columnIndex==12){
+									if (columnObject.columnIndex==9 || columnObject.columnIndex==5 || columnObject.columnIndex==10 || columnObject.columnIndex==11 || columnObject.columnIndex==12 || columnObject.columnIndex==8){
 										Pst_UpPat.setNull(columnObject.Pst_updateIndex, java.sql.Types.NULL);
 										Pst_UpPat.setNull(columnObject.Pst_updateIndex+8, java.sql.Types.NULL);
 									}
@@ -748,6 +751,7 @@ public class FX_Main {
 							e.printStackTrace();
 							System.out.print("Fehler beim Ausführen von \"insert into fall\": Fall ggf. doppelt!" + " ");
 							pWriter.println(Pst_Einv.toString());
+							pWriter.println(e.getMessage());
 						}
 
 						columnObject = structure.head;
@@ -1251,6 +1255,115 @@ public class FX_Main {
 
 		return task;
 	}
-	//==========================================================================
+	public static Task<Void> excelToExpri(final Task<XSSFSheet> loadSheetTask) {
+
+		Task<Void> task = new Task<Void>() {
+
+			@Override
+			protected Void call() throws Exception {
+				// TODO Auto-generated method stub
+
+				XSSFSheet sheet = loadSheetTask.get();
+
+				//excelToPatient
+				System.out.println("excelToExpri");
+				updateProgress(-1, recordsToRead);
+
+				Iterator<Row> itr = sheet.iterator();
+				Row row = itr.next();
+
+				PrintWriter pWriter = null; 
+				System.out.println("TEST");
+				try {
+					pWriter = new PrintWriter(new BufferedWriter(new FileWriter("exprimage.log"))); 
+
+					//ResultSetMetaData rsMeta = rs.getMetaData();						
+					ResultSet rs = cn.createStatement().executeQuery( "select patd.`Name`, patd.Vorname, patd.Geburtsdatum ,fall.`E.-Nummer`, klass.er, klass.pr, klass.`Her2/neu`, fall.Einsender from mydb.klassifikation as klass join mydb.fall as fall  join mydb.patientendaten as patd  on klass.`Fall_E.-Nummer` = fall.`E.-Nummer` and klass.Fall_Befundtyp = fall.Befundtyp and patd.PatientenID = fall.Patientendaten_PatientenID where patd.PatientenID =1 ;" );
+					while (rs.next() ){
+						System.out.println(rs.getString(1));
+					}
+					/*
+					PreparedStatement Pst_Einv11 = cn.prepareStatement("INSERT INTO mydb.`einverstaendnis2011` (2011EEStatus, 2011EEDatum, `Rezidiv/Metastase`, RDatum, RDatum2, `Notizen3`, HA, FA ,Chemo, Radiatio, aH ,R, patientendaten_PatientenID) "
+							+" VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, (select PatientenID from mydb.patientendaten where Geburtsdatum = ? and Vorname = ? and Name = ? ))"
+							+" ON DUPLICATE KEY UPDATE 2011EEStatus=?, 2011EEDatum=?, `Rezidiv/Metastase`=?, RDatum=?, RDatum2=?, `Notizen3`=?, HA=?, FA=?, Chemo=?, Radiatio=?, aH=?, R=? , "
+							+" patientendaten_PatientenID=(select PatientenID from mydb.patientendaten where Geburtsdatum = ? and Vorname = ? and Name = ? );");
+					 */
+					int k = 0;	//iterator
+
+					while (itr.hasNext() && k < recordsToRead) {
+
+						k++;
+
+						updateProgress(recordsToRead + k, recordsToRead*2);
+						row = itr.next();
+						// Iterating over each column of Excel file
+
+						Cell cell = null;
+						
+						
+						switch (cell.getCellType()) {
+						case Cell.CELL_TYPE_STRING:
+							cell.getColumnIndex()
+							break;
+						case Cell.CELL_TYPE_NUMERIC:
+							if (columnObject.PstIndex == 2 || columnObject.PstIndex == 4 || columnObject.PstIndex == 5 || columnObject.PstIndex == 13 || columnObject.PstIndex == 17 || columnObject.PstIndex == 19 || columnObject.PstIndex == 20 || columnObject.PstIndex == 28){
+								//Eingangsdatum, Geburtsdatum oder OP-Datum
+								Pst_Einv11.setDate(columnObject.PstIndex, new java.sql.Date(cell.getDateCellValue().getTime()));
+							} else if (columnObject.PstIndex == 26 || columnObject.PstIndex == 11){
+								Pst_Einv11.setString(columnObject.PstIndex,(int) cell.getNumericCellValue()+"");
+							} else {
+								Pst_Einv11.setInt(columnObject.PstIndex, (int)cell.getNumericCellValue());;
+							}
+							break;
+						case Cell.CELL_TYPE_BLANK:
+							Pst_Einv11.setNull(columnObject.PstIndex, java.sql.Types.NULL);
+							break;
+						}
+						//end of switch
+					}
+
+
+					try {
+						System.out.print("Updated rows in mydb.fall: " +  " - ");
+					} catch (SQLException e) {
+						//e.printStackTrace();
+						System.out.print("Fehler beim Ausführen von \"insert into fall\": Fall ggf. doppelt!" + " ");
+						pWriter.println(Pst_Einv11.toString());
+					}
+
+					columnObject = structure.head;
+
+				}
+				//end of while
+
+				Pst_Einv11.close(); 
+
+				=============================================================*/
+						//					Pst_UpPat.close();
+						System.out.println("Write fall success");
+				System.out.println();
+			} catch (SQLException SQLex) {
+				System.out.println("Fehler beim Erstellen des PreparedStatement \"insert into fall\"!");
+				SQLex.printStackTrace();
+			} catch (IOException ioe) { 
+				ioe.printStackTrace(); 
+			} catch (Exception e){
+				e.printStackTrace();
+			}				finally { 
+				if (pWriter != null){ 
+					pWriter.flush(); 
+					pWriter.close(); 
+
+				} 
+			} 
+
+
+			return null;
+		} 
+	};
+
+	return task;
+}
+//==========================================================================
 
 }
