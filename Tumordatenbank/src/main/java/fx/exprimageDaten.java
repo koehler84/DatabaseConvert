@@ -39,7 +39,14 @@ public class exprimageDaten {
 	private String FA_DB;
 	private String ARZT_EXCEL;
 	private int PatIDDB;
-
+	private String Notizen2Excel;
+	
+	public String getNotizen2Excel() {
+		return Notizen2Excel;
+	}
+	public void setNotizen2Excel(String notizen2Excel) {
+		Notizen2Excel = notizen2Excel;
+	}
 	public Date getrDatumExcel() {
 		return rDatumExcel;
 	}
@@ -265,19 +272,23 @@ public class exprimageDaten {
 		boolean used = false;
 		sqlUpdateStatment.add("update einverstaendnis2011 set ");
 		if (rDatumDB==null && rDatumExcel!= null ){
-			sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "einverstaendnis2011.RDatum = "+ rDatumExcel);
+			sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "einverstaendnis2011.RDatum = '"+ rDatumExcel +"'");
 			used = true;
 		} else if (rDatum2DB==null && rDatum2Excel!= null ){
 			if (used) {
 				sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + ", ");
 			}
 			used =true;
-			sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "einverstaendnis2011.RDatum2 = "+ rDatum2Excel);
+			sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "einverstaendnis2011.RDatum2 = '"+ rDatum2Excel +"'");
 		} else if (false){
 			//TODO Handling FA, HA, Arzt
-		} else if (x==9){
-			sqlUpdateStatment.remove(0);
-			x=-1;
+		}
+		
+		if (!used){
+			sqlUpdateStatment.remove(x);
+			x--;
+		} else {
+			sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + " where einverstaendnis2011.Patientendaten_PatientenID = " +PatIDDB +";");
 		}
 
 		sqlUpdateStatment.add("update fall join klassifikation on klassifikation.`Fall_E.-Nummer` = fall.`E.-Nummer` and klassifikation.Fall_Befundtyp = fall.Befundtyp set ");
@@ -285,42 +296,100 @@ public class exprimageDaten {
 		x++;
 		if (einsenderDB==null && einsenderExcel!= null ){
 
-			sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "fall.Einsender = "+ einsenderExcel);
+			sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "fall.Einsender = '"+ einsenderExcel +"'");
 			used =true;
 		} else if (erDB==null && erExcel!= null ){
 			if (used) {
 				sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + ", ");
 			}
 			used =true;
-			sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "klassifikation.ER = "+ erExcel);
+			sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "klassifikation.ER = '"+ erExcel +"'");
 		} else if (prDB==null && prExcel!= null ){
 			if (used) {
 				sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + ", ");
 			}
 			used =true;
-			sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "klassifikation.PR = "+ prExcel);
+			sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "klassifikation.PR = '"+ prExcel +"'");
 		} else if (her2NeuDB==null && her2NeuExcel!= null){
 			if (used) {
 				sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + ", ");
 			}
 			used =true;
-			sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "klassifikation.`Her2/neu` = "+ her2NeuExcel);
-
-		}else if (x==9){
-			sqlUpdateStatment.remove(0);
+			sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "klassifikation.`Her2/neu` = '"+ her2NeuExcel +"'");
+		}
+			
+		if (!used){
+			sqlUpdateStatment.remove(x);
+			x--;
+		} else {
+			sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + " where fall.Patientendaten_PatientenID = " +PatIDDB +";");
 		}
 
-
-
-
-
-		if (medAntihormonTamoxifenDB == 9999 && medAntihormonTamoxifenExcel != 9999){
-			sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "med_antihormon_tamoxifen = "+ medAntihormonTamoxifenExcel);
+		sqlUpdateStatment.add("update `einverständnis` join fragebogen on `einverständnis`.Pseudonym = fragebogen.Pseudonym set ");
+		used = false;
+		x++;
+		if (NotizenExcel!= null || Notizen2Excel!= null){
+			if (NotizenDB==null){
+				if (NotizenExcel==null)
+					sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "`einverständnis`.Notizen = '"+Notizen2Excel +"'");
+				else if (Notizen2Excel==null)
+					sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "`einverständnis`.Notizen = '"+NotizenExcel +"'");
+				else 
+					sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "`einverständnis`.Notizen = '"+Notizen2Excel +"| "+NotizenExcel +"'");
+			} else {
+				if (NotizenExcel==null)
+					sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "`einverständnis`.Notizen = '"+ NotizenDB + "| "+Notizen2Excel +"'");
+				else if (Notizen2Excel==null)
+					sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "`einverständnis`.Notizen = '"+ NotizenDB + "| "+NotizenExcel +"'");
+				else 
+					sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "`einverständnis`.Notizen = '"+ NotizenDB + "| "+Notizen2Excel +"| "+NotizenExcel +"'");
+			
+			}
+			used =true;
+		} else if (chemoDB==null &&chemoExcel!= null ){
+			if (used) {
+				sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + ", ");
+			}
+			used =true;
+			sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "fragebogen.chemo = '"+ chemoExcel +"'");
+		} else if (medAntihormonTamoxifenDB==9999 && medAntihormonTamoxifenExcel!= 9999 ){
+			if (used) {
+				sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + ", ");
+			}
+			used =true;
+			sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "fragebogen.med_antihormon_tamoxifen = "+ medAntihormonTamoxifenExcel);
+		} else if (EE2015StatusDB==null && EE2015StatusExcel!= null){
+			if (used) {
+				sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + ", ");
+			}
+			used =true;
+			sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "`einverständnis`.`2015EEStatus` = '"+ EE2015StatusExcel +"'");
+		} else if (EE2015DatumDB==null && EE2015DatumExcel!= null){
+			if (used) {
+				sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + ", ");
+			}
+			used =true;
+			sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "`einverständnis`.`2015EEDatum` = '"+ EE2015DatumExcel +"'");
+		} else if (quelleTodDB==null && quelleTodExcel!= null){
+			if (used) {
+				sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + ", ");
+			}
+			used =true;
+			sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "`einverständnis`.QuelleTod = '"+ quelleTodExcel +"'");
+		} else if (todDatumDB==null && todDatumExcel!= null){
+			if (used) {
+				sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + ", ");
+			}
+			used =true;
+			sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "`einverständnis`.TodDatum = '"+ todDatumExcel +"'");
 		}
-
-
-
-
+		
+		if (!used){
+			sqlUpdateStatment.remove(x);
+			x--;
+		} else {
+			sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + " where `einverständnis`.Patientendaten_PatientenID = " +PatIDDB +";");
+		}
 		return sqlUpdateStatment;
 	}
 	public void setPatIDDB(int PatIDDB) {
@@ -328,5 +397,41 @@ public class exprimageDaten {
 	}
 	public int getPatIDDB(){
 		return PatIDDB;
+	}
+	public void clear() {
+		einsenderExcel=null;
+		einsenderDB=null;
+		eNR=null;
+		name=null;
+		vorname=null;
+		gebDatum=null;
+		erExcel=null;
+		erDB=null;
+		prExcel=null;
+		prDB=null;
+		her2NeuExcel=null;
+		her2NeuDB=null;
+		NotizenExcel=null;
+		NotizenDB=null;
+		chemoExcel=null;
+		chemoDB=null;
+		medAntihormonTamoxifenExcel=9999;
+		medAntihormonTamoxifenDB=9999;
+		rDatumExcel=null;
+		rDatumDB=null;
+		rDatum2Excel=null;
+		rDatum2DB=null;
+		EE2015StatusExcel=null;
+		EE2015StatusDB=null;
+		EE2015DatumExcel=null;
+		EE2015DatumDB=null;
+		quelleTodExcel=null;
+		quelleTodDB=null;
+		todDatumExcel=null;
+		todDatumDB=null;
+		HA_DB=null;
+		FA_DB=null;
+		ARZT_EXCEL=null;
+		PatIDDB=-1;
 	}
 }

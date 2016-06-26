@@ -16,13 +16,17 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import com.sun.javafx.css.PseudoClassState;
 
 import javafx.concurrent.Task;
 import javafx.scene.control.Alert;
@@ -548,8 +552,12 @@ public class FX_Main {
 
 					Pst_Fall.close();
 					Pst_Klassifikation.close();
-					System.out.println("Write fall success");
-					System.out.println();
+					Alert alert = new Alert(AlertType.INFORMATION);
+					alert.setTitle("Information");
+					alert.setHeaderText(null);
+					alert.setContentText("Einlesen der Patienten- und Fall-Tabelle abgeschlossen");
+					alert.show();
+
 				} catch (SQLException SQLex) {
 					System.out.println("Fehler beim Erstellen des PreparedStatement \"insert into fall\"!");
 				}
@@ -759,15 +767,20 @@ public class FX_Main {
 					}
 					//end of while
 
+					Alert alert = new Alert(AlertType.INFORMATION);
+					alert.setTitle("Information");
+					alert.setHeaderText(null);
+					alert.setContentText("Einlesen der Einverständnis2015-Tabelle abgeschlossen");
+					alert.show();
+
 					Pst_Einv.close();
 					Pst_UpPat.close();
-					System.out.println("Write fall success");
-					System.out.println();
 				} catch (SQLException SQLex) {
 					System.out.println("Fehler beim Erstellen des PreparedStatement \"insert into fall\"!");
 				} catch (IOException ioe) { 
 					ioe.printStackTrace(); 
 				} finally { 
+					
 					if (pWriter != null){ 
 						pWriter.flush(); 
 						pWriter.close(); 
@@ -836,77 +849,7 @@ public class FX_Main {
 
 						columnIndex columnObject = structure.head;
 						boolean first = true;
-						//						boolean writeableName = true;
-						//						boolean writeableVorname = true;
 
-						//						do {
-						//							if (first) {
-						//								first = false;
-						//							} else {
-						//								columnObject = columnObject.next;
-						//							}
-						//
-						//							cell = row.getCell(columnObject.columnIndex);
-						//
-						//							if (columnObject.Pst_updateIndex != -1) {
-						//								//this is only executed if the parameter can be inserted into the PreparedStatement
-						//
-						//								switch (cell.getCellType()) {
-						//								case Cell.CELL_TYPE_STRING:
-						//									if (columnObject.columnIndex==4){
-						//										Pst_UpPat.setString(1, cell.getStringCellValue());
-						//										if (writeableName) Pst_UpPat.setString(11, cell.getStringCellValue());
-						//									}
-						//									if (columnObject.columnIndex==6){
-						//										Pst_UpPat.setString(3, cell.getStringCellValue());
-						//										if (writeableVorname) Pst_UpPat.setString(10, cell.getStringCellValue());
-						//									}
-						//									if (columnObject.columnIndex==5){
-						//										String alt = cell.getStringCellValue();
-						//										if (alt.startsWith("?")){
-						//											Pst_UpPat.setString(2, alt);
-						//											Pst_UpPat.setString(10, alt.substring(1));
-						//											writeableVorname = false;
-						//										}else if (alt.startsWith("!") || alt==""){
-						//											Pst_UpPat.setString(2, alt);
-						//										} else {
-						//											Pst_UpPat.setString(2, alt);
-						//											Pst_UpPat.setString(11, alt);
-						//											writeableName = false;
-						//										}
-						//									} 
-						//									if (columnObject.columnIndex==9 || columnObject.columnIndex==10 || columnObject.columnIndex==11 || columnObject.columnIndex==8){
-						//										Pst_UpPat.setString(columnObject.Pst_updateIndex, cell.getStringCellValue());
-						//									}
-						//									break;
-						//								case Cell.CELL_TYPE_NUMERIC:
-						//									if (columnObject.columnIndex==9 || columnObject.columnIndex==10 || columnObject.columnIndex==11 || columnObject.columnIndex==8){
-						//										Pst_UpPat.setInt(columnObject.Pst_updateIndex,(int) cell.getNumericCellValue());
-						//									} else if (columnObject.columnIndex==7) {
-						//										Pst_UpPat.setString(columnObject.Pst_updateIndex, new java.sql.Date(cell.getDateCellValue().getTime())+"");
-						//										Pst_UpPat.setString(9, new java.sql.Date(cell.getDateCellValue().getTime())+"");
-						//									}
-						//									break;
-						//								case Cell.CELL_TYPE_BLANK:
-						//									if (columnObject.columnIndex==9 || columnObject.columnIndex==10 || columnObject.columnIndex==11 || columnObject.columnIndex==12){
-						//										Pst_UpPat.setNull(columnObject.Pst_updateIndex, java.sql.Types.NULL);
-						//									}
-						//									break;
-						//								}
-						//								//end of switch
-						//							}
-						//
-						//						} while (columnObject.hasNext());
-						//						try {
-						//							System.out.print("Updated rows in mydb.PatUp: " + Pst_UpPat.executeUpdate() + " - ");
-						//						} catch (SQLException e) {
-						//							//e.printStackTrace();
-						//							System.out.print("PatUp: Fehler beim Ausführen von \"insert into fall\": Fall ggf. doppelt!" + " ");
-						//						}
-						//
-						//
-						//
-						//________________________________________________________________________________
 						cell = null;
 						columnObject = structure.head;
 						first = true;
@@ -983,8 +926,12 @@ public class FX_Main {
 
 					Pst_Qest.close();
 					//					Pst_UpPat.close();
-					System.out.println("Write fall success");
-					System.out.println();
+					Alert alert = new Alert(AlertType.INFORMATION);
+					alert.setTitle("Information");
+					alert.setHeaderText(null);
+					alert.setContentText("Einlesen der QuestorPro-Tabelle abgeschlossen");
+					alert.show();
+
 				} catch (SQLException SQLex) {
 					System.out.println("Fehler beim Erstellen des PreparedStatement \"insert into fall\"!");
 				} catch (IOException ioe) { 
@@ -1110,8 +1057,12 @@ public class FX_Main {
 
 					Pst_Einv11.close();
 					//					Pst_UpPat.close();
-					System.out.println("Write fall success");
-					System.out.println();
+					Alert alert = new Alert(AlertType.INFORMATION);
+					alert.setTitle("Information");
+					alert.setHeaderText(null);
+					alert.setContentText("Einlesen der Einverständnis2011-Tabelle abgeschlossen");
+					alert.show();
+
 				} catch (SQLException SQLex) {
 					System.out.println("Fehler beim Erstellen des PreparedStatement \"insert into fall\"!");
 				} catch (IOException ioe) { 
@@ -1278,14 +1229,14 @@ public class FX_Main {
 					pWriter = new PrintWriter(new BufferedWriter(new FileWriter("exprimage.log"))); 
 
 
-					int[] iter = {0,1,3,4,5,25,26,27,56,57,59,61,62,63,64,65,66,67,73};
+					int[] iter = {0,1,3,4,5,25,26,27,56,57,59,61,62,63,64,65,66,67,72,73};
 					int k = 0;	//iterator
 					exprimageDaten Daten = new exprimageDaten();
 
 					while (itr.hasNext() && k < recordsToRead) {
 
 						k++;
-
+						Daten.clear();
 						updateProgress(recordsToRead + k, recordsToRead*2);
 						row = itr.next();
 						// Iterating over each column of Excel file
@@ -1328,6 +1279,9 @@ public class FX_Main {
 									break;
 								case 66:
 									Daten.setQuelleTodExcel(cell.getStringCellValue());
+									break;
+								case 72:
+									Daten.setNotizen2Excel(cell.getStringCellValue());
 									break;
 								case 73:
 									Daten.setARZT_EXCEL(cell.getStringCellValue());
@@ -1382,7 +1336,7 @@ public class FX_Main {
 							Daten.setEinsenderDB(rs.getString(4));
 							Daten.setPatIDDB(rs.getInt(5));
 						}
-						
+
 						statement = "select ee2015.Notizen, frag.Chemo, frag.med_antihormon_tamoxifen, ee2015.`2015EEStatus`, ee2015.`2015EEDatum`, ee2015.QuelleTod, "
 								+ "ee2015.TodDatum from mydb.fragebogen as frag join mydb.einverständnis as ee2015 join mydb.patientendaten as patd "
 								+ "on frag.Pseudonym = ee2015.Pseudonym and ee2015.patientendaten_PatientenID = patd.PatientenID "
@@ -1408,16 +1362,35 @@ public class FX_Main {
 							Daten.setHA_DB(rs.getString(3));
 							Daten.setFA_DB(rs.getString(4));
 						}
+						List<String> list = new ArrayList<String>();
+						list = Daten.buildStatment();
 
+						cn.setAutoCommit(false);
+						for (String updStatement : list) { 
+							if (Daten.getPatIDDB()==563){
+								System.out.println(updStatement);
+							}
+							if (cn.createStatement().executeUpdate(updStatement)==0){
+								pWriter.println("0 Rows: "+ updStatement);
+							};
+							
+						}
+						cn.commit();
 						//end of while
 
 					}
+					cn.setAutoCommit(true);
 					//					Pst_UpPat.close();
-					System.out.println("Write fall success");
-					System.out.println();
+					
+					Alert alert = new Alert(AlertType.INFORMATION);
+					alert.setTitle("Information");
+					alert.setHeaderText(null);
+					alert.setContentText("Einlesen der Exprimage-Tabelle abgeschlossen");
+					alert.show();
+
 				} catch (SQLException SQLex) {
-					System.out.println("Fehler beim Erstellen des PreparedStatement \"insert into fall\"!");
 					SQLex.printStackTrace();
+					pWriter.println(SQLex.getMessage());
 				} catch (IOException ioe) { 
 					ioe.printStackTrace(); 
 				} catch (Exception e){
