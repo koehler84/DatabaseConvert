@@ -780,7 +780,7 @@ public class FX_Main {
 				} catch (IOException ioe) { 
 					ioe.printStackTrace(); 
 				} finally { 
-					
+
 					if (pWriter != null){ 
 						pWriter.flush(); 
 						pWriter.close(); 
@@ -1251,39 +1251,51 @@ public class FX_Main {
 							case Cell.CELL_TYPE_STRING:
 								switch (cell.getColumnIndex()) {
 								case 0:
-									Daten.setEinsenderExcel(cell.getStringCellValue());
+									if (cell.getStringCellValue()!="" && cell.getStringCellValue()!=" ")
+										Daten.setEinsenderExcel(cell.getStringCellValue());
 									break;
 								case 1:
-									Daten.seteNR(cell.getStringCellValue());
+									if (cell.getStringCellValue()!="" && cell.getStringCellValue()!=" ")
+										Daten.seteNR(cell.getStringCellValue());
 									break;
 								case 3:
-									Daten.setName(cell.getStringCellValue());
+									if (cell.getStringCellValue()!="" && cell.getStringCellValue()!=" ")
+										Daten.setName(cell.getStringCellValue());
 									break;
 								case 4:
-									Daten.setVorname(cell.getStringCellValue());
+									if (cell.getStringCellValue()!="" && cell.getStringCellValue()!=" ")
+										Daten.setVorname(cell.getStringCellValue());
 									break;
 								case 25:
-									Daten.setErExcel(cell.getStringCellValue());
+									if (cell.getStringCellValue()!="" && cell.getStringCellValue()!=" ")
+										Daten.setErExcel(cell.getStringCellValue());
 									break;
 								case 26:
-									Daten.setPrExcel(cell.getStringCellValue());
+									if (cell.getStringCellValue()!="" && cell.getStringCellValue()!=" ")
+										Daten.setPrExcel(cell.getStringCellValue());
 									break;
 								case 27:
-									Daten.setHer2NeuExcel(cell.getStringCellValue());
+									if (cell.getStringCellValue()!="" && cell.getStringCellValue()!=" ")
+										Daten.setHer2NeuScoreExcel(cell.getStringCellValue());
 									break;
 								case 56:
-									Daten.setNotizenExcel(cell.getStringCellValue());
+									if (cell.getStringCellValue()!="" && cell.getStringCellValue()!=" ")
+										Daten.setNotizenExcel(cell.getStringCellValue());
 									break;
 								case 63:
-									Daten.setEE2015StatusExcel(cell.getStringCellValue());
+									if (cell.getStringCellValue()!="" && cell.getStringCellValue()!=" ")
+										Daten.setEE2015StatusExcel(cell.getStringCellValue());
 									break;
 								case 66:
-									Daten.setQuelleTodExcel(cell.getStringCellValue());
+									if (cell.getStringCellValue()!="" && cell.getStringCellValue()!=" ")
+										Daten.setQuelleTodExcel(cell.getStringCellValue());
 									break;
 								case 72:
+									if (cell.getStringCellValue()!="" && cell.getStringCellValue()!=" ")
 									Daten.setNotizen2Excel(cell.getStringCellValue());
 									break;
 								case 73:
+									if (cell.getStringCellValue()!="" && cell.getStringCellValue()!=" ")
 									Daten.setARZT_EXCEL(cell.getStringCellValue());
 									break;
 
@@ -1326,13 +1338,13 @@ public class FX_Main {
 						String statement = "select klass.er, klass.pr, klass.`Her2/neu`, fall.Einsender, patd.PatientenID from "
 								+ "mydb.klassifikation as klass join mydb.fall as fall  join mydb.patientendaten as patd "
 								+ "on klass.`Fall_E.-Nummer` = fall.`E.-Nummer` and klass.Fall_Befundtyp = fall.Befundtyp and patd.PatientenID = fall.Patientendaten_PatientenID "
-								+ "where patd.`Name`= '"+Daten.getName()+"' and patd.Vorname = '"+Daten.getVorname()+"' and patd.Geburtsdatum = '"+Daten.getGebDatum()+"' "
-								+ "and fall.`E.-Nummer` = '"+Daten.geteNR()+"';";
+								+ "where patd.`Name`= '"+Daten.getName().replace("'", "''")+"' and patd.Vorname = '"+Daten.getVorname().replace("'", "''")+"' and patd.Geburtsdatum = '"+Daten.getGebDatum()+"' "
+								+ "and fall.`E.-Nummer` = '"+Daten.geteNR().replace("'", "''")+"';";
 						ResultSet rs = cn.createStatement().executeQuery(statement);
 						while (rs.next() ){
 							Daten.setErDB(rs.getString(1));
 							Daten.setPrDB(rs.getString(2));
-							Daten.setHer2NeuDB(rs.getString(3));
+							Daten.setHer2NeuScoreDB(rs.getString(3));
 							Daten.setEinsenderDB(rs.getString(4));
 							Daten.setPatIDDB(rs.getInt(5));
 						}
@@ -1340,7 +1352,7 @@ public class FX_Main {
 						statement = "select ee2015.Notizen, frag.Chemo, frag.med_antihormon_tamoxifen, ee2015.`2015EEStatus`, ee2015.`2015EEDatum`, ee2015.QuelleTod, "
 								+ "ee2015.TodDatum from mydb.fragebogen as frag join mydb.einverständnis as ee2015 join mydb.patientendaten as patd "
 								+ "on frag.Pseudonym = ee2015.Pseudonym and ee2015.patientendaten_PatientenID = patd.PatientenID "
-								+ "where patd.`Name`= '"+Daten.getName()+"' and patd.Vorname = '"+Daten.getVorname()+"' and patd.Geburtsdatum = '"+Daten.getGebDatum()+"' ;";
+								+ "where patd.PatientenID= '"+Daten.getPatIDDB()+"' ;";
 						rs = cn.createStatement().executeQuery(statement);
 						while (rs.next() ){
 							Daten.setNotizenDB(rs.getString(1));
@@ -1354,7 +1366,7 @@ public class FX_Main {
 
 						statement = "select ee2011.RDatum, ee2011.RDatum2, ee2011.HA, ee2011.FA from mydb.patientendaten as patd "
 								+ "join mydb.einverstaendnis2011 as ee2011 on patd.PatientenID = ee2011.patientendaten_PatientenID "
-								+ "where patd.`Name`= '"+Daten.getName()+"' and patd.Vorname = '"+Daten.getVorname()+"' and patd.Geburtsdatum = '"+Daten.getGebDatum()+"' ;";
+								+ "where patd.PatientenID= '"+Daten.getPatIDDB()+"' ;";
 						rs = cn.createStatement().executeQuery(statement);
 						while (rs.next() ){
 							Daten.setrDatumDB(rs.getDate(1));
@@ -1367,13 +1379,11 @@ public class FX_Main {
 
 						cn.setAutoCommit(false);
 						for (String updStatement : list) { 
-							if (Daten.getPatIDDB()==563){
-								System.out.println(updStatement);
-							}
+							System.out.println(updStatement);
 							if (cn.createStatement().executeUpdate(updStatement)==0){
 								pWriter.println("0 Rows: "+ updStatement);
 							};
-							
+
 						}
 						cn.commit();
 						//end of while
@@ -1381,7 +1391,7 @@ public class FX_Main {
 					}
 					cn.setAutoCommit(true);
 					//					Pst_UpPat.close();
-					
+
 					Alert alert = new Alert(AlertType.INFORMATION);
 					alert.setTitle("Information");
 					alert.setHeaderText(null);

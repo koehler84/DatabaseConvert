@@ -15,8 +15,8 @@ public class exprimageDaten {
 	private String erDB;
 	private String prExcel;
 	private String prDB;
-	private String her2NeuExcel;
-	private String her2NeuDB;
+	private String her2NeuScoreExcel;
+	private String her2NeuScoreDB;
 	private String NotizenExcel;
 	private String NotizenDB;
 	private String chemoExcel;
@@ -40,7 +40,7 @@ public class exprimageDaten {
 	private String ARZT_EXCEL;
 	private int PatIDDB;
 	private String Notizen2Excel;
-	
+
 	public String getNotizen2Excel() {
 		return Notizen2Excel;
 	}
@@ -107,11 +107,11 @@ public class exprimageDaten {
 	public void setPrDB(String prDB) {
 		this.prDB = prDB;
 	}
-	public String getHer2NeuDB() {
-		return her2NeuDB;
+	public String getHer2NeuScoreDB() {
+		return her2NeuScoreDB;
 	}
-	public void setHer2NeuDB(String her2NeuDB) {
-		this.her2NeuDB = her2NeuDB;
+	public void setHer2NeuScoreDB(String her2NeuScoreDB) {
+		this.her2NeuScoreDB = her2NeuScoreDB;
 	}
 	public String getNotizenExcel() {
 		return NotizenExcel;
@@ -243,28 +243,26 @@ public class exprimageDaten {
 	public void seteNR (String eNr){
 		//Convertion old ENr to new Format (994/13085 = A/1999/413085)
 		String jH;
-		if (Integer.parseInt(eNr.substring(0, 2))>20){
-			jH = "19";
+		if (eNr=="F"){
+			this.eNR="F";
 		} else {
-			jH = "20";
-		}
+			if (Integer.parseInt(eNr.substring(0, 2))>20){
+				jH = "19";
+			} else {
+				jH = "20";
+			}
 
-		this.eNR = "A/"+jH+eNr.substring(0, 2)+"/"+eNr.substring(2, 3)+eNr.substring(4, eNr.length());
+			this.eNR = "A/"+jH+eNr.substring(0, 2)+"/"+eNr.substring(2, 3)+eNr.substring(4, eNr.length());
+		}
 	}
 	public String geteNR (){
 		return this.eNR;
 	}
-	public void setHer2NeuExcel(String her2Neu){
-		if (her2Neu=="0"){
-			this.her2NeuExcel="-";
-		} else if (her2Neu=="1+" || her2Neu=="2+" || her2Neu=="3+"){
-			this.her2NeuExcel="+";
-		} else {
-			//TODO Exception
-		}
+	public void setHer2NeuScoreExcel(String her2NeuScore){
+		this.her2NeuScoreExcel=her2NeuScore;
 	}
-	public String getHer2NeuExcel (){
-		return this.her2NeuExcel;
+	public String getHer2ScoreNeuExcel (){
+		return this.her2NeuScoreExcel;
 	}
 	public List<String> buildStatment() {
 		List<String> sqlUpdateStatment = new ArrayList<String>();
@@ -280,10 +278,14 @@ public class exprimageDaten {
 			}
 			used =true;
 			sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "einverstaendnis2011.RDatum2 = '"+ rDatum2Excel +"'");
-		} else if (false){
-			//TODO Handling FA, HA, Arzt
+		} else if (HA_DB==null&&ARZT_EXCEL!=null){
+			if (used) {
+				sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + ", ");
+			}
+			used =true;
+			sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "einverstaendnis2011.HA = '"+ ARZT_EXCEL +"'");
 		}
-		
+
 		if (!used){
 			sqlUpdateStatment.remove(x);
 			x--;
@@ -296,28 +298,28 @@ public class exprimageDaten {
 		x++;
 		if (einsenderDB==null && einsenderExcel!= null ){
 
-			sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "fall.Einsender = '"+ einsenderExcel +"'");
+			sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "fall.Einsender = '"+ einsenderExcel.replace("'", "''") +"'");
 			used =true;
 		} else if (erDB==null && erExcel!= null ){
 			if (used) {
 				sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + ", ");
 			}
 			used =true;
-			sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "klassifikation.ER = '"+ erExcel +"'");
+			sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "klassifikation.ER = '"+ erExcel.replace("'", "''") +"'");
 		} else if (prDB==null && prExcel!= null ){
 			if (used) {
 				sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + ", ");
 			}
 			used =true;
-			sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "klassifikation.PR = '"+ prExcel +"'");
-		} else if (her2NeuDB==null && her2NeuExcel!= null){
+			sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "klassifikation.PR = '"+ prExcel.replace("'", "''") +"'");
+		} else if (her2NeuScoreDB==null && her2NeuScoreExcel!= null){
 			if (used) {
 				sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + ", ");
 			}
 			used =true;
-			sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "klassifikation.`Her2/neu` = '"+ her2NeuExcel +"'");
+			sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "klassifikation.`Her2/neu-Score` = '"+ her2NeuScoreExcel.replace("'", "''") +"'");
 		}
-			
+
 		if (!used){
 			sqlUpdateStatment.remove(x);
 			x--;
@@ -331,19 +333,19 @@ public class exprimageDaten {
 		if (NotizenExcel!= null || Notizen2Excel!= null){
 			if (NotizenDB==null){
 				if (NotizenExcel==null)
-					sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "`einverständnis`.Notizen = '"+Notizen2Excel +"'");
+					sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "`einverständnis`.Notizen = '"+Notizen2Excel.replace("'", "''") +"'");
 				else if (Notizen2Excel==null)
-					sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "`einverständnis`.Notizen = '"+NotizenExcel +"'");
+					sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "`einverständnis`.Notizen = '"+NotizenExcel.replace("'", "''") +"'");
 				else 
-					sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "`einverständnis`.Notizen = '"+Notizen2Excel +"| "+NotizenExcel +"'");
+					sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "`einverständnis`.Notizen = '"+Notizen2Excel.replace("'", "''") +"| "+NotizenExcel.replace("'", "''") +"'");
 			} else {
 				if (NotizenExcel==null)
-					sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "`einverständnis`.Notizen = '"+ NotizenDB + "| "+Notizen2Excel +"'");
+					sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "`einverständnis`.Notizen = '"+ NotizenDB.replace("'", "''") + "| "+Notizen2Excel.replace("'", "''") +"'");
 				else if (Notizen2Excel==null)
-					sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "`einverständnis`.Notizen = '"+ NotizenDB + "| "+NotizenExcel +"'");
+					sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "`einverständnis`.Notizen = '"+ NotizenDB.replace("'", "''") + "| "+NotizenExcel.replace("'", "''") +"'");
 				else 
-					sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "`einverständnis`.Notizen = '"+ NotizenDB + "| "+Notizen2Excel +"| "+NotizenExcel +"'");
-			
+					sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "`einverständnis`.Notizen = '"+ NotizenDB.replace("'", "''") + "| "+Notizen2Excel.replace("'", "''") +"| "+NotizenExcel.replace("'", "''") +"'");
+
 			}
 			used =true;
 		} else if (chemoDB==null &&chemoExcel!= null ){
@@ -351,7 +353,7 @@ public class exprimageDaten {
 				sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + ", ");
 			}
 			used =true;
-			sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "fragebogen.chemo = '"+ chemoExcel +"'");
+			sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "fragebogen.chemo = '"+ chemoExcel.replace("'", "''") +"'");
 		} else if (medAntihormonTamoxifenDB==9999 && medAntihormonTamoxifenExcel!= 9999 ){
 			if (used) {
 				sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + ", ");
@@ -363,7 +365,7 @@ public class exprimageDaten {
 				sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + ", ");
 			}
 			used =true;
-			sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "`einverständnis`.`2015EEStatus` = '"+ EE2015StatusExcel +"'");
+			sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "`einverständnis`.`2015EEStatus` = '"+ EE2015StatusExcel.replace("'", "''") +"'");
 		} else if (EE2015DatumDB==null && EE2015DatumExcel!= null){
 			if (used) {
 				sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + ", ");
@@ -375,7 +377,7 @@ public class exprimageDaten {
 				sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + ", ");
 			}
 			used =true;
-			sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "`einverständnis`.QuelleTod = '"+ quelleTodExcel +"'");
+			sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "`einverständnis`.QuelleTod = '"+ quelleTodExcel.replace("'", "''") +"'");
 		} else if (todDatumDB==null && todDatumExcel!= null){
 			if (used) {
 				sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + ", ");
@@ -383,7 +385,7 @@ public class exprimageDaten {
 			used =true;
 			sqlUpdateStatment.set(x, sqlUpdateStatment.get(x) + "`einverständnis`.TodDatum = '"+ todDatumExcel +"'");
 		}
-		
+
 		if (!used){
 			sqlUpdateStatment.remove(x);
 			x--;
@@ -409,9 +411,10 @@ public class exprimageDaten {
 		erDB=null;
 		prExcel=null;
 		prDB=null;
-		her2NeuExcel=null;
-		her2NeuDB=null;
+		her2NeuScoreExcel=null;
+		her2NeuScoreDB=null;
 		NotizenExcel=null;
+		Notizen2Excel=null;
 		NotizenDB=null;
 		chemoExcel=null;
 		chemoDB=null;
