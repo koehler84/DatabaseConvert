@@ -75,6 +75,8 @@ public class start {
 				case "kryo": index = new columnIndex(columnName, i, 10); break;
 				case "op-datum": index = new columnIndex(columnName, i, 11); break;
 				case "mikroskopie": index = new columnIndex(columnName, i, 12); break;
+				case "t":  index = new columnIndex(columnName, i); break;
+				case "n":  index = new columnIndex(columnName, i); break;
 				case "befundtext": index = new columnIndex(columnName, i); break;
 				}
 				if (index != null) structure.add(index);
@@ -123,17 +125,16 @@ public class start {
 				Cell cell = row.getCell(i);
 				String columnName = cell.getStringCellValue().toLowerCase();
 				columnIndex index = null;
-				columnIndex index2 = null;
 
 				switch (columnName) {
 				//				case "kat.":  index = new columnIndex(columnName, i, 1); index2 = new columnIndex(columnName, i, 15); break;
 				//				case "einsender": index = new columnIndex(columnName, i, 2); index2 = new columnIndex(columnName, i, 16); break;
-				case "pseudonym":  index = new columnIndex(columnName, i, 1); index2 = new columnIndex(columnName, i, 11); break;
-				case "pseudonym2": index = new columnIndex(columnName, i, 2); index2 = new columnIndex(columnName, i, 12); break;
+				case "pseudonym":  index = new columnIndex(columnName, i, 1); break;
+				case "pseudonym2": index = new columnIndex(columnName, i, 2); break;
 				case "altern. name": index = new columnIndex(columnName, i, -1, 2); break;
-				case "nachname":  index = new columnIndex(columnName, i, 10, 1);  index2 = new columnIndex(columnName, i, 20);break;
-				case "vorname":  index = new columnIndex(columnName, i, 9, 3);  index2 = new columnIndex(columnName, i, 19);break;
-				case "geb.datum":  index = new columnIndex(columnName, i, 8, 4); index2 = new columnIndex(columnName, i, 18); break;
+				case "nachname":  index = new columnIndex(columnName, i, 10, 1);break;
+				case "vorname":  index = new columnIndex(columnName, i, 9, 3);break;
+				case "geb.datum":  index = new columnIndex(columnName, i, 8, 4); break;
 				//TODO
 
 				case "straße":  index = new columnIndex(columnName, i, -1, 5); break;
@@ -143,17 +144,16 @@ public class start {
 
 				//				case "frühere ee":  index = new columnIndex(columnName, i, 5); index2 = new columnIndex(columnName, i, 19); break;
 				//				case "datum früheres einverständnis":  index = new columnIndex(columnName, i, 6); index2 = new columnIndex(columnName, i, 20); break;
-				case "ee 2015":  index = new columnIndex(columnName, i, 3); index2 = new columnIndex(columnName, i, 13); break;
-				case "datum ee 2015":  index = new columnIndex(columnName, i, 4); index2 = new columnIndex(columnName, i, 14); break;
-				case "notizen":  index = new columnIndex(columnName, i, 5); index2 = new columnIndex(columnName, i, 15); break;
-				case "notizen 2 /verstorben quelle":  index = new columnIndex(columnName, i, 6); index2 = new columnIndex(columnName, i, 16); break;
-				case "tod_dat":  index = new columnIndex(columnName, i, 7); index2 = new columnIndex(columnName, i, 17); break;
+				case "ee 2015":  index = new columnIndex(columnName, i, 3); break;
+				case "datum ee 2015":  index = new columnIndex(columnName, i, 4); break;
+				case "notizen":  index = new columnIndex(columnName, i, 5); break;
+				case "notizen 2 /verstorben quelle":  index = new columnIndex(columnName, i, 6); break;
+				case "tod_dat":  index = new columnIndex(columnName, i, 7); break;
 				//case "op datum":  index = new columnIndex(columnName, i); break;
 
 				}
 
 				if (index != null) structure.add(index);
-				if (index2 != null) structure.add(index2);
 			}
 
 			if (structure.check("exprimage")) {
@@ -169,40 +169,40 @@ public class start {
 				columnIndex index = null;
 
 				switch (columnName) {
-				case "pseudonym":  index = new columnIndex(columnName, i, 1); break;
-				case "welle": index = new columnIndex(columnName, i, 2); break;
-				case "rawid":  index = new columnIndex(columnName, i, 3); break;
-				case "source": index = new columnIndex(columnName, i, 4); break;
-				case "zeit": index = new columnIndex(columnName, i, 5); break;
-				case "1. wurde zur behandlung ihrer brustkrebserkrankung bei ihnen eine chemotherapie durchgeführt?":  index = new columnIndex(columnName, i, 6); break;
-				case "1.1 wann wurde die chemotherapie durchgeführt?":  index = new columnIndex(columnName, i, 7); break;
-				case "1.2 mit welchem/n medikament/en wurde die therapie durchgeführt?":  index = new columnIndex(columnName, i, 8); break;
-				case "2. wurde bei ihnen eine bestrahlung/radiatio durchgeführt?":  index = new columnIndex(columnName, i, 9); break;
-				case "3. nehmen oder nahmen sie medikamente einer anti-hormon-therapie ein und falls ja welche/s?; nein":  index = new columnIndex(columnName, i, 10); break;
-				case "3. nehmen oder nahmen sie medikamente einer anti-hormon-therapie ein und falls ja welche/s?; ja, aber ich ich bin mir nicht sicher welches":  index = new columnIndex(columnName, i, 11); break;
-				case "3. nehmen oder nahmen sie medikamente einer anti-hormon-therapie ein und falls ja welche/s?; tamoxifen":  index = new columnIndex(columnName, i, 12); break;
-				case "3. nehmen oder nahmen sie medikamente einer anti-hormon-therapie ein und falls ja welche/s?; arimidex® (anastrozol)":  index = new columnIndex(columnName, i, 13); break;
-				case "3. nehmen oder nahmen sie medikamente einer anti-hormon-therapie ein und falls ja welche/s?; aromasin® (exemestan)":  index = new columnIndex(columnName, i, 14); break;
-				case "3. nehmen oder nahmen sie medikamente einer anti-hormon-therapie ein und falls ja welche/s?; fe03a® (letrozol)":  index = new columnIndex(columnName, i, 15); break;
-				case "4. wurden oder werden sie mit herceptin® (trastuzumab) behandelt?":  index = new columnIndex(columnName, i, 16); break;
-				case "5. wurden sie mit biophosphonaten zur vorbeugung/ behandlung von osteoporose behandelt (z.b. fosamax®/alendron, bonviva®/ bondronat®, actonel®, bonefos®/clodron/ostac®, zometa®)? ":  index = new columnIndex(columnName, i, 17); break;
-				case "5. wurden sie mit biophosphonaten zur vorbeugung/ behandlung von osteoporose behandelt (z.b. fosamax®/alendron, bonviva®/ bondronat®, actonel®, bonefos®/clodron/ostac®, zometa®)? ; ja und zwar:_text":  index = new columnIndex(columnName, i, 18); break;
-				case "6. ist seit der ersterkrankung eine weitere brustkrebserkrankung aufgetreten? (falls ja, beantworten sie bitte die fragen 6.1 - 6.3.)":  index = new columnIndex(columnName, i, 19); break;
-				case "6.1 wie hat sich die erneute erkrankung bei ihnen bemerkbar gemacht?; rezidiv - die gleiche brust ist erneut von krebs betroffen":  index = new columnIndex(columnName, i, 20); break;
-				case "6.1 wie hat sich die erneute erkrankung bei ihnen bemerkbar gemacht?; metastasen - andere organe sind von krebs betroffen":  index = new columnIndex(columnName, i, 21); break;
-				case "6.2. wo genau sind metastasen aufgetreten?; andere brust":  index = new columnIndex(columnName, i, 22); break;
-				case "6.2. wo genau sind metastasen aufgetreten?; lymphknoten":  index = new columnIndex(columnName, i, 23); break;
-				case "6.2. wo genau sind metastasen aufgetreten?; knochen":  index = new columnIndex(columnName, i, 24); break;
-				case "6.2. wo genau sind metastasen aufgetreten?; lunge":  index = new columnIndex(columnName, i, 25); break;
-				case "6.2. wo genau sind metastasen aufgetreten?; gehirn":  index = new columnIndex(columnName, i, 26); break;
-				case "6.2. wo genau sind metastasen aufgetreten?; leber":  index = new columnIndex(columnName, i, 27); break;
-				case "6.2. wo genau sind metastasen aufgetreten?; andere organe":  index = new columnIndex(columnName, i, 28); break;
-				case "6.2. wo genau sind metastasen aufgetreten?; andere organe_text":  index = new columnIndex(columnName, i, 29); break;
-				case "6.3 wann ist die krebserkrankung erneut aufgetreten?":  index = new columnIndex(columnName, i, 30); break;
-				case "7. wer ist ihr hausarzt/ ihre hausärztin?":  index = new columnIndex(columnName, i, 31); break;
-				case "8. wer ist ihr frauenarzt/ ihre frauenärztin?":  index = new columnIndex(columnName, i, 32); break;
-				case "9. möchten sie zu ihrer erkrankung noch etwas anmerken?":  index = new columnIndex(columnName, i, 33); break;
-				case "ich möchte informiert werden, sollten ergebnisse vorliegen, die nur mich bzw. meinen krankheitsverlauf betreffen.":  index = new columnIndex(columnName, i, 34); break;
+				case "pseudonym":  index = new columnIndex(columnName, i, 34); break;
+				case "welle": index = new columnIndex(columnName, i, 1); break;
+				case "rawid":  index = new columnIndex(columnName, i, 2); break;
+				case "source": index = new columnIndex(columnName, i, 3); break;
+				case "zeit": index = new columnIndex(columnName, i, 4); break;
+				case "1. wurde zur behandlung ihrer brustkrebserkrankung bei ihnen eine chemotherapie durchgeführt?":  index = new columnIndex(columnName, i, 5); break;
+				case "1.1 wann wurde die chemotherapie durchgeführt?":  index = new columnIndex(columnName, i, 6); break;
+				case "1.2 mit welchem/n medikament/en wurde die therapie durchgeführt?":  index = new columnIndex(columnName, i, 7); break;
+				case "2. wurde bei ihnen eine bestrahlung/radiatio durchgeführt?":  index = new columnIndex(columnName, i, 8); break;
+				case "3. nehmen oder nahmen sie medikamente einer anti-hormon-therapie ein und falls ja welche/s?; nein":  index = new columnIndex(columnName, i, 9); break;
+				case "3. nehmen oder nahmen sie medikamente einer anti-hormon-therapie ein und falls ja welche/s?; ja, aber ich ich bin mir nicht sicher welches":  index = new columnIndex(columnName, i, 10); break;
+				case "3. nehmen oder nahmen sie medikamente einer anti-hormon-therapie ein und falls ja welche/s?; tamoxifen":  index = new columnIndex(columnName, i, 11); break;
+				case "3. nehmen oder nahmen sie medikamente einer anti-hormon-therapie ein und falls ja welche/s?; arimidex® (anastrozol)":  index = new columnIndex(columnName, i, 12); break;
+				case "3. nehmen oder nahmen sie medikamente einer anti-hormon-therapie ein und falls ja welche/s?; aromasin® (exemestan)":  index = new columnIndex(columnName, i, 13); break;
+				case "3. nehmen oder nahmen sie medikamente einer anti-hormon-therapie ein und falls ja welche/s?; fe03a® (letrozol)":  index = new columnIndex(columnName, i, 14); break;
+				case "4. wurden oder werden sie mit herceptin® (trastuzumab) behandelt?":  index = new columnIndex(columnName, i, 15); break;
+				case "5. wurden sie mit biophosphonaten zur vorbeugung/ behandlung von osteoporose behandelt (z.b. fosamax®/alendron, bonviva®/ bondronat®, actonel®, bonefos®/clodron/ostac®, zometa®)? ":  index = new columnIndex(columnName, i, 16); break;
+				case "5. wurden sie mit biophosphonaten zur vorbeugung/ behandlung von osteoporose behandelt (z.b. fosamax®/alendron, bonviva®/ bondronat®, actonel®, bonefos®/clodron/ostac®, zometa®)? ; ja und zwar:_text":  index = new columnIndex(columnName, i, 17); break;
+				case "6. ist seit der ersterkrankung eine weitere brustkrebserkrankung aufgetreten? (falls ja, beantworten sie bitte die fragen 6.1 - 6.3.)":  index = new columnIndex(columnName, i, 18); break;
+				case "6.1 wie hat sich die erneute erkrankung bei ihnen bemerkbar gemacht?; rezidiv - die gleiche brust ist erneut von krebs betroffen":  index = new columnIndex(columnName, i, 19); break;
+				case "6.1 wie hat sich die erneute erkrankung bei ihnen bemerkbar gemacht?; metastasen - andere organe sind von krebs betroffen":  index = new columnIndex(columnName, i, 20); break;
+				case "6.2. wo genau sind metastasen aufgetreten?; andere brust":  index = new columnIndex(columnName, i, 21); break;
+				case "6.2. wo genau sind metastasen aufgetreten?; lymphknoten":  index = new columnIndex(columnName, i, 22); break;
+				case "6.2. wo genau sind metastasen aufgetreten?; knochen":  index = new columnIndex(columnName, i, 23); break;
+				case "6.2. wo genau sind metastasen aufgetreten?; lunge":  index = new columnIndex(columnName, i, 24); break;
+				case "6.2. wo genau sind metastasen aufgetreten?; gehirn":  index = new columnIndex(columnName, i, 25); break;
+				case "6.2. wo genau sind metastasen aufgetreten?; leber":  index = new columnIndex(columnName, i, 26); break;
+				case "6.2. wo genau sind metastasen aufgetreten?; andere organe":  index = new columnIndex(columnName, i, 27); break;
+				case "6.2. wo genau sind metastasen aufgetreten?; andere organe_text":  index = new columnIndex(columnName, i, 28); break;
+				case "6.3 wann ist die krebserkrankung erneut aufgetreten?":  index = new columnIndex(columnName, i, 29); break;
+				case "7. wer ist ihr hausarzt/ ihre hausärztin?":  index = new columnIndex(columnName, i, 30); break;
+				case "8. wer ist ihr frauenarzt/ ihre frauenärztin?":  index = new columnIndex(columnName, i, 31); break;
+				case "9. möchten sie zu ihrer erkrankung noch etwas anmerken?":  index = new columnIndex(columnName, i, 32); break;
+				case "ich möchte informiert werden, sollten ergebnisse vorliegen, die nur mich bzw. meinen krankheitsverlauf betreffen.":  index = new columnIndex(columnName, i, 33); break;
 
 				}
 
@@ -222,25 +222,24 @@ public class start {
 				columnIndex index2 = null;
 
 				switch (columnName) {
-				case "nachname":  index = new columnIndex(columnName, i, 15); index2 = new columnIndex(columnName, i, 30); break;
-				case "vorname":  index = new columnIndex(columnName, i, 14); index2 = new columnIndex(columnName, i, 29); break;
-				case "geb.datum":  index = new columnIndex(columnName, i, 13); index2 = new columnIndex(columnName, i, 28); break;
-				case "ee 2011":  index = new columnIndex(columnName, i, 1); index2 = new columnIndex(columnName, i, 16); break;
-				case "datum ee 2011":  index = new columnIndex(columnName, i, 2); index2 = new columnIndex(columnName, i, 17); break;
-				case "rezidiv/metastase":  index = new columnIndex(columnName, i, 3); index2 = new columnIndex(columnName, i, 18); break;
-				case "r_datum1":  index = new columnIndex(columnName, i, 4); index2 = new columnIndex(columnName, i, 19); break;
-				case "r_datum2":  index = new columnIndex(columnName, i, 5); index2 = new columnIndex(columnName, i, 20); break;
-				case "notizen 3":  index = new columnIndex(columnName, i, 6); index2 = new columnIndex(columnName, i, 21); break;
-				case "ha":  index = new columnIndex(columnName, i, 7); index2 = new columnIndex(columnName, i, 22); break;
-				case "fa":  index = new columnIndex(columnName, i, 8); index2 = new columnIndex(columnName, i, 23); break;
-				case "chemo":  index = new columnIndex(columnName, i, 9); index2 = new columnIndex(columnName, i, 24); break;
-				case "radiatio":  index = new columnIndex(columnName, i, 10); index2 = new columnIndex(columnName, i, 25); break;
-				case "ah":  index = new columnIndex(columnName, i, 11); index2 = new columnIndex(columnName, i, 26); break;
-				case "r ":  index = new columnIndex(columnName, i, 12); index2 = new columnIndex(columnName, i, 27); break;
+				case "nachname":  index = new columnIndex(columnName, i, 15); break;
+				case "vorname":  index = new columnIndex(columnName, i, 14); break;
+				case "geb.datum":  index = new columnIndex(columnName, i, 13); break;
+				case "ee 2011":  index = new columnIndex(columnName, i, 1); break;
+				case "datum ee 2011":  index = new columnIndex(columnName, i, 2); break;
+				case "rezidiv/metastase":  index = new columnIndex(columnName, i, 3); break;
+				case "r_datum1":  index = new columnIndex(columnName, i, 4); break;
+				case "r_datum2":  index = new columnIndex(columnName, i, 5); break;
+				case "notizen 3":  index = new columnIndex(columnName, i, 6); break;
+				case "ha":  index = new columnIndex(columnName, i, 7); break;
+				case "fa":  index = new columnIndex(columnName, i, 8); break;
+				case "chemo":  index = new columnIndex(columnName, i, 9); break;
+				case "radiatio":  index = new columnIndex(columnName, i, 10); break;
+				case "ah":  index = new columnIndex(columnName, i, 11); break;
+				case "r ":  index = new columnIndex(columnName, i, 12); break;
 
 				}
 				if (index != null) structure.add(index);
-				if (index2 != null) structure.add(index2);
 
 			}
 
@@ -620,7 +619,7 @@ public class start {
 					cell = row.getCell(befundtextColumnIndex);
 					String befundtext = cell.getStringCellValue();
 
-					excelToKlassifikation_text(Pst_Klassifikation, befundtext, E_NR, befundtyp);					
+					excelToKlassifikation_text(Pst_Klassifikation, befundtext, E_NR, befundtyp, null, null);					
 				} else {
 					excelToKlassifikation_spalten(Pst_Klassifikation, E_NR, befundtyp, structureKlassifikation, cell);										
 					//System.out.println();
@@ -639,7 +638,7 @@ public class start {
 
 	}
 
-	public static void excelToKlassifikation_text(PreparedStatement Pst, String befundtext, String E_Nr, Befundtyp befundtyp) throws SQLException {
+	public static void excelToKlassifikation_text(PreparedStatement Pst, String befundtext, String E_Nr, Befundtyp befundtyp, String T, String N) throws SQLException {
 
 		StringReader srObject = new StringReader();
 		try {
@@ -649,41 +648,34 @@ public class start {
 			System.out.println("Objektfehler!");
 			return;
 		}
+		System.out.println(E_Nr);
+
+		N=StringReader.validateN(N);
+		T=StringReader.validateT(T);
+		
+		if (N==null) {
+			N=srObject.N;
+		}
+		if (T==null) {
+			T=srObject.T;
+		}
 
 		Pst.setString(1, E_Nr);
+
 		Pst.setInt(2, befundtyp.getValue());
-		Pst.setString(4, srObject.T);
-		Pst.setString(5, srObject.N);
+		Pst.setString(3, srObject.G);
+		Pst.setString(4, T);
+		Pst.setString(5, N);
 		Pst.setString(6, srObject.M);
-		Pst.setString(10, srObject.ER);
-		Pst.setString(11, srObject.PR);
+		Pst.setString(7, srObject.L);
+		Pst.setString(8, srObject.V);
+		Pst.setString(9, srObject.R);
+		Pst.setString(10, srObject.getER());
+		Pst.setString(11, srObject.getPR());
 		Pst.setString(12, srObject.her2_Neu);
 		Pst.setString(13, srObject.lage);
 		Pst.setString(14, srObject.tumorart);
-
-		if (srObject.G != 9) {
-			Pst.setInt(3, srObject.G);
-		} else {
-			Pst.setNull(3, java.sql.Types.NULL);
-		}
-
-		if (srObject.L != 9) {
-			Pst.setInt(7, srObject.L);
-		} else {
-			Pst.setNull(7, java.sql.Types.NULL);
-		}
-
-		if (srObject.V != 9) {
-			Pst.setInt(8, srObject.V);
-		} else {
-			Pst.setNull(8, java.sql.Types.NULL);
-		}
-
-		if (srObject.R != 9) {
-			Pst.setInt(9, srObject.R);
-		} else {
-			Pst.setNull(9, java.sql.Types.NULL);
-		}
+		Pst.setString(15, srObject.her2_NeuScore);
 
 		try {
 			System.out.println("Einfügen in Klassifikation, geänderte Zeilen: " + Pst.executeUpdate());
