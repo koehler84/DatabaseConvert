@@ -500,7 +500,7 @@ public class FX_Main {
 							if (columnObject.PstIndex != -1) {
 								//this is only executed if the parameter can be inserted into the PreparedStatement
 								cell = row.getCell(columnObject.columnIndex);
-								
+
 								if (cell.getCellType()==Cell.CELL_TYPE_STRING && cell.getStringCellValue().equals("A/1996/302669")){
 									System.out.println("");
 								}
@@ -797,8 +797,8 @@ public class FX_Main {
 
 						try {
 							int upsertrow; 
-							if (k==12) {
-								System.out.println("12");
+							if (k==31) {
+								System.out.println();
 							}
 							upsertrow = Pst_Frag.executeUpdate();
 							if (upsertrow == 0) {
@@ -811,7 +811,7 @@ public class FX_Main {
 						} catch (SQLException e) {
 							error+= "[EE2015 "+e.toString()+"]";
 						}
-
+						System.out.println(Pst_UpPat);
 						columnObject = structure.head;
 
 					}
@@ -1148,23 +1148,22 @@ public class FX_Main {
 		return task;
 	}
 	public static Task<Void> excelToKrebsregister(final Task<XSSFSheet> loadSheetTask) {
+		//used for Plausibilitätstest_Ronja
 
 		Task<Void> task = new Task<Void>() {
 
 			@Override
 			protected Void call() throws Exception {
-				// TODO Auto-generated method stub
-
+				
 				XSSFSheet sheet = loadSheetTask.get();
 
-				//excelToPatient
-				System.out.println("excelToKrebsregister");
+				
+				System.out.println("excelToPlausi");
 				updateProgress(-1, recordsToRead);
 
 				Iterator<Row> itr = sheet.iterator();
 				Row row = itr.next();
 
-				columnStructure<columnIndex> structure = start.getColumnIndizes(sheet, "einv2011");
 
 				PrintWriter pWriter = null; 
 
@@ -1173,89 +1172,178 @@ public class FX_Main {
 
 
 
-					pWriter = new PrintWriter(new BufferedWriter(new FileWriter("krebsr.log"))); 
+					pWriter = new PrintWriter(new BufferedWriter(new FileWriter("plausi.log"))); 
 
 
 
 
 
-					PreparedStatement Pst_Einv11 = cn.prepareStatement("INSERT INTO mydb.`einverstaendnis2011` (2011EEStatus, 2011EEDatum, `Rezidiv/Metastase`, RDatum, RDatum2, `Notizen3`, HA, FA ,Chemo, Radiatio, aH ,R, patientendaten_PatientenID) "
-							+" VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, (select PatientenID from mydb.patientendaten where Geburtsdatum = ? and Vorname = ? and Name = ? ))"
-							+" ON DUPLICATE KEY UPDATE 2011EEStatus=?, 2011EEDatum=?, `Rezidiv/Metastase`=?, RDatum=?, RDatum2=?, `Notizen3`=?, HA=?, FA=?, Chemo=?, Radiatio=?, aH=?, R=? , "
-							+" patientendaten_PatientenID=(select PatientenID from mydb.patientendaten where Geburtsdatum = ? and Vorname = ? and Name = ? );");
+					PreparedStatement Pst_plausi = cn.prepareStatement("INSERT INTO mydb.klassifikation "
+							+ "(klassifikation.`Fall_E.-Nummer`, g, t, n, m, v, l, r, ER, PR, `Her2/neu`, lage, Tumorart) "
+							+ "VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE "
+							+ "klassifikation.`Fall_E.-Nummer`=values(klassifikation.`Fall_E.-Nummer`), g=values(g), t=values(t), n=values(n), m=values(m),"
+							+ " v=values(v), l=values(l), r=values(r), er=values(er), pr=values(pr), `Her2/neu`=values(`Her2/neu`), lage=values(lage), "
+							+ "Tumorart=values(Tumorart) ;");
+					Tumorart tumorart = new Tumorart();
 					int k = 0;	//iterator
 
+					int[] iter = {10,14,16,19,21,23,25,27,29,31,33,36,37,38,39,40};
 					while (itr.hasNext() && k < recordsToRead) {
-
 						k++;
-
 						updateProgress(recordsToRead + k, recordsToRead*2);
 						row = itr.next();
 						// Iterating over each column of Excel file
 
-						Pst_Einv11.clearParameters();
-						//						Pst_UpPat.clearParameters();
-
 						Cell cell = null;
 
-						columnIndex columnObject = structure.head;
-						boolean first = true;
-						cell = null;
-						columnObject = structure.head;
-						first = true;
+						for (int i: iter){
+							cell = row.getCell(i);
 
-						do {
-							if (first) {
-								first = false;
-							} else {
-								columnObject = columnObject.next;
-							}
-
-							cell = row.getCell(columnObject.columnIndex);
-
-							if (columnObject.PstIndex != -1) {
-								//this is only executed if the parameter can be inserted into the PreparedStatement
-
-								switch (cell.getCellType()) {
-								case Cell.CELL_TYPE_STRING:
-									Pst_Einv11.setString(columnObject.PstIndex, cell.getStringCellValue());
+							switch (cell.getCellType()) {
+							case Cell.CELL_TYPE_STRING:
+								switch (cell.getColumnIndex()) {
+								case 10:
+									if (cell.getStringCellValue()!="" && cell.getStringCellValue()!=" ")
+										Pst_plausi.setString(1, cell.getStringCellValue());
 									break;
-								case Cell.CELL_TYPE_NUMERIC:
-									if (columnObject.PstIndex == 2 || columnObject.PstIndex == 4 || columnObject.PstIndex == 5 || columnObject.PstIndex == 13 || columnObject.PstIndex == 17 || columnObject.PstIndex == 19 || columnObject.PstIndex == 20 || columnObject.PstIndex == 28){
-										//Eingangsdatum, Geburtsdatum oder OP-Datum
-										Pst_Einv11.setDate(columnObject.PstIndex, new java.sql.Date(cell.getDateCellValue().getTime()));
-									} else if (columnObject.PstIndex == 26 || columnObject.PstIndex == 11){
-										Pst_Einv11.setString(columnObject.PstIndex,(int) cell.getNumericCellValue()+"");
-									} else {
-										Pst_Einv11.setInt(columnObject.PstIndex, (int)cell.getNumericCellValue());;
-									}
+								case 14:
+									if (cell.getStringCellValue()!="" && cell.getStringCellValue()!=" ")
+										Pst_plausi.setString(2, cell.getStringCellValue());
 									break;
-								case Cell.CELL_TYPE_BLANK:
-									Pst_Einv11.setNull(columnObject.PstIndex, java.sql.Types.NULL);
+								case 16:
+									if (cell.getStringCellValue()!="" && cell.getStringCellValue()!=" ")
+										Pst_plausi.setString(3, cell.getStringCellValue());
+									break;
+								case 19:
+									if (cell.getStringCellValue()!="" && cell.getStringCellValue()!=" ")
+										Pst_plausi.setString(4, cell.getStringCellValue());
+									break;
+								case 21:
+									if (cell.getStringCellValue()!="" && cell.getStringCellValue()!=" ")
+										Pst_plausi.setString(5, cell.getStringCellValue());
+									break;
+								case 23:
+									if (cell.getStringCellValue()!="" && cell.getStringCellValue()!=" ")
+										Pst_plausi.setString(6, cell.getStringCellValue());
+									break;
+								case 25:
+									if (cell.getStringCellValue()!="" && cell.getStringCellValue()!=" ")
+										Pst_plausi.setString(7, cell.getStringCellValue());
+									break;
+								case 27:
+									if (cell.getStringCellValue()!="" && cell.getStringCellValue()!=" ")
+										Pst_plausi.setString(8, cell.getStringCellValue());
+									break;
+								case 29:
+									if (cell.getStringCellValue()!="" && cell.getStringCellValue()!=" ")
+										Pst_plausi.setString(9, cell.getStringCellValue());
+									break;
+								case 31:
+									if (cell.getStringCellValue()!="" && cell.getStringCellValue()!=" ")
+										Pst_plausi.setString(10, cell.getStringCellValue());
+									break;
+								case 33:
+									if (cell.getStringCellValue()!="" && cell.getStringCellValue()!=" ")
+										Pst_plausi.setString(11, cell.getStringCellValue());
+									break;
+								case 36:
+									if (cell.getStringCellValue()!="" && cell.getStringCellValue()!=" ")
+										Pst_plausi.setString(12, cell.getStringCellValue());
+									break;
+								case 37:
+									if (cell.getStringCellValue()!="" && cell.getStringCellValue()!=" ")
+										tumorart.setTumorArt1(cell.getStringCellValue());
+									break;
+								case 38:
+									if (cell.getStringCellValue()!="" && cell.getStringCellValue()!=" ")
+										tumorart.setTumorArt2(cell.getStringCellValue());
+									break;
+								case 39:
+									if (cell.getStringCellValue()!="" && cell.getStringCellValue()!=" ")
+										tumorart.setTumorArt3(cell.getStringCellValue());
+									break;
+								case 40:
+									if (cell.getStringCellValue()!="" && cell.getStringCellValue()!=" ")
+										tumorart.setTumorArt4(cell.getStringCellValue());
 									break;
 								}
-								//end of switch
+								break;
+							case Cell.CELL_TYPE_NUMERIC:
+								switch (cell.getColumnIndex()) {
+								case 10:
+									if (cell.getStringCellValue()!="" && cell.getStringCellValue()!=" ")
+										Pst_plausi.setString(1, cell.getNumericCellValue()+"");
+									break;
+								case 14:
+									if (cell.getStringCellValue()!="" && cell.getStringCellValue()!=" ")
+										Pst_plausi.setString(2, cell.getNumericCellValue()+"");
+									break;
+								case 16:
+									if (cell.getStringCellValue()!="" && cell.getStringCellValue()!=" ")
+										Pst_plausi.setString(3, cell.getNumericCellValue()+"");
+									break;
+								case 19:
+									if (cell.getStringCellValue()!="" && cell.getStringCellValue()!=" ")
+										Pst_plausi.setString(4, cell.getNumericCellValue()+"");
+									break;
+								case 21:
+									if (cell.getStringCellValue()!="" && cell.getStringCellValue()!=" ")
+										Pst_plausi.setString(5, cell.getNumericCellValue()+"");
+									break;
+								case 23:
+									if (cell.getStringCellValue()!="" && cell.getStringCellValue()!=" ")
+										Pst_plausi.setString(6, cell.getNumericCellValue()+"");
+									break;
+								case 25:
+									if (cell.getStringCellValue()!="" && cell.getStringCellValue()!=" ")
+										Pst_plausi.setString(7, cell.getNumericCellValue()+"");
+									break;
+								case 27:
+									if (cell.getStringCellValue()!="" && cell.getStringCellValue()!=" ")
+										Pst_plausi.setString(8, cell.getNumericCellValue()+"");
+									break;
+								case 29:
+									if (cell.getStringCellValue()!="" && cell.getStringCellValue()!=" ")
+										Pst_plausi.setString(9, cell.getNumericCellValue()+"");
+									break;
+								case 31:
+									if (cell.getStringCellValue()!="" && cell.getStringCellValue()!=" ")
+										Pst_plausi.setString(10, cell.getNumericCellValue()+"");
+									break;
+								case 33:
+									if (cell.getStringCellValue()!="" && cell.getStringCellValue()!=" ")
+										Pst_plausi.setString(11, cell.getNumericCellValue()+"");
+									break;
+								case 36:
+									if (cell.getStringCellValue()!="" && cell.getStringCellValue()!=" ")
+										Pst_plausi.setString(12, cell.getNumericCellValue()+"");
+									break;
+								case 37:
+									if (cell.getStringCellValue()!="" && cell.getStringCellValue()!=" ")
+										tumorart.setTumorArt1(cell.getNumericCellValue()+"");
+									break;
+								case 38:
+									if (cell.getStringCellValue()!="" && cell.getStringCellValue()!=" ")
+										tumorart.setTumorArt2(cell.getNumericCellValue()+"");
+									break;
+								case 39:
+									if (cell.getStringCellValue()!="" && cell.getStringCellValue()!=" ")
+										tumorart.setTumorArt3(cell.getNumericCellValue()+"");
+									break;
+								case 40:
+									if (cell.getStringCellValue()!="" && cell.getStringCellValue()!=" ")
+										tumorart.setTumorArt4(cell.getNumericCellValue()+"");
+									break;
+								}
+								break;
+
 							}
-
-						} while (columnObject.hasNext());
-
-						try {
-							System.out.print("Updated rows in mydb.fall: " + Pst_Einv11.executeUpdate() + " - ");
-						} catch (SQLException e) {
-							//e.printStackTrace();
-							System.out.print("Fehler beim Ausführen von \"insert into fall\": Fall ggf. doppelt!" + " ");
-							pWriter.println(Pst_Einv11.toString());
 						}
-
-						columnObject = structure.head;
+						Pst_plausi.setString(13, tumorart.toString());
+						int upsertrow = Pst_plausi.executeUpdate();
+						System.out.println(upsertrow);
 
 					}
-					//end of while
-
-					Pst_Einv11.close();
-					//					Pst_UpPat.close();
-					System.out.println("Write fall success");
-					System.out.println();
 				} catch (SQLException SQLex) {
 					System.out.println("Fehler beim Erstellen des PreparedStatement \"insert into fall\"!");
 				} catch (IOException ioe) { 
@@ -1293,9 +1381,8 @@ public class FX_Main {
 				PrintWriter pWriter = null; 
 				try {
 					pWriter = new PrintWriter(new BufferedWriter(new FileWriter("exprimage.log"))); 
-					int q = 0;
 
-					int[] iter = {0,1,3,4,5,11,12,13,14,15,16,17,25,26,27,56,57,58,59,60,61,62,63,64,65,66,67,72,73};
+					int[] iter = {0,1,3,4,5,11,12,13,14,15,16,17,25,26,27,28,56,57,58,59,60,61,62,63,64,65,66,67,72,73};
 					int k = 0;	//iterator
 					exprimageDaten Daten = new exprimageDaten();
 
@@ -1373,6 +1460,9 @@ public class FX_Main {
 									if (cell.getStringCellValue()!="" && cell.getStringCellValue()!=" ")
 										Daten.setHer2NeuScoreExcel(cell.getStringCellValue());
 									break;
+								case 28:
+									if (cell.getStringCellValue()!="" && cell.getStringCellValue()!=" ")
+										Daten.setTumorArtExcel(cell.getStringCellValue());
 								case 56:
 									if (cell.getStringCellValue()!="" && cell.getStringCellValue()!=" ")
 										Daten.setNotizenExcel(cell.getStringCellValue());
@@ -1434,6 +1524,9 @@ public class FX_Main {
 								case 17:
 									Daten.setRExcel((int) cell.getNumericCellValue()+"");
 									break;
+								case 28:
+									Daten.setTumorArtExcel((int) cell.getNumericCellValue()+"");
+									break;
 								case 57:
 									Daten.setChemoExcel((int) cell.getNumericCellValue());
 									break;
@@ -1474,35 +1567,51 @@ public class FX_Main {
 
 
 						//ResultSetMetaData rsMeta = rs.getMetaData();
-						String statement = "select klass.er, klass.pr, klass.`Her2/neu-Score`, fall.Einsender, patd.PatientenID, klass.G, klass.T, klass.N, klass.M, klass.L, klass.V, klass.R, patd.Geburtsdatum, patd.`Name`, patd.Vorname from "
+						String statement = "select klass.er, klass.pr, klass.`Her2/neu-Score`, klass.Lage, klass.Tumorart,"
+								+ " fall.Einsender, patd.PatientenID, klass.G, klass.T, klass.N, klass.M, klass.L, klass.V,"
+								+ " klass.R, patd.Geburtsdatum, patd.`Name`, patd.Vorname from "
 								+ "mydb.klassifikation as klass join mydb.fall as fall  join mydb.patientendaten as patd "
 								+ "on klass.`Fall_E.-Nummer` = fall.`E.-Nummer` and klass.Fall_Befundtyp = fall.Befundtyp and patd.PatientenID = fall.Patientendaten_PatientenID "
 								+ "where fall.`E.-Nummer` = '"+Daten.geteNR()+"';";
 						ResultSet rs = cn.createStatement().executeQuery(statement);
 
 
-						if (!rs.isBeforeFirst() ) {    
-							q++;
-							System.out.println(q+" " + Daten.geteNR());
+						if (!rs.isBeforeFirst() ) {
+							int rowReturnByStatement;
+							statement = "INSERT INTO mydb.patientendaten (Name, Vorname, Geburtsdatum) "
+									+" VALUES ( " + Daten.getName() + ", " + Daten.getVorname() + ", " + Daten.getGebDatum() + ")"
+									+" ON DUPLICATE KEY UPDATE Name=VALUES(Name), Vorname=VALUES(Vorname), Geburtsdatum=VALUES(Geburtsdatum);";
+							rowReturnByStatement = cn.createStatement().executeUpdate(statement);
+							statement = "INSERT INTO mydb.fall (`E.-Nummer`, Befundtyp, Patientendaten_PatientenID) "
+									+" VALUES ( '" + Daten.geteNR() + "', Befundtyp = 0, (select PatientenID from Patientendaten where Name =" + Daten.getName() + 
+									" AND Vorname = " + Daten.getVorname() + " AND Geburtsdatum = " + Daten.getGebDatum() + "))"
+									+" ON DUPLICATE KEY UPDATE `E.-Nummer`=VALUES(`E.-Nummer`), Befundtyp=VALUES(Befundtyp), Patientendaten_PatientenID=VALUES(Patientendaten_PatientenID);";
+							rowReturnByStatement = cn.createStatement().executeUpdate(statement);
+							statement = "INSERT INTO mydb.klassifikation (`Fall_E.-Nummer`, Fall_Befundtyp) "
+									+" VALUES ( '" + Daten.geteNR() + "', Fall_Befundtyp = 0)"
+									+" ON DUPLICATE KEY UPDATE `Fall_E.-Nummer`=VALUES(`Fall_E.-Nummer`), Fall_Befundtyp=VALUES(Fall_Befundtyp);";
+							rowReturnByStatement = cn.createStatement().executeUpdate(statement);
+							System.out.println(rowReturnByStatement);
 						} 
 
 						while (rs.next() ){
 							Daten.setErDB(rs.getString(1));
 							Daten.setPrDB(rs.getString(2));
 							Daten.setHer2NeuScoreDB(rs.getString(3));
-							Daten.setEinsenderDB(rs.getString(4));
-							String save = rs.getString(5);
-							if (save != null) Daten.setPatIDDB(rs.getInt(5));
-							Daten.setGDB(rs.getString(6));
-							Daten.setTDB(rs.getString(7));
-							Daten.setNDB(rs.getString(8));
-							Daten.setMDB(rs.getString(9));
-							Daten.setLDB(rs.getString(10));
-							Daten.setVDB(rs.getString(11));
-							Daten.setRDB(rs.getString(12));
-							if (rs.getDate(13)!=null) Daten.setGebDatum(rs.getDate(13));
-							if (rs.getString(14)!=null) Daten.setName(rs.getString(14));
-							if (rs.getString(15)!=null) Daten.setVorname(rs.getString(15));
+							//TODO Daten.setTumorDB(rs.getString(4),rs.getString(5)); 
+							Daten.setEinsenderDB(rs.getString(6));
+							String save = rs.getString(7);
+							if (save != null) Daten.setPatIDDB(rs.getInt(7));
+							Daten.setGDB(rs.getString(8));
+							Daten.setTDB(rs.getString(9));
+							Daten.setNDB(rs.getString(10));
+							Daten.setMDB(rs.getString(11));
+							Daten.setLDB(rs.getString(12));
+							Daten.setVDB(rs.getString(13));
+							Daten.setRDB(rs.getString(14));
+							if (rs.getDate(15)!=null) Daten.setGebDatum(rs.getDate(15));
+							if (rs.getString(16)!=null) Daten.setName(rs.getString(16));
+							if (rs.getString(17)!=null) Daten.setVorname(rs.getString(17));
 						}
 
 						//						statement = "select ee2015.Notizen, frag.Chemo, frag.med_antihormon_tamoxifen, ee2015.`2015EEStatus`, ee2015.`2015EEDatum`, ee2015.QuelleTod, "
@@ -1541,16 +1650,13 @@ public class FX_Main {
 						list = Daten.buildStatment();
 
 						if (Daten.getPatIDDB()!=0){
-							cn.setAutoCommit(false);
 							for (String updStatement : list) { 
 								cn.createStatement().executeUpdate(updStatement);
 
 							}
-							cn.commit();
 							//end of while
 						}
 					}
-					cn.setAutoCommit(true);
 					//					Pst_UpPat.close();
 
 					Alert alert = new Alert(AlertType.INFORMATION);
