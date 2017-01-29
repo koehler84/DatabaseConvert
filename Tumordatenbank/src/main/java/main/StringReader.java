@@ -1,6 +1,12 @@
 package main;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.swing.plaf.synth.SynthSpinnerUI;
+
+import fx.ER_PR;
 
 public class StringReader {
 
@@ -37,6 +43,12 @@ public class StringReader {
 	String lage=null;
 	int indexER=Integer.MAX_VALUE;
 	int indexPR=Integer.MAX_VALUE;
+	List<Integer> ER_array = new ArrayList<Integer>();
+	List<Integer> PR_array = new ArrayList<Integer>();
+	List<Integer> positivArray = new ArrayList<Integer>();
+	List<Integer> negativArray = new ArrayList<Integer>();
+
+
 
 
 	//TODO:	her2_Neu implementieren (X), SubString (V), R (V)
@@ -87,7 +99,6 @@ public class StringReader {
 
 		this.source = null;
 
-
 		//TODO Überarbeiten Durchläufe ineffizient as fuck
 		for (int i = 0; i < textSub[3].length(); i++) {
 			FindKlassifikation(textSub[3], i);
@@ -114,11 +125,12 @@ public class StringReader {
 
 		int a=3;
 		while (a>-1) {
-			for (int i = 0; i < textSub[a].length(); i++) {
-				if (getER()==null || getPR()==null) {
-					FindER_PR(textSub[a], i);
-				}
-			}
+			if (getER()==null || getPR()==null) FindER_PR(textSub[a]);
+			//			for (int i = 0; i < textSub[a].length(); i++) {
+			//				if (getER()==null || getPR()==null) {
+			//					FindER_PR(textSub[a], i);
+			//				}
+			//			}
 			a--;
 		}
 	}
@@ -160,28 +172,109 @@ public class StringReader {
 	}
 
 	private void FindHer2_neu (String textSub, int i) {
-		if ((i < textSub.length() - 8) && (textSub.substring(i, i + 5)).toUpperCase().equals("SCORE")) {
-			if (textSub.substring(i + 5, i + 6).equals("2") && !textSub.substring(i + 6, i + 7).equals("/") || textSub.substring(i + 6, i + 7).equals("2") && !textSub.substring(i + 7, i + 8).equals("/")) {
-				her2_NeuScore="2";
+		if (Pattern.compile(".*score ??3[^)/].*").matcher(textSub.toLowerCase()).matches()) { her2_NeuScore = "3"; }
+		if (Pattern.compile(".*score ??2[^)/].*").matcher(textSub.toLowerCase()).matches()) { her2_NeuScore = "2"; }
+		if (Pattern.compile(".*score ??1[^)/].*").matcher(textSub.toLowerCase()).matches()) { her2_NeuScore = "1"; }
+		if (Pattern.compile(".*score ??0[^/].*").matcher(textSub.toLowerCase()).matches()) { her2_NeuScore = "0"; }
+
+		if (her2_NeuScore!=null) {
+			if (Pattern.compile(".*neu -.*").matcher(textSub.toLowerCase()).matches() || her2_NeuScore == "0" || her2_NeuScore == "1") {
+				her2_Neu = "-";
+			} else if (Pattern.compile(".*neu \\+.*").matcher(textSub.toLowerCase()).matches() || her2_NeuScore == "3") {
+				her2_Neu = "+";
+			} else if (her2_NeuScore == "2") {
+				her2_Neu = "?";
 			}
-			if (textSub.substring(i + 5, i + 6).equals("3") && !textSub.substring(i + 6, i + 7).equals("/") || textSub.substring(i + 6, i + 7).equals("3") && !textSub.substring(i + 7, i + 8).equals("/")) {
-				her2_NeuScore="3";
-			}
-			if (textSub.substring(i + 5, i + 6).equals("1") && !textSub.substring(i + 6, i + 7).equals("/") || textSub.substring(i + 6, i + 7).equals("1") && !textSub.substring(i + 7, i + 8).equals("/")) {
-				her2_NeuScore="1";
-			}
-			if (textSub.substring(i + 5, i + 6).equals("0") && !textSub.substring(i + 6, i + 7).equals("/") || textSub.substring(i + 6, i + 7).equals("0") && !textSub.substring(i + 7, i + 8).equals("/")) {
-				her2_NeuScore="0";
-			}
-		}
-		if ((i < textSub.length() - 6) && (textSub.substring(i, i + 5)).toUpperCase().equals("NEU -") || her2_NeuScore!=null && (her2_NeuScore.equals("0") || her2_NeuScore.equals("1"))) {
-			her2_Neu="-";
-		} else if ((i < textSub.length() - 5) && (textSub.substring(i, i + 5)).toUpperCase().equals("NEU +")|| her2_NeuScore!=null && her2_NeuScore.equals("3")) {
-			her2_Neu="+";
-		} else if (her2_NeuScore!=null && her2_NeuScore.equals("2")) {
-			her2_Neu="?";
 		}
 	}
+
+	public String getAllAsString() {
+		return "|"+ER+"|"+PR+"|";
+	}
+
+	private void FindER_PR (String textSub){
+		String[] ER_PR_Values = {" er ", "östrogen", " pr ", "progesteron", " -", "negativ", "positiv", " +", "er-", "er+", "pr-", "pr+"};
+		for (int i = 0; i < ER_PR_Values.length; i++) {
+			int index=0;
+			index = textSub.toLowerCase().indexOf(ER_PR_Values[i],index);
+			while (index!=-1){
+				if (i==8) {
+					ER="-";
+				}
+				if (i==9) {
+					ER="+";
+				}
+				if (i==8) {
+					PR="-";
+				}
+				if (i==9) {
+					PR="+";
+				}
+				if (i==0||i==1) {
+					ER_array.add(index);
+				}
+				if (i==2||i==3) {
+					PR_array.add(index);
+				}
+				if (i==4||i==5) {
+					negativArray.add(index);
+				}
+				if (i==6||i==7) {
+					positivArray.add(index);
+				}
+				index = textSub.toLowerCase().indexOf(ER_PR_Values[i],index+1);
+			}
+		}
+
+		int temp=Integer.MAX_VALUE;
+		int tempStatus = 0; //0 kein treffer| 1 Negativ| 2 Positiv
+		for(int tempER : ER_array)
+		{
+			for(int tempNeg : negativArray)
+			{
+				if (temp>tempNeg-tempER&&tempNeg-tempER>0){
+					temp=tempNeg-tempER;
+					tempStatus=1;
+				}
+			}
+			for(int tempPos : positivArray)
+			{
+				if (temp>tempPos-tempER&&tempPos-tempER>0){
+					temp=tempPos-tempER;
+					tempStatus=2;
+					break;
+				}
+			}
+		}
+		if (tempStatus==1) ER="-";
+		else if (tempStatus==2) ER="+";
+
+		temp=Integer.MAX_VALUE;
+		tempStatus = 0; //0 kein treffer| 1 Negativ| 2 Positiv
+		for(int tempPR : PR_array)
+		{
+			for(int tempNeg : negativArray)
+			{
+				if (temp>tempNeg-tempPR&&tempNeg-tempPR>0){
+					temp=tempNeg-tempPR;
+					tempStatus=1;
+				}
+			}
+			for(int tempPos : positivArray)
+			{
+				if (temp>tempPos-tempPR&&tempPos-tempPR>0){
+					temp=tempPos-tempPR;
+					tempStatus=2;
+					break;
+				}
+			}
+		}
+		if (tempStatus==1) PR="-";
+		else if (tempStatus==2) PR="+";
+		System.out.println();
+	}
+
+
 
 	private void FindER_PR (String textSub, int i) {
 

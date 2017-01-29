@@ -57,8 +57,15 @@ public class exprimageDaten {
 	private String medAntihormonAromataseHExcel;
 	private String bestrahlung;
 	private String expFU;
+	private String tumorArtExcel;
 
 
+	public String getTumorArtExcel() {
+		return tumorArtExcel;
+	}
+	public void setTumorArtExcel(String tumorArtExcel) {
+		this.tumorArtExcel = tumorArtExcel;
+	}
 	public String getMedAntihormonAromataseHExcel() {
 		if (medAntihormonAromataseHExcel==null){
 			return null;
@@ -619,5 +626,9 @@ public class exprimageDaten {
 		medAntihormonAromataseHExcel=null;
 		bestrahlung=null;
 		expFU=null;
+	}
+	public void setTumorDB(String string, String string2) {
+		// TODO Auto-generated method stub
+		
 	}
 }
